@@ -34,7 +34,6 @@ services:
         value: true
       - key: AUTH_SECRET
         generateValue: true # Render will generate a secure random value
-        sync: false
       - key: DATABASE_URL
         sync: false # e.g. mongodb+srv://user:pass@cluster.mongodb.net/codepilot?retryWrites=true&w=majority
       - key: AUTH_GITHUB_ID
