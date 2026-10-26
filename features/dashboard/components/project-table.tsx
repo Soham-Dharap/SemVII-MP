@@ -30,31 +30,31 @@ export default function ProjectTable({ projects, onDeleteProject, onDuplicatePro
   if (projects.length === 0) return null;
   return (
     <>
-      <div className="border border-border bg-card rounded-[16px] overflow-hidden">
-        <div className="flex items-center justify-between px-3 sm:px-4 h-[40px] bg-muted border-b border-border">
-          <h2 className="mono text-[11px] font-semibold tracking-widest">Recent playgrounds</h2><span className="mono text-[10px] bg-secondary border border-border px-2 py-1 rounded-full">{projects.length} total</span>
+      <div className="border border-border bg-card rounded-[20px] overflow-hidden shadow-sm">
+        <div className="flex items-center justify-between px-4 sm:px-6 h-[44px] bg-muted/40 border-b border-border">
+          <h2 className="label text-[11px]">Recent playgrounds</h2><span className="mono text-[11px] bg-card border border-border px-3 py-1 rounded-full shadow-sm">{projects.length} total</span>
         </div>
         <div className="hidden sm:block overflow-x-auto">
-          <table className="w-full mono text-[11px]">
-            <thead><tr className="bg-muted text-muted-foreground border-b border-border text-left"><th className="px-4 py-2 font-medium">PROJECT</th><th className="px-3 py-2 font-medium">TEMPLATE</th><th className="px-3 py-2 font-medium">CREATED</th><th className="px-3 py-2 font-medium">OWNER</th><th className="w-10" /></tr></thead>
+          <table className="w-full mono text-[12px]">
+            <thead><tr className="bg-muted/30 text-muted-foreground border-b border-border text-left"><th className="px-6 py-3 font-semibold label text-[11px]">PROJECT</th><th className="px-3 py-3 font-semibold label text-[11px]">TEMPLATE</th><th className="px-3 py-3 font-semibold label text-[11px]">CREATED</th><th className="px-3 py-3 font-semibold label text-[11px]">OWNER</th><th className="w-12" /></tr></thead>
             <tbody className="divide-y divide-border">
               {projects.map((p) => (
-                <tr key={p.id} className="hover:bg-accent bg-card">
-                  <td className="px-3 sm:px-4 py-3">
+                <tr key={p.id} className="hover:bg-muted/30 transition bg-card">
+                  <td className="px-6 py-4">
                     <Link href={`/playground/${p.id}`} className="flex items-center gap-3 group">
-                      <span className="h-7 w-7 rounded-[8px] bg-foreground text-background flex items-center justify-center mono text-[10px] font-bold shrink-0">{p.template[0]}</span>
-                      <div className="min-w-0"><div className="text-[12px] font-semibold group-hover:underline truncate max-w-[260px]">{p.title}</div><div className="text-[11px] text-muted-foreground truncate max-w-[260px]">{p.description || "No description"}</div></div>
+                      <span className="h-9 w-9 rounded-xl bg-foreground text-background flex items-center justify-center mono text-[11px] font-bold shrink-0 shadow-sm">{p.template[0]}</span>
+                      <div className="min-w-0"><div className="text-[13px] font-bold group-hover:text-primary transition truncate max-w-[280px]">{p.title}</div><div className="text-[11px] text-muted-foreground truncate max-w-[280px]">{p.description || "No description"}</div></div>
                     </Link>
                   </td>
-                  <td className="px-3 py-3"><span className="bg-secondary border border-border px-2 py-1 rounded-full text-[10px] font-semibold">{p.template}</span></td>
-                  <td className="px-3 py-3 text-muted-foreground">{format(new Date(p.createdAt), "MMM d, yyyy")}</td>
-                  <td className="px-3 py-3"><div className="flex items-center gap-2"><Image src={p.user.image || "/placeholder.svg"} alt="" width={18} height={18} className="h-[18px] w-[18px] rounded-full border border-border" /><span className="truncate max-w-[100px]">{p.user.name}</span></div></td>
+                  <td className="px-3 py-3"><span className="bg-secondary border border-border px-3 py-1 rounded-full text-[11px] font-bold">{p.template}</span></td>
+                  <td className="px-3 py-3 text-muted-foreground mono text-[11px]">{format(new Date(p.createdAt), "MMM d, yyyy")}</td>
+                  <td className="px-3 py-3"><div className="flex items-center gap-2"><Image src={p.user.image || "/placeholder.svg"} alt="" width={20} height={20} className="h-5 w-5 rounded-full border border-border" /><span className="truncate max-w-[100px] text-[12px] font-medium">{p.user.name}</span></div></td>
                   <td className="px-3 py-3">
                     <DropdownMenu>
-                      <DropdownMenuTrigger className="h-8 w-8 inline-flex items-center justify-center rounded-full border border-border hover:bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring shrink-0">
+                      <DropdownMenuTrigger className="h-8 w-8 inline-flex items-center justify-center rounded-full border border-border bg-card hover:bg-accent shadow-sm">
                         <MoreHorizontal className="h-4 w-4" />
                       </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="mono text-[11px] min-w-[160px] z-50">
+                      <DropdownMenuContent align="end" className="mono text-[12px] min-w-[170px] z-50 rounded-xl">
                         <DropdownMenuItem onClick={() => router.push(`/playground/${p.id}`)}><ExternalLink className="h-3.5 w-3.5 mr-2" />Open</DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleEditClick(p)}><Edit3 className="h-3.5 w-3.5 mr-2" />Edit</DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleDuplicate(p)}><Copy className="h-3.5 w-3.5 mr-2" />Duplicate</DropdownMenuItem>
@@ -71,32 +71,32 @@ export default function ProjectTable({ projects, onDeleteProject, onDuplicatePro
         </div>
         <div className="sm:hidden divide-y divide-border">
           {projects.map((p) => (
-            <div key={p.id} className="flex items-center gap-3 px-3 sm:px-4 py-3 hover:bg-accent">
+            <div key={p.id} className="flex items-center gap-3 px-4 py-4 hover:bg-muted/30">
               <Link href={`/playground/${p.id}`} className="flex items-center gap-3 flex-1 min-w-0">
-                <span className="h-8 w-8 rounded-[10px] bg-foreground text-background flex items-center justify-center mono text-[10px] font-bold shrink-0">{p.template[0]}</span>
-                <div className="flex-1 min-w-0"><div className="text-[12px] font-semibold truncate">{p.title}</div><div className="mono text-[10px] text-muted-foreground">{p.template} · {format(new Date(p.createdAt), "MMM d")}</div></div>
-                <span className="mono text-[12px] shrink-0">→</span>
+                <span className="h-10 w-10 rounded-xl bg-foreground text-background flex items-center justify-center mono text-[11px] font-bold shrink-0">{p.template[0]}</span>
+                <div className="flex-1 min-w-0"><div className="text-[13px] font-bold truncate">{p.title}</div><div className="mono text-[11px] text-muted-foreground">{p.template} · {format(new Date(p.createdAt), "MMM d")}</div></div>
+                <span className="h-7 w-7 rounded-full bg-secondary border border-border flex items-center justify-center text-[12px] shrink-0">→</span>
               </Link>
               <DropdownMenu>
-                <DropdownMenuTrigger className="h-9 w-9 inline-flex items-center justify-center rounded-full border border-border hover:bg-accent bg-card shrink-0 focus-visible:outline-none">
+                <DropdownMenuTrigger className="h-9 w-9 inline-flex items-center justify-center rounded-full border border-border bg-card shadow-sm">
                   <MoreHorizontal className="h-4 w-4" />
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="mono text-[11px] min-w-[160px] z-50">
+                <DropdownMenuContent align="end" className="mono text-[12px] min-w-[160px] z-50 rounded-xl">
                   <DropdownMenuItem onClick={() => router.push(`/playground/${p.id}`)}><ExternalLink className="h-3.5 w-3.5 mr-2" />Open</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => handleEditClick(p)}><Edit3 className="h-3.5 w-3.5 mr-2" />Edit</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => handleDuplicate(p)}><Copy className="h-3.5 w-3.5 mr-2" />Duplicate</DropdownMenuItem>
                   <DropdownMenuItem onClick={() => copyUrl(p.id)}><Copy className="h-3.5 w-3.5 mr-2" />Copy link</DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => { setSelectedProject(p); setDeleteDialogOpen(true); }} className="text-destructive focus:text-destructive"><Trash2 className="h-3.5 w-3.5 mr-2" />Delete</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => { setSelectedProject(p); setDeleteDialogOpen(true); }} className="text-destructive"><Trash2 className="h-3.5 w-3.5 mr-2" />Delete</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
           ))}
         </div>
-        <div className="px-4 h-[28px] flex items-center justify-between bg-muted border-t border-border mono text-[10px] text-muted-foreground"><span>{projects.length} playgrounds</span><span>Private by default</span></div>
+        <div className="px-6 h-[32px] flex items-center justify-between bg-muted/30 border-t border-border mono text-[11px] text-muted-foreground"><span>{projects.length} playgrounds</span><span>Private by default</span></div>
       </div>
-      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}><DialogContent className="bg-card border-border max-w-[520px] w-[95vw]"><DialogHeader><DialogTitle className="display text-[18px]">Edit playground</DialogTitle><DialogDescription className="mono text-[11px] text-muted-foreground">Make changes to your playground details.</DialogDescription></DialogHeader><div className="grid gap-3 py-2"><div className="grid gap-1.5"><Label className="mono text-[10px] font-semibold">TITLE</Label><Input value={editData.title} onChange={e => setEditData({ ...editData, title: e.target.value })} className="h-9 bg-background mono text-[12px]" /></div><div className="grid gap-1.5"><Label className="mono text-[10px] font-semibold">DESCRIPTION</Label><Textarea value={editData.description} onChange={e => setEditData({ ...editData, description: e.target.value })} className="min-h-[70px] bg-background mono text-[11px] resize-none" /></div></div><DialogFooter><Button variant="ghost" onClick={() => setEditDialogOpen(false)} className="mono text-[11px]">Cancel</Button><Button onClick={handleEditSubmit} disabled={isLoading} className="bg-primary text-primary-foreground mono text-[11px]">Save changes</Button></DialogFooter></DialogContent></Dialog>
-      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}><AlertDialogContent className="bg-card border-border max-w-[420px] w-[95vw]"><AlertDialogHeader><AlertDialogTitle className="display text-[18px]">Delete playground?</AlertDialogTitle><AlertDialogDescription className="mono text-[11px]">This will permanently delete “{selectedProject?.title}”. This action cannot be undone.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel className="mono text-[11px]">Cancel</AlertDialogCancel><AlertDialogAction onClick={confirmDelete} disabled={isLoading} className="bg-destructive text-destructive-foreground mono text-[11px]">Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
+      <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}><DialogContent className="bg-card border-border max-w-[520px] w-[95vw] rounded-[20px]"><DialogHeader><DialogTitle className="display text-[20px]">Edit playground</DialogTitle><DialogDescription className="text-[13px] text-muted-foreground">Make changes to your playground details.</DialogDescription></DialogHeader><div className="grid gap-4 py-2"><div className="grid gap-2"><Label className="label text-[11px]">TITLE</Label><Input value={editData.title} onChange={e => setEditData({ ...editData, title: e.target.value })} className="h-10 bg-background rounded-xl" /></div><div className="grid gap-2"><Label className="label text-[11px]">DESCRIPTION</Label><Textarea value={editData.description} onChange={e => setEditData({ ...editData, description: e.target.value })} className="min-h-[80px] bg-background rounded-xl resize-none" /></div></div><DialogFooter><Button variant="ghost" onClick={() => setEditDialogOpen(false)} className="rounded-full">Cancel</Button><Button onClick={handleEditSubmit} disabled={isLoading} className="bg-primary text-primary-foreground rounded-full">Save changes</Button></DialogFooter></DialogContent></Dialog>
+      <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}><AlertDialogContent className="bg-card border-border max-w-[420px] w-[95vw] rounded-[20px]"><AlertDialogHeader><AlertDialogTitle className="display text-[20px]">Delete playground?</AlertDialogTitle><AlertDialogDescription className="text-[13px]">This will permanently delete “{selectedProject?.title}”. Cannot be undone.</AlertDialogDescription></AlertDialogHeader><AlertDialogFooter><AlertDialogCancel className="rounded-full">Cancel</AlertDialogCancel><AlertDialogAction onClick={confirmDelete} disabled={isLoading} className="bg-destructive text-destructive-foreground rounded-full">Delete</AlertDialogAction></AlertDialogFooter></AlertDialogContent></AlertDialog>
     </>
   );
 }

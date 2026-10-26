@@ -9,26 +9,32 @@ const Page = async () => {
   const hasProjects = playgrounds && playgrounds.length > 0;
   return (
     <div className="bg-background min-h-[70vh]">
-      <div className="mx-auto max-w-[1240px] px-4 sm:px-6 py-6 sm:py-8">
-        <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4 sm:gap-6 border-b border-border pb-6">
+      <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-6 sm:py-8">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b border-border pb-6">
           <div className="min-w-0">
-            <div className="mono text-[11px] font-semibold tracking-widest text-primary">WORKSPACE</div>
-            <h1 className="display text-[26px] sm:text-[32px] mt-1 tracking-tight">Playgrounds</h1>
-            <p className="mt-2 mono text-[11px] text-muted-foreground">{hasProjects ? `${playgrounds.length} playgrounds • Private by default` : "No playgrounds yet — create one from a template."}</p>
+            <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-full px-3 py-1 mono text-[11px] font-bold tracking-wide text-primary">
+              <span className="h-1.5 w-1.5 bg-primary rounded-full animate-pulse" /> WORKSPACE
+            </div>
+            <h1 className="hero-title text-[28px] sm:text-[36px] mt-3">Playgrounds</h1>
+            <p className="mt-2 text-[13px] text-muted-foreground max-w-[480px]">{hasProjects ? `${playgrounds.length} playgrounds • Premium workspace with live sync` : "No playgrounds yet — create one from a template to start shipping."}</p>
           </div>
-          <div className="hidden sm:block text-right mono text-[10px] shrink-0">
-            <div className="text-muted-foreground">{new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</div>
-            <div className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground px-2.5 py-1 rounded-full mt-1 font-semibold">● All systems operational</div>
+          <div className="hidden lg:block text-right shrink-0">
+            <div className="mono text-[11px] text-muted-foreground">{new Date().toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}</div>
+            <div className="inline-flex items-center gap-2 bg-card border border-border rounded-full px-3 py-1.5 mt-2 mono text-[11px] font-medium shadow-sm">
+              <span className="h-2 w-2 bg-primary rounded-full animate-pulse" /> All systems operational
+            </div>
           </div>
         </div>
-        <div className="mt-6 grid grid-cols-12 gap-3 sm:gap-4">
-          <div className="col-span-12 md:col-span-7"><AddNewButton /></div>
-          <div className="col-span-12 md:col-span-5"><AddRepoButton /></div>
+
+        <div className="mt-6 grid grid-cols-12 gap-4">
+          <div className="col-span-12 md:col-span-8"><AddNewButton /></div>
+          <div className="col-span-12 md:col-span-4"><AddRepoButton /></div>
         </div>
+
         <div className="mt-8">
           {!hasProjects ? (
-            <div className="border border-border bg-card rounded-[16px] p-6 sm:p-8">
-              <EmptyState title="No playgrounds" description="Choose a template — React, Next.js, Vue, Angular, Express, Hono — and start typing." imageSrc="/empty-state.svg" />
+            <div className="border border-border bg-card rounded-[24px] p-8 sm:p-10 shadow-sm">
+              <EmptyState title="No playgrounds yet" description="Choose a template — React, Next.js, Vue, Angular, Express, Hono — and start building. Your first project is free." imageSrc="/empty-state.svg" />
             </div>
           ) : (
             <ProjectTable
