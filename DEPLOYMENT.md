@@ -139,6 +139,7 @@ Google equivalent) as **additional** callback URLs — keep the production ones.
 | Bare "Not Found" on every URL | No successful deploy — see section 0. |
 | `@prisma/client did not initialize yet` | Build skipped `prisma generate`; use the exact build command above and clear the build cache. |
 | `redirect_uri_mismatch` / GitHub 404 after clicking login | Callback URL in the OAuth console must exactly match `/api/auth/callback/<provider>` on your Render domain. |
+| Providers JSON (`/api/auth/providers`) shows `https://localhost:10000/...` | A wrong `AUTH_URL` (or `NEXTAUTH_URL`) is set in the Render environment. Delete it — the app auto-derives the public URL from Render's `RENDER_EXTERNAL_URL` and `trustHost`. Never set `AUTH_URL` to a localhost address. |
 | Atlas timeout / `querySrv ENOTFOUND` | Allow `0.0.0.0/0` in Atlas Network Access; verify the password in `DATABASE_URL`. |
 | Infinite redirect to sign-in | Check `AUTH_SECRET` exists and `AUTH_TRUST_HOST=true`. |
 | First load is slow | Cold start on the free plan; allow up to a minute. |

@@ -6,6 +6,16 @@ import { db } from "./lib/db";
 import { getAccountByUserId, getUserById } from "@/features/auth/actions";
 import type { UserRole } from "@/features/auth/type";
 
+// Render injects the service's public URL (e.g. https://codepilot-4mjj.onrender.com).
+// A stale or incorrect AUTH_URL — such as the internal https://localhost:10000
+// address — otherwise overrides trustHost and forces every OAuth redirect to
+// localhost, which no provider can accept. On Render, always derive AUTH_URL
+// from the platform-provided external URL so OAuth stays correct even if the
+// dashboard variable is wrong or the service gets a new subdomain.
+if (process.env.RENDER_EXTERNAL_URL) {
+  process.env.AUTH_URL = `${process.env.RENDER_EXTERNAL_URL}/api/auth`;
+}
+
 export const { auth, handlers, signIn, signOut } = NextAuth({
   ...authConfig,
   adapter: PrismaAdapter(db),
