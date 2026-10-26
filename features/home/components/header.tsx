@@ -4,42 +4,34 @@ import UserButton from "@/features/auth/components/user-button";
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-50 w-full bg-[#0A0A0B] border-b-2 border-[#F4F4F0]">
-      <div className="mx-auto max-w-[1440px] px-4 sm:px-6">
-        <div className="flex h-[52px] items-center justify-between gap-4">
-          <Link href="/" className="flex items-center gap-3 shrink-0">
-            <div className="h-9 w-9 rounded-[12px] bg-[#F4F4F0] border-2 border-[#0A0A0B] flex items-center justify-center overflow-hidden brutal-dark rotate-[-2deg]">
-              <Image src="/logo.svg" alt="CodePilot" width={28} height={28} className="h-[28px] w-[28px]" />
+    <header className="sticky top-0 z-50 w-full bg-[#09090B]/80 backdrop-blur-xl border-b border-[#232326]">
+      <div className="mx-auto max-w-[1240px] px-6">
+        <div className="flex h-[56px] items-center justify-between gap-6">
+          <Link href="/" className="flex items-center gap-2.5 shrink-0">
+            <div className="h-8 w-8 rounded-[9px] bg-white flex items-center justify-center overflow-hidden">
+              <Image src="/logo.svg" alt="CodePilot" width={22} height={22} className="h-[22px] w-[22px]" />
             </div>
-            <span className="mono text-[11px] font-bold tracking-[0.14em] uppercase hidden sm:inline">
-              <span className="text-[#F4F4F0]">CODE</span><span className="text-[#D6FF00]">PILOT</span>
+            <span className="mono text-[12px] font-semibold tracking-[-0.02em] text-white">
+              CodePilot
             </span>
-            <span className="hidden lg:inline-flex items-center gap-2 ml-2 px-2.5 py-1 rounded-full bg-[#D6FF00] text-black mono text-[10px] font-bold rotate-[1deg]">v2026.01 ✦ GEN-Z</span>
+            <span className="hidden sm:inline-flex ml-1 px-2 py-0.5 rounded-full bg-[#1A1A1D] border border-[#232326] mono text-[10px] font-medium text-[#8A8A90]">Monaco • Live</span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-2">
-            <a href="#write" className="px-3 py-1.5 rounded-full bg-[#1C1C1F] border-2 border-[#F4F4F0] mono text-[11px] font-bold text-white hover:bg-[#D6FF00] hover:text-black transition-colors">01 WRITE</a>
-            <a href="#preview" className="px-3 py-1.5 rounded-full bg-[#1C1C1F] border-2 border-[#F4F4F0] mono text-[11px] font-bold text-white hover:bg-[#D6FF00] hover:text-black transition-colors">02 PREVIEW</a>
-            <a href="#ship" className="px-3 py-1.5 rounded-full bg-[#1C1C1F] border-2 border-[#F4F4F0] mono text-[11px] font-bold text-white hover:bg-[#D6FF00] hover:text-black transition-colors">03 SHIP</a>
-            <Link href="/dashboard" className="px-3 py-1.5 rounded-full bg-white text-black mono text-[11px] font-bold border-2 border-black hover:rotate-[1deg] transition-transform">PLAYGROUNDS →</Link>
+          <nav className="hidden md:flex items-center gap-1">
+            <a href="#write" className="px-3 py-1.5 rounded-full mono text-[11px] font-medium text-[#8A8A90] hover:text-white hover:bg-[#1A1A1D] transition-colors">Write</a>
+            <a href="#preview" className="px-3 py-1.5 rounded-full mono text-[11px] font-medium text-[#8A8A90] hover:text-white hover:bg-[#1A1A1D] transition-colors">Preview</a>
+            <a href="#ship" className="px-3 py-1.5 rounded-full mono text-[11px] font-medium text-[#8A8A90] hover:text-white hover:bg-[#1A1A1D] transition-colors">Ship</a>
+            <span className="mx-2 h-4 w-px bg-[#232326]" />
+            <Link href="/dashboard" className="mono text-[11px] font-medium text-[#8A8A90] hover:text-white transition-colors">Playgrounds</Link>
           </nav>
 
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="hidden sm:inline-flex mono text-[10px] font-bold bg-[#1C1C1F] border-2 border-[#F4F4F0] text-white px-2 py-1 rotate-[-1deg]">⌘K</span>
-            <Link href="/dashboard" className="inline-flex h-[36px] items-center bg-[#D6FF00] text-black px-4 mono text-[12px] font-black border-2 border-black shadow-[3px_3px_0_#F4F4F0] hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[2px_2px_0_#F4F4F0] transition-all rotate-[-0.5deg]">
-              OPEN APP ✦
+          <div className="flex items-center gap-3 shrink-0">
+            <span className="hidden sm:inline-flex mono text-[10px] font-medium bg-[#1A1A1D] border border-[#232326] text-[#8A8A90] px-2 py-1 rounded-[8px]">⌘ K</span>
+            <Link href="/dashboard" className="inline-flex h-[34px] items-center bg-[#D6FF00] text-[#09090B] px-4 mono text-[12px] font-semibold rounded-full hover:bg-[#C6EB00] transition-colors">
+              Open app
             </Link>
             <UserButton />
           </div>
-        </div>
-      </div>
-      {/* ticker */}
-      <div className="overflow-hidden border-t-2 border-[#F4F4F0] bg-[#D6FF00] text-black">
-        <div className="flex whitespace-nowrap ticker mono text-[11px] font-black tracking-[0.12em] py-1.5">
-          <span className="mx-4">{} CODE → PREVIEW → SHIP → REPEAT — NO AI SLOP — MONACO + LIVE PREVIEW + FILE SYSTEM —</span>
-          <span className="mx-4">{} CODE → PREVIEW → SHIP → REPEAT — NO AI SLOP — MONACO + LIVE PREVIEW + FILE SYSTEM —</span>
-          <span className="mx-4">{} CODE → PREVIEW → SHIP → REPEAT — NO AI SLOP — MONACO + LIVE PREVIEW + FILE SYSTEM —</span>
-          <span className="mx-4">{} CODE → PREVIEW → SHIP → REPEAT — NO AI SLOP — MONACO + LIVE PREVIEW + FILE SYSTEM —</span>
         </div>
       </div>
     </header>
