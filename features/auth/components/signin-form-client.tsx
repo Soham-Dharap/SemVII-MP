@@ -40,7 +40,9 @@ const SignInFormClient = () => {
     <div className="grid gap-3">
       <button
         type="button"
-        onClick={() => signIn("google")}
+        onClick={() =>
+          signIn("google", undefined, { prompt: "select_account" })
+        }
         className="flex h-12 w-full items-center justify-center gap-3 rounded-xl border border-border bg-card text-[15px] font-medium shadow-sm transition-all hover:-translate-y-px hover:border-iris/40 hover:shadow-md active:translate-y-0"
       >
         <GoogleIcon />

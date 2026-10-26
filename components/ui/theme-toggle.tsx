@@ -19,7 +19,7 @@ export function ThemeToggle() {
 
   return (
     <div
-      className="cursor-pointer rounded-full p-1.5 text-zinc-600 transition-colors hover:bg-zinc-100 dark:text-zinc-300"
+      className="cursor-pointer rounded-full p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       role="button"
       aria-label="Toggle color theme"

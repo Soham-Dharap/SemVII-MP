@@ -16,7 +16,7 @@ const AddRepoButton = () => {
         className="group relative flex items-center justify-between overflow-hidden rounded-2xl border border-dashed border-border bg-muted/40 p-7 text-left transition-all duration-300 hover:-translate-y-1 hover:border-iris/40 hover:bg-card hover:shadow-lg"
       >
         <div>
-          <div className="mb-4 flex size-11 items-center justify-center rounded-xl bg-foreground text-white transition-transform duration-300 group-hover:scale-105">
+          <div className="mb-4 flex size-11 items-center justify-center rounded-xl bg-foreground text-background transition-transform duration-300 group-hover:scale-105">
             <ArrowDownToLine className="size-5" />
           </div>
           <h2 className="text-lg font-semibold tracking-tight">

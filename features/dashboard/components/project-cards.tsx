@@ -174,7 +174,7 @@ export default function ProjectCards({
                       className={`size-4 transition-colors ${
                         isStarred
                           ? "fill-amber-400 text-amber-400"
-                          : "text-zinc-300 group-hover:text-zinc-400"
+                          : "text-muted-foreground/30 group-hover:text-muted-foreground/60"
                       }`}
                     />
                   </button>

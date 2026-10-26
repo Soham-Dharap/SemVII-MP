@@ -93,7 +93,7 @@ const EditorSurface = ({
         {lines.map((_, index) => (
           <div
             key={index}
-            className="pr-3 text-right text-[12px] leading-6 text-zinc-300"
+            className="pr-3 text-right text-[12px] leading-6 text-muted-foreground/40"
           >
             {index + 1}
           </div>
@@ -104,7 +104,7 @@ const EditorSurface = ({
         ref={preRef}
         aria-hidden
         className={cn(
-          "pointer-events-none absolute inset-0 overflow-auto text-zinc-800",
+          "pointer-events-none absolute inset-0 overflow-auto text-foreground",
           sharedClasses,
         )}
       >
@@ -193,7 +193,7 @@ const CodeEditor = ({
                     <Code2
                       className={cn(
                         "size-3.5 shrink-0",
-                        isActive ? "text-iris" : "text-zinc-400",
+                        isActive ? "text-iris" : "text-muted-foreground",
                       )}
                     />
                     <span className="truncate">{file.name}</span>
@@ -222,7 +222,7 @@ const CodeEditor = ({
           <span className="truncate font-mono text-xs text-muted-foreground">
             {activeFile.path.split("/").map((part, i, arr) => (
               <span key={i}>
-                {i > 0 && <span className="mx-1.5 text-zinc-300">/</span>}
+                {i > 0 && <span className="mx-1.5 text-border">/</span>}
                 <span className={i === arr.length - 1 ? "text-foreground/80" : ""}>
                   {part}
                 </span>
