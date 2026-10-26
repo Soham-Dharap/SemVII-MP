@@ -8,17 +8,17 @@ const Page = async () => {
   const playgrounds = await getAllPlaygroundForUser();
   const hasProjects = playgrounds && playgrounds.length > 0;
   return (
-    <div className="bg-[#0A0A0B] min-h-[70vh]">
-      <div className="mx-auto max-w-[1440px] px-6 py-8">
-        <div className="flex items-start justify-between gap-6 border-b-[3px] border-[#F4F4F0] pb-6">
+    <div className="bg-background min-h-[70vh]">
+      <div className="mx-auto max-w-[1240px] px-6 py-8">
+        <div className="flex items-start justify-between gap-6 border-b border-border pb-6">
           <div>
-            <div className="mono text-[11px] font-black tracking-[0.14em] text-[#D6FF00]">WORKSPACE ✦ GEN-Z</div>
-            <h1 className="display text-[36px] mt-1 text-white">PLAYGROUNDS</h1>
-            <p className="mt-2 mono text-[11px] font-bold text-white/60">{hasProjects ? `${playgrounds.length} playgrounds · private by default` : "No playgrounds yet — create one from a template."}</p>
+            <div className="mono text-[11px] font-semibold tracking-widest text-primary">WORKSPACE</div>
+            <h1 className="display text-[32px] mt-1">Playgrounds</h1>
+            <p className="mt-2 mono text-[11px] text-muted-foreground">{hasProjects ? `${playgrounds.length} playgrounds • Private by default` : "No playgrounds yet — create one from a template."}</p>
           </div>
-          <div className="hidden sm:block text-right mono text-[10px] font-bold">
-            <div className="text-white/60">{new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</div>
-            <div className="inline-flex items-center gap-1.5 bg-[#D6FF00] text-black px-2 py-1 border-2 border-black mt-1">● ALL SYSTEMS GO</div>
+          <div className="hidden sm:block text-right mono text-[10px]">
+            <div className="text-muted-foreground">{new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</div>
+            <div className="inline-flex items-center gap-1.5 bg-primary text-primary-foreground px-2 py-1 rounded-full mt-1 font-semibold">● All systems operational</div>
           </div>
         </div>
         <div className="mt-6 grid grid-cols-12 gap-4">
@@ -27,7 +27,7 @@ const Page = async () => {
         </div>
         <div className="mt-8">
           {!hasProjects ? (
-            <div className="border-[3px] border-black bg-white shadow-[6px_6px_0_#F4F4F0] p-8">
+            <div className="border border-border bg-card rounded-[16px] p-8">
               <EmptyState title="No playgrounds" description="Choose a template — React, Next.js, Vue, Angular, Express, Hono — and start typing." imageSrc="/empty-state.svg" />
             </div>
           ) : (

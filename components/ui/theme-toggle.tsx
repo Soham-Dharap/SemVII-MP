@@ -4,24 +4,19 @@ import { useEffect, useState } from "react";
 import { Moon, Sun } from "lucide-react";
 
 export function ThemeToggle() {
-  const { setTheme, theme } = useTheme();
+  const { setTheme, theme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-
   useEffect(() => setMounted(true), []);
-
-  if (!mounted) return <div className="h-7 w-7" />;
-
+  if (!mounted) return <div className="h-8 w-8 rounded-full border border-border bg-card" />;
+  const isDark = resolvedTheme === "dark";
   return (
     <button
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-[#f5f5f7] dark:bg-[#2c2c2e] border border-black/5 dark:border-white/5 hover:bg-[#e8e8ed] dark:hover:bg-[#3a3a3c] transition-colors"
+      onClick={() => setTheme(isDark ? "light" : "dark")}
+      className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-card border border-border hover:bg-accent transition-colors"
       aria-label="Toggle theme"
+      title={isDark ? "Switch to light (white + blue)" : "Switch to dark (black + neon)"}
     >
-      {theme === "dark" ? (
-        <Sun className="size-3.5 text-[#f5f5f7]" />
-      ) : (
-        <Moon className="size-3.5 text-[#1d1d1f]" />
-      )}
+      {isDark ? <Sun className="size-4 text-foreground" /> : <Moon className="size-4 text-foreground" />}
     </button>
   );
 }

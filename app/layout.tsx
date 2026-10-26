@@ -17,7 +17,7 @@ import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "CodePilot — Code like u mean it.",
-  description: "The Gen-Z code playground. Monaco + live preview + brutalist file system. No AI slop. Just ship.",
+  description: "The professional code playground. Monaco + live preview + file system. White + blue light, black + neon dark.",
   icons: { icon: "/logo.svg" },
 };
 
@@ -30,9 +30,9 @@ async function AuthSession({ children }: { children: React.ReactNode }) {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="antialiased bg-[#0A0A0B] text-[#F4F4F0] selection:bg-[#D6FF00] selection:text-black">
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false} disableTransitionOnChange>
-          <Toaster richColors closeButton theme="dark" />
+      <body className="antialiased bg-background text-foreground">
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
+          <Toaster richColors closeButton />
           <Suspense fallback={null}><AuthSession>{children}</AuthSession></Suspense>
         </ThemeProvider>
       </body>

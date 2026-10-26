@@ -10,17 +10,17 @@ const AddNewButton = () => {
   const router = useRouter();
   const handleSubmit = async (data: { title: string; template: "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR"; description?: string; }) => {
     const res = await createPlayground(data);
-    toast.success("Project created ✦");
+    toast.success("Project created");
     setIsModalOpen(false);
     router.push(`/playground/${res?.id}`);
   };
   return (
     <>
-      <button onClick={() => setIsModalOpen(true)} className="group w-full text-left bg-[#D6FF00] text-black border-[3px] border-black shadow-[6px_6px_0_#F4F4F0] p-5 hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-[5px_5px_0_#F4F4F0] transition-all flex flex-col rotate-[-0.4deg]">
-        <div className="flex items-start justify-between w-full"><div className="mono text-[10px] font-black tracking-[0.12em]">NEW PLAYGROUND ✦</div><span className="text-[16px] font-black">→</span></div>
-        <div className="display text-[22px] mt-2 leading-none">START FROM TEMPLATE</div>
-        <div className="mono text-[11px] font-bold leading-5 text-black/70 mt-1">React / Next / Vue / Angular / Express / Hono — 6 starters. Paste config and it runs fr fr.</div>
-        <div className="mt-3 mono text-[10px] font-black flex gap-3"><span className="bg-black text-white px-1.5 py-0.5">6 TEMPLATES</span><span className="bg-white text-black border-2 border-black px-1.5 py-0.5">TAKES 10s ✦</span></div>
+      <button onClick={() => setIsModalOpen(true)} className="group w-full text-left bg-primary text-primary-foreground border border-border rounded-[16px] p-5 hover:opacity-90 transition-opacity flex flex-col">
+        <div className="flex items-start justify-between w-full"><div className="mono text-[10px] tracking-[0.08em] uppercase opacity-80">New playground</div><span className="mono text-[12px]">→</span></div>
+        <div className="display text-[18px] mt-2 leading-none">Start from a template</div>
+        <div className="mono text-[11px] leading-5 opacity-80 mt-1">React, Next.js, Vue, Angular, Express, Hono — six starters, paste your config and it runs.</div>
+        <div className="mt-3 mono text-[10px] tracking-[0.06em] uppercase flex gap-3 opacity-80"><span>6 templates</span><span>•</span><span>Takes 10s</span></div>
       </button>
       <TemplateSelectionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSubmit={handleSubmit} />
     </>

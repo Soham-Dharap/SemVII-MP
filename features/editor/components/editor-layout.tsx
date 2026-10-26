@@ -26,7 +26,6 @@ export function EditorLayout({ playground, initialFiles }: EditorLayoutProps) {
 
   const activeFile = files.find(f => f.id === activeId) || null;
 
-  // Auto-save debounce for active file
   useEffect(() => {
     if (!activeFile) return;
     const handler = setTimeout(async () => {
@@ -42,7 +41,6 @@ export function EditorLayout({ playground, initialFiles }: EditorLayoutProps) {
     return () => clearTimeout(handler);
   }, [activeFile?.content, activeFile?.id]);
 
-  // Cmd+S shortcut
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "s") {
@@ -85,7 +83,7 @@ export function EditorLayout({ playground, initialFiles }: EditorLayoutProps) {
     if (!confirm("Delete this file?")) return;
     await deleteFile(id, playground.id);
     setFiles(prev => prev.filter(f => f.id !== id));
-    if (activeId === id) setActiveId(prev => files.find(f => f.id !== prev)?.id || files[0]?.id || null);
+    if (activeId === id) setActiveId(files.find(f => f.id !== id)?.id || null);
     toast.success("File deleted");
   };
 
@@ -109,7 +107,7 @@ export function EditorLayout({ playground, initialFiles }: EditorLayoutProps) {
   };
 
   return (
-    <div className="flex h-screen flex-col bg-[#fcfcfc] dark:bg-[#0a0a0a]">
+    <div className="flex h-screen flex-col bg-background">
       <Topbar
         title={playground.title}
         template={playground.template}
@@ -121,7 +119,7 @@ export function EditorLayout({ playground, initialFiles }: EditorLayoutProps) {
 
       <div className="flex flex-1 overflow-hidden">
         <ResizablePanelGroup orientation="horizontal" className="flex-1">
-          <ResizablePanel defaultSize={22} minSize={15} maxSize={32} className="bg-[#fcfcfc] dark:bg-[#111]">
+          <ResizablePanel defaultSize={22} minSize={15} maxSize={32} className="bg-card">
             <FileExplorer
               files={files}
               activeFileId={activeId}
@@ -132,22 +130,22 @@ export function EditorLayout({ playground, initialFiles }: EditorLayoutProps) {
             />
           </ResizablePanel>
 
-          <ResizableHandle withHandle className="bg-black/[0.06] dark:bg-white/10 w-px" />
+          <ResizableHandle withHandle className="bg-border w-px" />
 
           <ResizablePanel defaultSize={48} minSize={30} className="flex flex-col min-w-0">
-            <div className="flex h-8 items-center gap-0 border-b border-black/10 dark:border-white/10 bg-[#f5f5f5] dark:bg-[#0f0f0f] px-2 overflow-x-auto shrink-0">
+            <div className="flex h-8 items-center gap-0 border-b border-border bg-muted/50 px-2 overflow-x-auto shrink-0">
               {files.filter(f => !f.name.endsWith("/.keep")).slice(0, 8).map(f => (
                 <button
                   key={f.id}
                   onClick={() => setActiveId(f.id)}
-                  className={`flex h-6 items-center gap-1.5 rounded-md px-2.5 text-[12px] font-medium whitespace-nowrap border shrink-0 ${activeId === f.id ? "bg-white dark:bg-[#1a1a1a] border-black/10 dark:border-white/10 text-[#111] dark:text-white shadow-sm" : "border-transparent text-[#888] hover:text-[#111] dark:hover:text-white"}`}
+                  className={`flex h-6 items-center gap-1.5 rounded-full px-2.5 text-[12px] font-medium whitespace-nowrap border shrink-0 transition-colors ${activeId === f.id ? "bg-foreground text-background border-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
                 >
                   {f.name.split("/").pop()}
                 </button>
               ))}
             </div>
 
-            <div className="flex-1 bg-white dark:bg-[#0a0a0a] min-h-0">
+            <div className="flex-1 bg-background min-h-0">
               {activeFile ? (
                 <MonacoEditor
                   value={activeFile.content || ""}
@@ -156,24 +154,24 @@ export function EditorLayout({ playground, initialFiles }: EditorLayoutProps) {
                 />
               ) : (
                 <div className="flex h-full flex-col items-center justify-center text-center p-8">
-                  <div className="h-10 w-10 rounded-xl bg-black/5 dark:bg-white/10 flex items-center justify-center mb-3">
+                  <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center mb-3">
                     <span className="text-[16px]">📄</span>
                   </div>
-                  <div className="text-[13px] font-medium text-[#111] dark:text-white">No file selected</div>
-                  <div className="text-[12px] text-[#888] mt-1">Choose a file from the explorer or create a new one</div>
+                  <div className="text-[13px] font-medium">No file selected</div>
+                  <div className="text-[12px] text-muted-foreground mt-1">Choose a file from the explorer or create a new one</div>
                 </div>
               )}
             </div>
 
-            <div className="h-5 flex items-center justify-between border-t border-black/10 dark:border-white/10 bg-[#fafafa] dark:bg-[#111] px-3 text-[11px] text-[#888] shrink-0">
+            <div className="h-5 flex items-center justify-between border-t border-border bg-muted px-3 text-[11px] text-muted-foreground shrink-0">
               <span className="truncate">{activeFile ? `${activeFile.name} • ${getMonacoLanguage(activeFile.name, "typescript")}` : "No file"} • UTF-8 • LF</span>
               <span className="hidden sm:inline">Ln 1, Col 1 • Spaces: 2 • {files.filter(f => !f.name.endsWith("/.keep")).length} files</span>
             </div>
           </ResizablePanel>
 
-          <ResizableHandle withHandle className="bg-black/[0.06] dark:bg-white/10 w-px" />
+          <ResizableHandle withHandle className="bg-border w-px" />
 
-          <ResizablePanel defaultSize={30} minSize={20} maxSize={45} className="bg-white dark:bg-[#0a0a0a] min-w-[280px]">
+          <ResizablePanel defaultSize={30} minSize={20} maxSize={45} className="bg-card min-w-[280px]">
             <Preview files={files.map(f => ({ name: f.name, content: f.content }))} template={playground.template} />
           </ResizablePanel>
         </ResizablePanelGroup>
