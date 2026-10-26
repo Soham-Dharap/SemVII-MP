@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { Eye, RefreshCw, ExternalLink, CheckCircle2, Terminal } from "lucide-react";
+import { Eye, RefreshCw, ExternalLink, CheckCircle2, Terminal, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface PreviewProps {
@@ -22,7 +22,7 @@ function buildPreviewHtml(files: { name: string; content: string | null }[], tem
   if (["EXPRESS", "HONO"].includes(template)) {
     const allContent = files.map(f => `// ${f.name}\n${f.content || ""}`).join("\n\n");
     const escapedAll = allContent.replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    return `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><style>body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a0a;color:#e5e5e5;padding:16px;line-height:1.6;max-width:100%;overflow-wrap:break-word}.badge{display:inline-flex;align-items:center;gap:6px;background:#1a1a1a;border:1px solid #2a2a2a;border-radius:20px;padding:4px 10px;font-size:11px;color:#888}.dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}pre{background:#111;border:1px solid #222;border-radius:8px;padding:12px;font-size:12px;overflow:auto;max-width:100%;white-space:pre-wrap;word-break:break-word;color:#e5e5e5;line-height:1.6}code{font-family:ui-monospace,Menlo,monospace}h2{font-size:16px;font-weight:600;color:white;margin:0}p{color:#888;font-size:13px;margin:8px 0 0 0;overflow-wrap:break-word}.log{margin-top:16px;background:#111;border:1px solid #222;border-radius:8px;overflow:hidden;max-width:100%}.log-header{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#1a1a1a;border-bottom:1px solid #222;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#888}.log-line{padding:8px 12px;font-family:ui-monospace,monospace;font-size:12px;border-bottom:1px solid #1a1a1a;display:flex;gap:8px;flex-wrap:wrap}.log-time{color:#666;min-width:60px}.log-msg{color:#e5e5e5;flex:1;min-width:0;word-break:break-word}</style></head><body><div class="badge"><span class="dot"></span> ${template} Server • Running</div><h2 style="margin-top:16px">Server template preview</h2><p>This is a backend template. Run locally with <code>node ${mainFile?.name || "server.js"}</code>. Preview shows file contents and mock logs.</p><div class="log"><div class="log-header"><span>●</span> Server logs — 3 entries</div><div class="log-line"><span class="log-time">08:59:01</span><span class="log-msg">[GET] / → 200 OK (12ms)</span></div><div class="log-line"><span class="log-time">08:59:02</span><span class="log-msg">[GET] /api/health → 200 { status: "ok" }</span></div><div class="log-line"><span class="log-time">08:59:03</span><span class="log-msg">Server running on http://localhost:3000</span></div></div><pre style="margin-top:16px">${escapedAll}</pre></body></html>`;
+    return `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><style>body{font-family:system-ui,-apple-system,sans-serif;background:#0a0a12;color:#e5e5e5;padding:16px;line-height:1.6;max-width:100%;overflow-wrap:break-word}.badge{display:inline-flex;align-items:center;gap:6px;background:#1a1a2a;border:1px solid #2a2a4a;border-radius:20px;padding:4px 10px;font-size:11px;color:#888}.dot{width:6px;height:6px;border-radius:50%;background:#22c55e;animation:pulse 2s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}pre{background:#11112a;border:1px solid #222;border-radius:12px;padding:12px;font-size:12px;overflow:auto;max-width:100%;white-space:pre-wrap;word-break:break-word;color:#e5e5e5;line-height:1.6}code{font-family:ui-monospace,Menlo,monospace}h2{font-size:16px;font-weight:600;color:white;margin:0}p{color:#888;font-size:13px;margin:8px 0 0 0;overflow-wrap:break-word}.log{margin-top:16px;background:#11112a;border:1px solid #222;border-radius:12px;overflow:hidden;max-width:100%}.log-header{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#1a1a32;border-bottom:1px solid #222;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#888}.log-line{padding:8px 12px;font-family:ui-monospace,monospace;font-size:12px;border-bottom:1px solid #1a1a2a;display:flex;gap:8px;flex-wrap:wrap}.log-time{color:#666;min-width:60px}.log-msg{color:#e5e5e5;flex:1;min-width:0;word-break:break-word}</style></head><body><div class="badge"><span class="dot"></span> ${template} Server • Running</div><h2 style="margin-top:16px">Backend preview</h2><p>Run locally with <code>node ${mainFile?.name || "server.js"}</code>.</p><div class="log"><div class="log-header"><span>●</span> Server logs — 3</div><div class="log-line"><span class="log-time">08:59:01</span><span class="log-msg">[GET] / → 200 OK</span></div><div class="log-line"><span class="log-time">08:59:02</span><span class="log-msg">[GET] /api/health → 200 { status: "ok" }</span></div><div class="log-line"><span class="log-time">08:59:03</span><span class="log-msg">Listening on :3000</span></div></div><pre style="margin-top:16px">${escapedAll}</pre></body></html>`;
   }
 
   let cleanedCode = rawCode
@@ -35,15 +35,15 @@ function buildPreviewHtml(files: { name: string; content: string | null }[], tem
   const hasComponent = /function\s+App|const\s+App\s*=|class\s+App/.test(cleanedCode);
   const renderCode = hasComponent 
     ? `${cleanedCode}\nconst root = ReactDOM.createRoot(document.getElementById('root')); root.render(React.createElement(App));`
-    : `function App(){ return React.createElement('div', {style:{padding:16, fontFamily:'system-ui', maxWidth:'100%', overflowWrap:'break-word'}}, React.createElement('pre', {style:{background:'#f5f5f5',padding:12,borderRadius:8, fontSize:12, whiteSpace:'pre-wrap', wordBreak:'break-word'}}, \`${escaped}\`)); } const root = ReactDOM.createRoot(document.getElementById('root')); root.render(React.createElement(App));`;
+    : `function App(){ return React.createElement('div', {style:{padding:20, fontFamily:'Space Grotesk, system-ui', maxWidth:'100%', overflowWrap:'break-word'}}, React.createElement('pre', {style:{background:'#F8FAFC',padding:16,borderRadius:16, fontSize:12, whiteSpace:'pre-wrap', wordBreak:'break-word', border:'1px solid #E2E8F0'}}, \`${escaped}\`)); } const root = ReactDOM.createRoot(document.getElementById('root')); root.render(React.createElement(App));`;
 
-  return `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script><script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script><script src="https://unpkg.com/@babel/standalone/babel.min.js"></script><style>*{box-sizing:border-box;max-width:100%}body{margin:0;font-family:system-ui,-apple-system,sans-serif;background:white;color:#111;line-height:1.5;overflow-wrap:break-word}#root{ min-height: 100vh; max-width:100%; overflow-x:hidden; }.error{ margin:12px; padding:12px 16px; background:#fef2f2; border:1px solid #fecaca; border-radius:8px; color:#dc2626; font-size:13px; font-family:ui-monospace,monospace; word-break:break-word; }.error b{ color:#991b1b; }${cssFiles}</style></head><body><div id="root"></div><div id="error" style="display:none"></div><script>window.onerror = function(msg, src, line, col, err){const el = document.getElementById('error');el.style.display='block';el.innerHTML = '<div class="error"><b>Runtime error:</b> ' + msg + ' <span style="color:#666;font-size:11px">[line ' + line + ']</span></div>';};</script><script type="text/babel" data-presets="react">try {${renderCode}} catch(e){document.getElementById('root').innerHTML = '<div class="error"><b>Compile error:</b> ' + e.message + '</div>';console.error(e);}</script></body></html>`;
+  return `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/><script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script><script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script><script src="https://unpkg.com/@babel/standalone/babel.min.js"></script><style>*{box-sizing:border-box;max-width:100%}body{margin:0;font-family:Space Grotesk,system-ui,-apple-system,sans-serif;background:white;color:#111;line-height:1.5;overflow-wrap:break-word}#root{min-height:100vh;max-width:100%;overflow-x:hidden}.error{margin:12px;padding:12px 16px;background:#fef2f2;border:1px solid #fecaca;border-radius:12px;color:#dc2626;font-size:13px;font-family:ui-monospace,monospace;word-break:break-word}.error b{color:#991b1b}${cssFiles}</style></head><body><div id="root"></div><div id="error" style="display:none"></div><script>window.onerror=function(msg,src,line,col,err){const el=document.getElementById('error');el.style.display='block';el.innerHTML='<div class="error"><b>Runtime error:</b> '+msg+' <span style="color:#666;font-size:11px">[line '+line+']</span></div>';};</script><script type="text/babel" data-presets="react">try {${renderCode}} catch(e){document.getElementById('root').innerHTML='<div class="error"><b>Compile error:</b> '+e.message+'</div>';console.error(e);}</script></body></html>`;
 }
 
 export function Preview({ files, template }: PreviewProps) {
   const [srcDoc, setSrcDoc] = useState("");
   const [key, setKey] = useState(0);
-  const [status, setStatus] = useState<"idle" | "loading" | "ready" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "loading" | "ready">("idle");
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
   const codeHash = useMemo(() => JSON.stringify(files.map(f => f.content).join("")) + template, [files, template]);
@@ -59,33 +59,35 @@ export function Preview({ files, template }: PreviewProps) {
   }, [codeHash, template]);
 
   return (
-    <div className="flex flex-col h-full min-h-0 min-w-0 bg-card overflow-hidden">
-      <div className="flex items-center justify-between px-2 sm:px-3 h-8 border-b border-border bg-muted/50 shrink-0 gap-2 min-w-0">
+    <div className="flex flex-col h-full min-h-0 min-w-0 w-full overflow-hidden bg-[#0F1115] max-w-full">
+      {/* Header — premium dark */}
+      <div className="flex items-center justify-between px-3 h-9 border-b border-white/[0.06] bg-white/[0.02] shrink-0 gap-2 min-w-0">
         <div className="flex items-center gap-2 min-w-0">
-          <div className="flex items-center gap-1.5 text-[11px] font-semibold tracking-widest uppercase shrink-0">
+          <div className="flex items-center gap-1.5 text-[11px] font-bold tracking-widest uppercase text-white/60 shrink-0">
             <Eye className="h-3.5 w-3.5" />
-            <span className="hidden xs:inline">Preview</span>
+            <span className="hidden sm:inline">Preview</span>
           </div>
-          <span className={`hidden sm:inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium border shrink-0 ${status === "ready" ? "bg-primary/10 text-primary border-primary/20" : "bg-secondary text-muted-foreground border-border"}`}>
+          <span className={`hidden sm:inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-bold border shrink-0 ${status === "ready" ? "bg-[#D6FF00]/15 text-[#D6FF00] border-[#D6FF00]/30" : "bg-white/5 text-white/40 border-white/10"}`}>
             {status === "ready" ? <CheckCircle2 className="h-3 w-3" /> : <Terminal className="h-3 w-3" />}
-            {status === "ready" ? "Live" : status === "loading" ? "Updating…" : "Idle"}
+            {status === "ready" ? "Live" : "Building…"}
           </span>
         </div>
         <div className="flex items-center gap-1 shrink-0">
-          <Button variant="ghost" size="icon-xs" onClick={() => setKey(k => k + 1)} className="h-6 w-6 rounded-md" title="Refresh preview">
+          <Button variant="ghost" size="icon-xs" onClick={() => setKey(k => k + 1)} className="h-7 w-7 rounded-full bg-white/5 border border-white/10 text-white/60 hover:bg-white/10 hover:text-white">
             <RefreshCw className={`h-3.5 w-3.5 ${status === "loading" ? "animate-spin" : ""}`} />
           </Button>
-          <a href="#" target="_blank" rel="noreferrer" className="hidden sm:flex h-6 w-6 items-center justify-center rounded-md hover:bg-accent">
-            <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
+          <a href="#" target="_blank" rel="noreferrer" className="hidden sm:flex h-7 w-7 items-center justify-center rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-white/60 hover:text-white">
+            <ExternalLink className="h-3.5 w-3.5" />
           </a>
         </div>
       </div>
 
-      <div className="flex-1 bg-white relative overflow-hidden min-h-0 min-w-0">
+      {/* Iframe */}
+      <div className="flex-1 bg-white relative overflow-hidden min-h-0 min-w-0 w-full max-w-full">
         {status === "loading" && (
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-background/80 backdrop-blur-sm">
-            <div className="flex items-center gap-2 text-[12px] text-muted-foreground">
-              <RefreshCw className="h-4 w-4 animate-spin" />
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-[#0F1115]/80 backdrop-blur-sm">
+            <div className="flex items-center gap-2 text-[12px] text-white/60 bg-[#1A1C1E] border border-white/10 rounded-full px-4 py-2">
+              <RefreshCw className="h-4 w-4 animate-spin text-[#6366F1]" />
               Building preview…
             </div>
           </div>
@@ -94,17 +96,20 @@ export function Preview({ files, template }: PreviewProps) {
           key={key}
           title="Live Preview"
           srcDoc={srcDoc}
-          className="h-full w-full border-0 min-w-0"
+          className="h-full w-full border-0 min-w-0 max-w-full block"
           sandbox="allow-scripts allow-same-origin"
+          loading="lazy"
         />
       </div>
 
-      <div className="px-2 sm:px-3 py-1.5 border-t border-border bg-muted/30 flex items-center justify-between text-[11px] shrink-0 gap-2 min-w-0">
-        <span className="text-muted-foreground flex items-center gap-1.5 truncate min-w-0">
-          <span className="h-2 w-2 rounded-full bg-primary animate-pulse shrink-0" />
-          <span className="truncate">Auto-refresh • {template}</span>
+      {/* Footer */}
+      <div className="px-3 h-7 border-t border-white/[0.06] bg-white/[0.02] flex items-center justify-between text-[11px] shrink-0 gap-2 min-w-0">
+        <span className="mono text-white/30 flex items-center gap-1.5 truncate min-w-0">
+          <span className="h-2 w-2 rounded-full bg-[#6366F1] animate-pulse shrink-0" />
+          <span className="truncate hidden sm:inline">Auto-refresh • {template}</span>
+          <span className="truncate sm:hidden">{template}</span>
         </span>
-        <span className="text-muted-foreground hidden sm:inline shrink-0">
+        <span className="mono text-white/20 hidden sm:inline shrink-0">
           {lastUpdate ? `Updated ${lastUpdate.toLocaleTimeString()}` : "Waiting"}
         </span>
       </div>

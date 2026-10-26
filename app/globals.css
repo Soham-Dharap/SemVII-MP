@@ -4,43 +4,43 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* LIGHT = premium soft off-white + deep blue accent */
+/* LIGHT = soft off-white — finance app secondary pages */
 :root {
-  --background: #F8F9FB;
+  --background: #FCFCF8;
   --foreground: #0D0F14;
   --card: #FFFFFF;
   --card-foreground: #0D0F14;
   --popover: #FFFFFF;
   --popover-foreground: #0D0F14;
-  --primary: #1640FF;
+  --primary: #6366F1;
   --primary-foreground: #FFFFFF;
-  --secondary: #EEF0F4;
+  --secondary: #EEF0FF;
   --secondary-foreground: #0D0F14;
   --muted: #F1F3F6;
   --muted-foreground: #6B7280;
-  --accent: #EEF0F4;
+  --accent: #EEF0FF;
   --accent-foreground: #0D0F14;
   --destructive: #EF4444;
   --destructive-foreground: #FFFFFF;
   --border: #E5E7EB;
   --input: #E5E7EB;
-  --ring: #1640FF;
-  --chart-1: #1640FF;
+  --ring: #6366F1;
+  --chart-1: #6366F1;
   --sidebar: #FFFFFF;
   --sidebar-foreground: #0D0F14;
-  --sidebar-primary: #1640FF;
+  --sidebar-primary: #6366F1;
   --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: #F1F3F6;
   --sidebar-accent-foreground: #0D0F14;
   --sidebar-border: #E5E7EB;
-  --sidebar-ring: #1640FF;
+  --sidebar-ring: #6366F1;
   --font-sans: "Space Grotesk", system-ui, -apple-system, sans-serif;
   --font-display: "Newsreader", Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
   --radius: 20px;
 }
 
-/* DARK = premium deep black + neon lime + blue glow — from refs */
+/* DARK = premium deep indigo/black + lime + indigo glow — Marklab + Zentra */
 .dark {
   --background: #07080A;
   --foreground: #F5F5F3;
@@ -105,24 +105,23 @@
 @layer base {
   * { @apply border-border outline-ring/50; }
   html { @apply antialiased overflow-x-hidden; font-family: var(--font-sans); letter-spacing: -0.015em; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; text-rendering: optimizeLegibility; }
-  body { @apply bg-background text-foreground overflow-x-hidden; line-height: 1.6; min-width: 0; font-feature-settings: "ss01" 1, "cv01" 1; }
+  body { @apply bg-background text-foreground overflow-x-hidden; line-height: 1.6; min-width: 0; max-width: 100vw; font-feature-settings: "ss01" 1, "cv01" 1; }
   ::selection { background: var(--primary); color: var(--primary-foreground); }
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--muted-foreground); }
 }
 
-/* Beautiful Typography System */
+/* Beautiful Typography System — Marklab mix */
 .display {
   font-family: var(--font-display);
   letter-spacing: -0.04em;
   line-height: 0.9;
   font-weight: 600;
-  font-feature-settings: "ss01" 1;
 }
 .display-lg {
   font-family: var(--font-display);
-  letter-spacing: -0.04em;
+  letter-spacing: -0.045em;
   line-height: 0.85;
   font-weight: 600;
 }
@@ -143,33 +142,33 @@
   font-weight: 500;
 }
 
-/* Premium cards from refs */
-.premium-card {
-  @apply bg-card border border-border rounded-[20px] shadow-sm;
-}
-.premium-card-hover {
-  @apply transition-all duration-300 hover:shadow-lg hover:border-border/80 hover:-translate-y-0.5;
-}
+.premium-card { @apply bg-card border border-border rounded-[20px] shadow-sm; }
+.premium-card-hover { @apply transition-all duration-300 hover:shadow-lg hover:border-border/80 hover:-translate-y-0.5; }
 .glass-card {
   background: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
-.dark .glass-card {
-  background: rgba(17, 17, 19, 0.8);
-  backdrop-filter: blur(20px);
+.dark .glass-card { background: rgba(17, 17, 19, 0.8); }
+
+/* Marklab gradient */
+.marklab-gradient {
+  background: radial-gradient(ellipse 900px 700px at 30% -10%, #4F46E5 0%, transparent 55%),
+              radial-gradient(ellipse 600px 500px at 90% 30%, #7C3AED 0%, transparent 50%),
+              linear-gradient(180deg, #0F0A2E 0%, #1A1040 35%, #070A1C 100%);
 }
-
-/* Prevent horizontal page scroll from resizable panels */
-[data-slot="resizable-panel-group"] { min-width: 0; }
-[data-slot="resizable-panel"] { min-width: 0; overflow: hidden; }
-
-/* Hide scrollbar while keeping scroll on mobile ticker */
-.scrollbar-none { scrollbar-width: none; -ms-overflow-style: none; }
-.scrollbar-none::-webkit-scrollbar { display: none; }
-
-/* Finance app gradient mesh */
 .finance-gradient {
   background: radial-gradient(ellipse 800px 600px at 50% 0%, rgba(22, 64, 255, 0.15) 0%, transparent 50%),
               radial-gradient(ellipse 600px 400px at 100% 100%, rgba(214, 255, 0, 0.08) 0%, transparent 50%);
 }
+
+/* Resizable — never overflow */
+[data-slot="resizable-panel-group"] { min-width: 0; max-width: 100%; overflow: hidden; }
+[data-slot="resizable-panel"] { min-width: 0; max-width: 100%; overflow: hidden; }
+[data-slot="resizable-handle"] { flex-shrink: 0; }
+.scrollbar-none { scrollbar-width: none; -ms-overflow-style: none; }
+.scrollbar-none::-webkit-scrollbar { display: none; }
+
+/* Custom scroll for explorer */
+.custom-scroll::-webkit-scrollbar { width: 4px; }
+.custom-scroll::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 999px; }

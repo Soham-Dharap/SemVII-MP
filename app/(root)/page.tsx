@@ -1,13 +1,12 @@
 "use client";
-
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
 const STARTER = `export default function App() {
   const [count, setCount] = useState(0)
   return (
-    <div style={{ padding: 32, fontFamily: 'system-ui' }}>
-      <h1 style={{ fontSize: 24, fontWeight: 700, letterSpacing: '-0.02em' }}>
+    <div style={{ padding: 32, fontFamily: 'Space Grotesk, system-ui' }}>
+      <h1 style={{ fontSize: 28, fontWeight: 700, letterSpacing: '-0.02em' }}>
         Hello CodePilot
       </h1>
       <p style={{ color: '#6B7280', fontSize: 13, marginTop: 8 }}>
@@ -15,16 +14,7 @@ const STARTER = `export default function App() {
       </p>
       <button 
         onClick={() => setCount(count + 1)} 
-        style={{ 
-          marginTop: 16, 
-          background: '#1640FF', 
-          color: 'white', 
-          borderRadius: 999, 
-          padding: '10px 18px', 
-          fontWeight: 600, 
-          border: 'none',
-          cursor: 'pointer'
-        }}>
+        style={{ marginTop: 16, background: '#6366F1', color: 'white', borderRadius: 999, padding: '10px 18px', fontWeight: 600, border: 'none' }}>
         Count: {count}
       </button>
     </div>
@@ -33,8 +23,8 @@ const STARTER = `export default function App() {
 
 function buildPreview(code: string) {
   const cleaned = code.replace(/^import.*?;?$/gm, "").replace(/export\s+default\s+function/g, "function App").replace(/export\s+/g, "");
-  const render = `try{${cleaned}\nconst root = ReactDOM.createRoot(document.getElementById('root')); root.render(React.createElement(App));}catch(e){document.body.innerHTML='<pre style="padding:16px;color:#EF4444;font-family:monospace">'+e.message+'</pre>'}`;
-  return `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script><script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script><script src="https://unpkg.com/@babel/standalone/babel.min.js"></script><style>body{margin:0;font-family:system-ui;background:white;color:#0D0F14;overflow-x:hidden} *{box-sizing:border-box}</style></head><body><div id="root"></div><script type="text/babel" data-presets="react">${render}<\/script></body></html>`;
+  const render = `try{${cleaned}\nconst root = ReactDOM.createRoot(document.getElementById('root')); root.render(React.createElement(App));}catch(e){document.body.innerHTML='<pre style="padding:16px;color:#EF4444">'+e.message+'</pre>'}`;
+  return `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script><script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script><script src="https://unpkg.com/@babel/standalone/babel.min.js"></script><style>body{margin:0;font-family:Space Grotesk,system-ui;background:white;color:#0D0F14}</style></head><body><div id="root"></div><script type="text/babel" data-presets="react">${render}<\/script></body></html>`;
 }
 
 export default function Home() {
@@ -43,300 +33,251 @@ export default function Home() {
   useEffect(() => { const t = setTimeout(() => setSrcDoc(buildPreview(code)), 300); return () => clearTimeout(t); }, [code]);
 
   return (
-    <div className="bg-background min-w-0 overflow-x-hidden">
-      {/* ===== HERO: Finance App Style — Blue glow + Own Your Code ===== */}
-      <section className="relative overflow-hidden bg-background finance-gradient border-b border-border">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/[0.04] via-transparent to-transparent pointer-events-none" />
-        
-        <div className="relative mx-auto max-w-[1280px] px-4 sm:px-6 pt-8 sm:pt-12 pb-12 sm:pb-16">
-          {/* Top badge like 55% off */}
-          <div className="flex justify-center">
-            <div className="inline-flex items-center gap-2 bg-card border border-border rounded-full px-4 py-1.5 shadow-sm">
-              <span className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-              <span className="mono text-[11px] font-semibold tracking-wide">NEW • Monaco 0.52 + Live Preview</span>
-              <span className="hidden sm:inline-flex bg-primary text-primary-foreground text-[10px] font-bold px-2 py-0.5 rounded-full">55% faster</span>
-            </div>
-          </div>
-
-          <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-8 lg:gap-12 items-center mt-8 sm:mt-10">
-            {/* Left: Typography */}
-            <div className="min-w-0">
-              <h1 className="hero-title text-[40px] sm:text-[52px] lg:text-[64px] xl:text-[72px]">
-                Own Your Code,
-                <span className="block text-foreground/40">Shape Your</span>
-                <span className="block text-primary">Future.</span>
-              </h1>
-              <p className="mt-4 sm:mt-6 text-[15px] sm:text-[16px] leading-6 text-muted-foreground max-w-[480px]">
-                From writing clean components to shipping production apps, your development journey begins here. <span className="text-foreground font-medium">No setup. No friction.</span>
-              </p>
-
-              <div className="mt-6 sm:mt-8 flex flex-col sm:flex-row gap-3">
-                <Link href="/dashboard" className="h-12 px-7 rounded-full bg-primary text-primary-foreground text-[14px] font-bold inline-flex items-center justify-center gap-2 hover:opacity-90 transition shadow-lg shadow-primary/20">
-                  Start Building →
-                </Link>
-                <Link href="#playground" className="h-12 px-7 rounded-full bg-card border border-border text-[14px] font-semibold inline-flex items-center justify-center hover:bg-accent transition">
-                  Try Live Demo
-                </Link>
-              </div>
-
-              <div className="mt-8 flex items-center gap-6 mono text-[11px] text-muted-foreground">
-                <span className="flex items-center gap-2"><span className="h-1.5 w-1.5 bg-primary rounded-full" />Trusted by 12k+ devs</span>
-                <span className="hidden sm:flex items-center gap-2"><span className="h-px w-6 bg-border" />Free forever</span>
-              </div>
-            </div>
-
-            {/* Right: Phone mockup like Finance App */}
-            <div className="relative lg:h-[560px] flex items-center justify-center min-w-0">
-              {/* Glow behind */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-blue-500/10 to-transparent blur-[80px] rounded-full opacity-60" />
-              
-              {/* Phone mockup */}
-              <div className="relative w-[300px] sm:w-[340px] bg-[#0A0A0F] rounded-[40px] p-2 shadow-[0_32px_80px_rgba(0,0,0,0.4)] border border-white/10 overflow-hidden">
-                <div className="bg-gradient-to-b from-[#1a1aff]/20 via-[#1640FF]/10 to-transparent rounded-[32px] overflow-hidden">
-                  {/* Status bar */}
-                  <div className="flex items-center justify-between px-6 pt-3 pb-2 text-white/60 mono text-[11px]">
-                    <span>9:41</span>
-                    <div className="flex gap-1"><span>●●●</span>◐</div>
-                  </div>
-                  {/* Header */}
-                  <div className="px-6 pt-4">
-                    <div className="text-white/60 mono text-[11px] tracking-widest uppercase">CodePilot</div>
-                    <div className="hero-title text-white text-[28px] leading-none mt-2">
-                      Code that
-                      <span className="block text-white/60">ships.</span>
-                    </div>
-                    <p className="text-white/50 text-[12px] leading-4 mt-3">Monaco editor with live preview. Real files, instant results.</p>
-                  </div>
-                  {/* Code preview card */}
-                  <div className="mx-4 mt-6 bg-white rounded-[20px] p-4 shadow-xl">
-                    <div className="flex items-center gap-2 mb-3">
-                      <div className="h-2.5 w-2.5 rounded-full bg-[#FF5F57]" />
-                      <div className="h-2.5 w-2.5 rounded-full bg-[#FFBD2E]" />
-                      <div className="h-2.5 w-2.5 rounded-full bg-[#28CA42]" />
-                      <span className="ml-auto mono text-[10px] text-muted-foreground">App.tsx • Live</span>
-                    </div>
-                    <div className="bg-[#0B0F1A] rounded-xl p-3 mono text-[10px] leading-4">
-                      <div className="text-[#475569]">import {"{useState}"} from &apos;react&apos;</div>
-                      <div className="text-[#E2E8F0]">function <span className="text-[#D6FF00]">App</span>() {"{"}</div>
-                      <div className="text-[#E2E8F0] pl-3">return &lt;h1&gt;Hello<span className="bg-primary text-primary-foreground px-1 rounded">CodePilot</span>&lt;/h1&gt;</div>
-                      <div className="text-[#E2E8F0]">{"}"}</div>
-                    </div>
-                    <div className="mt-3 flex gap-2">
-                      <div className="flex-1 bg-[#1640FF] text-white rounded-full py-2 text-center text-[11px] font-bold">Run →</div>
-                      <div className="px-3 bg-secondary border border-border rounded-full py-2 text-[11px] font-medium">Share</div>
-                    </div>
-                  </div>
-                  {/* Bottom dots */}
-                  <div className="flex justify-center gap-1.5 py-4">
-                    <div className="h-1.5 w-6 bg-white rounded-full" />
-                    <div className="h-1.5 w-1.5 bg-white/30 rounded-full" />
-                    <div className="h-1.5 w-1.5 bg-white/30 rounded-full" />
-                  </div>
-                </div>
-                {/* Home indicator */}
-                <div className="flex justify-center pt-2 pb-1">
-                  <div className="h-1 w-24 bg-white/80 rounded-full" />
-                </div>
-              </div>
-            </div>
-          </div>
+    <div className="bg-[#FCFCF8] overflow-x-hidden">
+      {/* ===== MARKLAB HERO — Dark Indigo Gradient ===== */}
+      <section className="relative overflow-hidden">
+        {/* Deep premium gradient — Marklab exact */}
+        <div className="absolute inset-0 bg-[#070A1C]" />
+        <div className="absolute inset-0 bg-gradient-to-br from-[#1A1040] via-[#2D1B69] to-[#6366F1]/30" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#FCFCF8]" />
+        {/* Blue glow left */}
+        <div className="absolute -left-[20%] top-[20%] w-[800px] h-[600px] bg-[#6366F1] blur-[150px] opacity-[0.35] rounded-full" />
+        {/* Vertical bars right — like Marklab */}
+        <div className="absolute right-0 top-[20%] bottom-[20%] w-[280px] hidden lg:flex gap-1 opacity-[0.15]">
+          {Array.from({length: 8}).map((_,i)=><div key={i} className="flex-1 bg-gradient-to-b from-white to-transparent" style={{opacity: 0.1 + i*0.05}} />)}
         </div>
-      </section>
 
-      {/* ===== LIVE PLAYGROUND — Interactive ===== */}
-      <section id="playground" className="mx-auto max-w-[1280px] px-4 sm:px-6 py-8 sm:py-12">
-        <div className="rounded-[24px] border border-border bg-card overflow-hidden shadow-xl shadow-black/[0.05]">
-          <div className="flex items-center justify-between h-[48px] px-4 sm:px-6 border-b border-border bg-muted/30">
+        {/* Pill Nav — Marklab */}
+        <div className="relative z-10 mx-auto max-w-[1280px] px-4 sm:px-6 pt-5">
+          <nav className="mx-auto max-w-[720px] flex items-center justify-between bg-[#1A1C2E]/80 backdrop-blur-xl border border-white/10 rounded-full px-2 py-2 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+            <div className="flex items-center gap-6 pl-3">
+              <div className="flex items-center gap-2">
+                <div className="h-7 w-7 rounded-full bg-gradient-to-br from-[#A78BFA] to-[#6366F1] flex items-center justify-center">
+                  <span className="text-white font-black text-[12px]">✦</span>
+                </div>
+                <span className="text-white font-bold text-[14px] tracking-tight">CodePilot</span>
+              </div>
+              <div className="hidden md:flex items-center gap-5 text-[12px] text-white/70 font-medium">
+                <span className="text-white flex items-center gap-1">Pages ▾</span>
+                <span>About</span>
+                <span>Templates</span>
+                <span>Pricing</span>
+              </div>
+            </div>
             <div className="flex items-center gap-3">
-              <div className="flex gap-1.5">
-                <span className="h-3 w-3 rounded-full bg-[#FF5F57] border border-black/10" />
-                <span className="h-3 w-3 rounded-full bg-[#FFBD2E] border border-black/10" />
-                <span className="h-3 w-3 rounded-full bg-[#28CA42] border border-black/10" />
-              </div>
-              <span className="mono text-[11px] font-bold hidden sm:inline ml-3">Playground • App.tsx • Live</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="hidden sm:inline-flex items-center gap-1.5 bg-primary text-primary-foreground px-3 py-1 rounded-full text-[11px] font-bold">
-                <span className="h-1.5 w-1.5 rounded-full bg-primary-foreground animate-pulse" /> LIVE
-              </span>
-              <Link href="/dashboard" className="bg-foreground text-background px-4 py-1.5 rounded-full text-[11px] font-bold">Open in App →</Link>
-            </div>
-          </div>
-          <div className="grid md:grid-cols-[1.1fr_0.9fr] min-h-[420px]">
-            <div className="bg-[#0B0F1A] p-4 sm:p-5 border-b md:border-b-0 md:border-r border-border">
-              <div className="mono text-[10px] tracking-widest text-[#475569] mb-3 flex items-center justify-between">
-                <span>SRC / APP.TSX</span>
-                <span className="text-[#D6FF00] flex items-center gap-1"><span className="h-1.5 w-1.5 bg-[#D6FF00] rounded-full animate-pulse" /> editing</span>
-              </div>
-              <textarea
-                value={code}
-                onChange={e => setCode(e.target.value)}
-                className="w-full h-[320px] bg-transparent text-[#E2E8F0] mono text-[12px] leading-[18px] resize-none focus:outline-none"
-                spellCheck={false}
-              />
-            </div>
-            <div className="bg-white min-h-[320px] relative flex flex-col">
-              <div className="h-7 bg-[#F8FAFC] border-b border-border flex items-center px-4 mono text-[10px] text-muted-foreground gap-2 shrink-0">
-                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" /> Preview • 350ms • Live
-              </div>
-              <iframe title="preview" srcDoc={srcDoc} className="flex-1 w-full border-0 min-h-[280px]" sandbox="allow-scripts allow-same-origin" />
-            </div>
-          </div>
-          <div className="h-8 hidden sm:flex items-center justify-between px-6 bg-muted/30 border-t border-border mono text-[11px] text-muted-foreground">
-            <span className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-primary animate-pulse" />Auto-save • Monaco • Babel</span>
-            <span>Try editing → preview updates live</span>
-          </div>
-        </div>
-      </section>
-
-      {/* ===== FEATURES — Finance App Style Cards ===== */}
-      <section id="features" className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12">
-        <div className="text-center max-w-[640px] mx-auto">
-          <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-full px-3 py-1 mono text-[11px] font-semibold text-primary">Why CodePilot</div>
-          <h2 className="hero-title text-[32px] sm:text-[42px] mt-4">Everything you need.<br/><span className="text-muted-foreground">Nothing you don&apos;t.</span></h2>
-          <p className="text-[14px] leading-6 text-muted-foreground mt-3">Professional tools with premium experience. Built for developers who ship.</p>
-        </div>
-
-        <div className="mt-10 grid md:grid-cols-3 gap-4 sm:gap-6">
-          {[
-            { icon: "◈", title: "Advanced Analytics", desc: "Track your progress with detailed insights.", accent: "bg-primary" },
-            { icon: "✦", title: "AI Pair Programming", desc: "Get intelligent code completions instantly.", accent: "bg-[#1640FF]" },
-            { icon: "⬢", title: "Instant Preview", desc: "See changes live in 350ms, no reload.", accent: "bg-foreground" },
-          ].map(c => (
-            <div key={c.title} className="premium-card p-6 sm:p-7 premium-card-hover">
-              <div className={`h-10 w-10 rounded-xl ${c.accent} text-white flex items-center justify-center text-[16px] font-bold`}>{c.icon}</div>
-              <h3 className="font-bold text-[16px] mt-4">{c.title}</h3>
-              <p className="text-[12px] leading-5 text-muted-foreground mt-2">{c.desc}</p>
-              <div className="mt-4 mono text-[11px] font-medium text-primary">Learn more →</div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ===== TEMPLATES — Bento like Finance App ===== */}
-      <section id="templates" className="mx-auto max-w-[1280px] px-4 sm:px-6 pb-12">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div>
-            <div className="mono text-[11px] font-bold tracking-[0.14em] text-primary">TEMPLATES</div>
-            <h2 className="display text-[28px] sm:text-[36px] mt-2">Start from anything.</h2>
-          </div>
-          <div className="hidden sm:flex mono text-[11px] text-muted-foreground gap-2">
-            <span>6 starters</span><span className="opacity-30">•</span><span>Pick → code</span>
-          </div>
-        </div>
-
-        <div className="mt-6 grid grid-cols-12 gap-4">
-          <Link href="/dashboard" className="col-span-12 lg:col-span-7 rounded-[24px] bg-foreground text-background p-7 sm:p-8 flex flex-col min-h-[300px] group relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent opacity-60 pointer-events-none" />
-            <div className="relative flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-background text-foreground flex items-center justify-center text-[11px] font-black">N</div>
-              <div>
-                <div className="mono text-[10px] tracking-widest opacity-60">FEATURED</div>
-                <div className="font-bold">Next.js 14</div>
-              </div>
-              <span className="ml-auto hidden sm:inline mono text-[10px] px-3 py-1 rounded-full bg-background/10 border border-white/10">App Router • RSC</span>
-            </div>
-            <h3 className="relative display text-[28px] sm:text-[34px] leading-[0.9] mt-6 max-w-[420px]">The React framework,<br/>ready in one click.</h3>
-            <p className="relative mono text-[12px] leading-5 opacity-60 mt-3 max-w-[420px]">Server components, file routing, API routes. We scaffold correctly.</p>
-            <div className="relative mt-auto pt-6 flex items-center gap-3">
-              <span className="h-10 px-6 rounded-full bg-background text-foreground mono text-[12px] font-bold inline-flex items-center group-hover:opacity-90 transition">Use Next.js →</span>
-              <span className="mono text-[11px] opacity-60">+12k runs</span>
-            </div>
-          </Link>
-
-          <div className="col-span-12 lg:col-span-5 grid grid-cols-2 gap-4">
-            {[
-              { n: "React", d: "Vite + HMR", c: "Vite 5", bg: "bg-[#61DAFB] text-black" },
-              { n: "Vue", d: "SFC + Vite", c: "Vue 3.4", bg: "bg-[#4FC08D] text-white" },
-              { n: "Express", d: "Node server", c: "Node 20", bg: "bg-[#EDEEF2] text-foreground border" },
-              { n: "Hono", d: "Edge light", c: "Hono 4", bg: "bg-[#FF6B35] text-white" },
-            ].map(t => (
-              <Link key={t.n} href="/dashboard" className="rounded-[20px] bg-card border border-border p-5 flex flex-col group hover:border-foreground/10 hover:shadow-lg transition">
-                <div className={`h-9 w-9 rounded-xl ${t.bg} flex items-center justify-center text-[10px] font-black border border-border/50`}>{t.n[0]}</div>
-                <div className="font-bold mt-3">{t.n}</div>
-                <div className="mono text-[11px] text-muted-foreground mt-1">{t.d}</div>
-                <div className="mono text-[10px] text-muted-foreground/60 mt-auto pt-4">{t.c}</div>
+              <span className="hidden sm:flex h-8 w-8 rounded-full bg-white/10 border border-white/10 items-center justify-center text-white/70">♡</span>
+              <Link href="/dashboard" className="h-9 px-5 rounded-full bg-white text-[#1A1040] text-[12px] font-bold inline-flex items-center gap-2 hover:bg-white/90 transition">
+                Let&apos;s Start <span className="h-6 w-6 rounded-full bg-[#1A1040] text-white flex items-center justify-center text-[10px]">↗</span>
               </Link>
-            ))}
-          </div>
+            </div>
+          </nav>
         </div>
-      </section>
 
-      {/* ===== PRICING — 55% off style from ref ===== */}
-      <section className="bg-[#0A0A0F] text-white relative overflow-hidden border-t border-white/5">
-        <div className="absolute inset-0 bg-gradient-to-b from-[#1640FF]/10 via-transparent to-transparent pointer-events-none" />
-        <div className="relative mx-auto max-w-[1280px] px-4 sm:px-6 py-12 sm:py-16">
-          <div className="max-w-[560px] mx-auto text-center">
-            <div className="inline-flex items-center gap-2 bg-[#D6FF00] text-black px-3 py-1 rounded-full mono text-[11px] font-black">Limited time</div>
-            <h2 className="hero-title text-[42px] sm:text-[56px] leading-[0.85] mt-4">
-              <span className="text-[#D6FF00]">55% off</span><br/>Premium
-            </h2>
-            <p className="text-white/60 text-[14px] leading-5 mt-4">Get yearly access at a discounted price, don&apos;t miss your chance to upgrade now!</p>
-          </div>
-
-          <div className="mt-10 max-w-[520px] mx-auto space-y-3">
-            {[
-              { name: "1-month Premium", price: "$0.99", desc: "Explore and get started", popular: false },
-              { name: "3-month Premium", price: "$2.99", desc: "Build healthy habits", popular: true, save: "Most popular" },
-              { name: "12-month Premium", price: "$5.99", desc: "Transform your lifestyle", old: "$11.99", popular: false },
-            ].map(p => (
-              <div key={p.name} className={`relative rounded-[16px] p-4 flex items-center justify-between border ${p.popular ? 'bg-white/[0.06] border-[#D6FF00] shadow-[0_0_20px_rgba(214,255,0,0.2)]' : 'bg-white/[0.04] border-white/10'}`}>
-                <div className="flex items-center gap-3">
-                  <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center ${p.popular ? 'border-[#D6FF00] bg-[#D6FF00]' : 'border-white/20'}`}>
-                    {p.popular && <div className="h-2 w-2 bg-black rounded-full" />}
-                  </div>
-                  <div>
-                    <div className="text-[14px] font-bold">{p.name}</div>
-                    <div className="mono text-[11px] text-white/50">{p.desc}</div>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-[16px] font-black">{p.price}</div>
-                  {p.old && <div className="mono text-[11px] text-white/40 line-through">{p.old}</div>}
-                </div>
-                {p.save && <div className="absolute -top-2 -right-2 bg-[#D6FF00] text-black text-[10px] font-black px-2 py-0.5 rounded-full">{p.save}</div>}
-              </div>
-            ))}
-            <Link href="/dashboard" className="block mt-6 h-12 rounded-full bg-[#D6FF00] text-black text-[14px] font-black flex items-center justify-center hover:brightness-105 transition">
-              Get Premium Plan
+        {/* Hero Content — Marklab Typography */}
+        <div className="relative z-10 mx-auto max-w-[1280px] px-4 sm:px-6 pt-12 sm:pt-16 pb-20 sm:pb-28 text-center">
+          <h1 className="text-white font-bold tracking-[-0.04em] leading-[0.9]">
+            <span className="block text-[36px] sm:text-[56px] lg:text-[72px]">Code that</span>
+            <span className="block text-[40px] sm:text-[64px] lg:text-[80px] font-normal italic" style={{fontFamily: 'Newsreader, serif'}}>
+              moves the <span className="font-bold not-italic" style={{fontFamily: 'Space Grotesk, sans-serif'}}>Needle</span>
+            </span>
+          </h1>
+          <p className="mt-5 text-white/60 text-[13px] sm:text-[14px] leading-6 max-w-[520px] mx-auto">
+            Every project here is designed to deliver impact — not just impressions. Build, preview, ship in seconds.
+          </p>
+          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link href="/dashboard" className="h-11 px-6 rounded-full bg-white text-[#1A1040] text-[13px] font-bold inline-flex items-center gap-2 hover:bg-white/90 transition">
+              Let&apos;s Start <span className="h-7 w-7 rounded-full bg-[#1A1040] text-white flex items-center justify-center">↗</span>
             </Link>
-            <p className="text-center mono text-[11px] text-white/40 mt-3">Works with all templates • Private by default</p>
+            <Link href="#playground" className="h-11 px-6 rounded-full bg-transparent border border-white/20 text-white text-[13px] font-medium inline-flex items-center gap-2 hover:bg-white/10 transition">
+              Book a demo ↗
+            </Link>
           </div>
-        </div>
-      </section>
-
-      {/* ===== CTA — More Control style ===== */}
-      <section className="bg-background border-t border-border finance-gradient">
-        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12 sm:py-16">
-          <div className="grid lg:grid-cols-2 gap-8 items-center">
+          {/* Arrow + Bell */}
+          <div className="absolute left-[12%] bottom-[28%] hidden lg:block">
+            <svg width="60" height="40" viewBox="0 0 60 40" fill="none" className="text-white/50"><path d="M2 35 Q 20 5 55 12" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" fill="none"/><path d="M55 12 L48 8 L50 18" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" fill="none"/></svg>
+          </div>
+          <div className="absolute right-[14%] bottom-[20%] hidden lg:block">
             <div className="relative">
-              <div className="absolute -inset-6 bg-gradient-to-br from-primary/10 to-transparent blur-2xl rounded-full" />
-              <div className="relative bg-card border border-border rounded-[24px] p-6 sm:p-8 shadow-xl">
-                <div className="mono text-[11px] font-bold tracking-widest text-primary">ZENTRA • PREMIUM</div>
-                <h3 className="display text-[28px] sm:text-[32px] leading-none mt-3">More Control<br/>to ship faster!</h3>
-                <p className="text-[13px] leading-5 text-muted-foreground mt-3">Advanced analytics, unlimited transactions, and priority support.</p>
-                <div className="mt-6 space-y-3">
-                  {["Advanced Analytics", "Unlimited Transactions", "Priority Support"].map(f => (
-                    <div key={f} className="flex items-center justify-between p-3 rounded-xl bg-muted border border-border">
-                      <span className="text-[13px] font-semibold">{f}</span>
-                      <span className="h-6 w-6 rounded-full bg-foreground text-background flex items-center justify-center text-[10px]">✓</span>
-                    </div>
-                  ))}
-                </div>
-                <Link href="/dashboard" className="mt-6 block h-11 rounded-full bg-primary text-primary-foreground font-bold text-[13px] flex items-center justify-center">
-                  Continue — Upgrade $199 →
-                </Link>
+              <div className="w-16 h-20 bg-gradient-to-br from-[#FF6B9D] via-[#6366F1] to-[#4F46E5] rounded-[20px] rounded-b-[28px] shadow-xl flex items-center justify-center rotate-[8deg]">
+                <div className="w-8 h-8 bg-white rounded-full animate-pulse" style={{boxShadow: '0 4px 12px rgba(0,0,0,0.3)'}} />
+                <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-6 h-6 border-[3px] border-[#FF6B9D] rounded-full" />
               </div>
             </div>
-            <div>
-              <h2 className="hero-title text-[36px] sm:text-[44px] leading-[0.9]">
-                More Control<br/><span className="text-primary">to ship faster!</span>
-              </h2>
-              <p className="text-[14px] leading-6 text-muted-foreground mt-4">Get premium features to accelerate your workflow. Unlimited playgrounds, advanced preview, team sharing.</p>
-              <div className="mt-6 flex gap-3">
-                <Link href="/dashboard" className="h-11 px-6 rounded-full bg-foreground text-background font-bold text-[13px] inline-flex items-center">Start Free →</Link>
-                <span className="h-11 px-5 rounded-full bg-card border border-border mono text-[11px] font-medium inline-flex items-center">No card required</span>
+          </div>
+        </div>
+      </section>
+
+      {/* Logo strip — Marklab */}
+      <section className="bg-white border-y border-black/5 py-6">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
+          <p className="text-center text-[12px] text-black/50 font-medium">Be part of the 100+ teams shipping faster with CodePilot.</p>
+          <div className="mt-5 flex flex-wrap justify-center items-center gap-6 sm:gap-10 opacity-60">
+            {["CodePilot", "Vercel ●", "Linear", "Notion", "Stripe", "Figma"].map(l=> (
+              <span key={l} className="text-[#6366F1] font-black text-[13px] tracking-tight">{l}</span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Revenue / Stats — Marklab bottom */}
+      <section className="bg-[#EEF0FF]/50 py-8">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 grid md:grid-cols-[1.4fr_0.8fr] gap-6">
+          <div className="bg-white border border-black/5 rounded-[24px] p-6 sm:p-8 shadow-sm">
+            <div className="inline-flex items-center gap-2 bg-[#6366F1]/10 border border-[#6366F1]/20 rounded-full px-3 py-1 text-[11px] font-bold text-[#6366F1]">LIVE PREVIEW</div>
+            <h3 className="display text-[22px] mt-4">Ship 3× faster</h3>
+            <p className="text-[13px] text-muted-foreground mt-2">Monaco + live preview in 350ms, real files. No Docker, no waiting.</p>
+            <div className="mt-6 grid grid-cols-3 gap-4">
+              <div><div className="text-[28px] font-black tracking-tight">99<span className="text-[16px]">%</span></div><div className="mono text-[11px] text-muted-foreground">Uptime</div></div>
+              <div><div className="text-[28px] font-black tracking-tight">0.8s</div><div className="mono text-[11px] text-muted-foreground">Boot time</div></div>
+              <div><div className="text-[28px] font-black tracking-tight">12k+</div><div className="mono text-[11px] text-muted-foreground">Builders</div></div>
+            </div>
+          </div>
+          <div className="bg-gradient-to-br from-[#6366F1] to-[#4F46E5] rounded-[24px] p-6 text-white relative overflow-hidden">
+            <div className="absolute -right-8 -top-8 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
+            <div className="h-10 w-10 rounded-full bg-white/20 backdrop-blur flex items-center justify-center">◎</div>
+            <h3 className="font-bold text-[18px] mt-4 leading-tight">Your code,<br/>your growth.</h3>
+            <p className="text-white/70 text-[12px] mt-2">Templates for every stack.</p>
+            <Link href="/dashboard" className="mt-4 inline-flex h-8 px-4 rounded-full bg-white text-[#6366F1] text-[11px] font-bold">Explore →</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== ZENTRA FINANCE — Onboarding Phones ===== */}
+      <section className="bg-[#070A14] text-white relative overflow-hidden py-12 sm:py-16">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#6366F1]/10 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 opacity-[0.03]" style={{backgroundImage: `linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px)`, backgroundSize: '40px 40px'}} />
+        <div className="relative mx-auto max-w-[1280px] px-4 sm:px-6">
+          <div className="text-center">
+            <h2 className="text-white/20 text-[56px] sm:text-[88px] font-black tracking-tighter leading-none select-none">CodePilot</h2>
+          </div>
+          <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 mt-4 max-w-[900px] mx-auto">
+            {/* Left phone — Own Your Money */}
+            <div className="bg-[#0F1115] border border-white/10 rounded-[32px] p-3 shadow-[0_24px_64px_rgba(0,0,0,0.6)]">
+              <div className="bg-gradient-to-b from-[#6366F1]/20 via-[#1A1A2E] to-[#0F1115] rounded-[24px] overflow-hidden min-h-[520px] flex flex-col">
+                <div className="flex justify-between px-5 pt-3 mono text-[11px] text-white/50"><span>9:41</span><span>● ● ●</span></div>
+                <div className="px-6 pt-8 flex-1">
+                  <div className="text-white/70 mono text-[11px] tracking-widest flex items-center gap-2"><span className="h-3 w-3 rounded-full border border-white/30 flex items-center justify-center text-[8px]">∞</span> CodePilot</div>
+                  <h3 className="hero-title text-white text-[30px] leading-[0.95] mt-4">Own Your Code,<br/>Shape <span className="text-[#6366F1]">Your Future.</span></h3>
+                  <p className="text-white/50 text-[12px] leading-5 mt-3">From writing components to shipping production apps, your journey begins here.</p>
+                </div>
+                <div className="p-4">
+                  <Link href="/dashboard" className="block h-11 rounded-full bg-[#6366F1] text-white font-bold text-[13px] flex items-center justify-center">Next →</Link>
+                  <div className="text-center mt-3"><span className="text-white/50 mono text-[11px]">Skip</span></div>
+                  <div className="flex justify-center gap-1.5 mt-3"><div className="h-1 w-6 bg-[#6366F1] rounded-full"/><div className="h-1 w-1.5 bg-white/20 rounded-full"/><div className="h-1 w-1.5 bg-white/20 rounded-full"/></div>
+                </div>
               </div>
+            </div>
+            {/* Right phone — More Control */}
+            <div className="bg-[#0F1115] border border-white/10 rounded-[32px] p-3 shadow-[0_24px_64px_rgba(0,0,0,0.6)]">
+              <div className="bg-gradient-to-b from-[#E0E7FF]/30 via-[#1A1A2E] to-[#0F1115] rounded-[24px] overflow-hidden min-h-[520px] flex flex-col">
+                <div className="flex justify-between px-5 pt-3 mono text-[11px] text-white/50"><span>9:41</span><span>● ● ●</span></div>
+                <div className="px-6 pt-6 text-center">
+                  <div className="text-white mono text-[12px] flex items-center justify-center gap-2"><span className="h-5 w-5 rounded-full bg-white/10 flex items-center justify-center">∞</span> Zentra <span className="h-4 w-4 rounded-full border border-white/30 flex items-center justify-center text-[8px]">×</span></div>
+                  <h3 className="text-white font-bold text-[22px] leading-none mt-3">More Control</h3>
+                  <p className="text-white/50 text-[11px] mt-1">to ship your features faster!</p>
+                </div>
+                <div className="mx-4 mt-5 bg-[#1A1C1E] border border-white/10 rounded-[20px] p-1">
+                  <div className="flex bg-black rounded-full p-1">
+                    <span className="flex-1 bg-[#6366F1] text-white rounded-full py-1.5 text-center mono text-[11px] font-bold">Premium</span>
+                    <span className="flex-1 text-white/60 rounded-full py-1.5 text-center mono text-[11px]">infinity</span>
+                  </div>
+                  <div className="p-4 space-y-4">
+                    <div className="flex justify-between gap-4 border-b border-white/5 pb-3">
+                      <div><div className="text-white text-[12px] font-bold">Advanced Analytics</div><div className="text-white/40 text-[11px] leading-4 mt-1">Get deeper insights & deploy faster!</div></div><span className="h-8 w-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/30">◈</span>
+                    </div>
+                    <div className="flex justify-between gap-4 border-b border-white/5 pb-3">
+                      <div><div className="text-white text-[12px] font-bold">Smart Preview</div><div className="text-white/40 text-[11px]">Live 350ms update.</div></div><span className="h-8 w-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/30">◈</span>
+                    </div>
+                    <div className="flex justify-between gap-4">
+                      <div><div className="text-white text-[12px] font-bold">Unlimited Playgrounds</div><div className="text-white/40 text-[11px]">No limits, forever.</div></div><span className="h-6 w-6 rounded-full bg-white text-black flex items-center justify-center text-[10px]">✓</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <Link href="/dashboard" className="block h-11 rounded-full bg-[#6366F1] text-white font-bold text-[12px] flex items-center justify-center">Continue — Free →</Link>
+                  <div className="text-center mono text-[10px] text-white/30 mt-2">and more!</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex justify-between items-center mt-6 max-w-[900px] mx-auto">
+            <span className="flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-3 py-1.5 mono text-[11px] text-white/70"><img src="https://i.pravatar.cc/40?img=12" className="w-6 h-6 rounded-full" alt=""/> @uix.vikram <span className="hidden sm:inline opacity-60">UI/UX Designer</span></span>
+            <span className="mono text-[11px] text-white/40 flex items-center gap-2">⬇ Save for later!</span>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== PREMIUM 55% OFF — Dark pricing ===== */}
+      <section className="bg-[#0A0A0F] text-white py-12 sm:py-16 border-t border-white/5 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#6366F1]/10 to-transparent pointer-events-none" />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[#6366F1] blur-[100px] opacity-[0.12] rounded-full pointer-events-none" />
+        <div className="relative mx-auto max-w-[720px] px-4 sm:px-6">
+          <div className="relative bg-gradient-to-b from-[#1A1C1E] to-[#0F1115] rounded-[32px] border border-white/10 overflow-hidden shadow-[0_24px_64px_rgba(0,0,0,0.5)]">
+            <div className="bg-gradient-to-b from-[#0F1115] via-[#0F1115] to-transparent p-6 sm:p-8">
+              <div className="flex justify-between items-start">
+                <div className="text-[#D6FF00] font-black leading-none"><div className="text-[44px] sm:text-[52px] tracking-tighter">55%</div><div className="text-[32px] sm:text-[36px] -mt-2 opacity-80">off</div></div>
+                <div className="text-[#D6FF00] text-[52px] leading-none -rotate-12 opacity-90" style={{fontFamily: 'Newsreader, serif', fontStyle: 'italic'}}>~</div>
+              </div>
+              <h2 className="text-white font-bold text-[18px] sm:text-[20px] text-center mt-4">Start from only $1.32 /week!</h2>
+              <p className="text-white/40 text-[11px] text-center leading-4 mt-2 max-w-[360px] mx-auto">Get yearly access at a discounted price, don&apos;t miss your chance to upgrade now!</p>
+              <div className="text-center mt-4"><span className="mono text-[11px] text-white/30">What&apos;s included ▾</span></div>
+              <div className="grid grid-cols-2 gap-3 mt-6">
+                <div className="bg-white/5 border border-white/5 rounded-[16px] p-4">
+                  <div className="h-7 w-7 rounded-full bg-white/10 flex items-center justify-center text-[#D6FF00] text-[12px]">◈</div>
+                  <div className="text-white text-[12px] font-bold mt-3">Advanced Analytics</div>
+                  <div className="text-white/40 mono text-[11px] leading-4 mt-1">Track progress with detailed data.</div>
+                </div>
+                <div className="bg-white/5 border border-white/5 rounded-[16px] p-4">
+                  <div className="h-7 w-7 rounded-full bg-white/10 flex items-center justify-center text-[#D6FF00]">✦</div>
+                  <div className="text-white text-[12px] font-bold mt-3">AI Code Review</div>
+                  <div className="text-white/40 mono text-[11px] mt-1">Instant breakdowns.</div>
+                </div>
+              </div>
+              <div className="mt-6 space-y-2.5">
+                {[
+                  {n: "1-month Premium", d: "Explore and get started", p: "$0.99", sel: false},
+                  {n: "3-month Premium", d: "Build healthy habits", p: "$2.99", sel: true},
+                  {n: "12-month Premium", d: "Transform your lifestyle", p: "$5.99", old: "$11.99", sel: false, save: "Save 50%"},
+                ].map(o=> (
+                  <div key={o.n} className={`relative rounded-full px-4 py-3 flex items-center justify-between border ${o.sel ? 'bg-[#D6FF00]/10 border-[#D6FF00] shadow-[0_0_20px_rgba(214,255,0,0.2)]' : 'bg-white/5 border-white/10'}`}>
+                    <div className="flex items-center gap-3">
+                      <div className={`h-5 w-5 rounded-full border-2 flex items-center justify-center ${o.sel ? 'border-[#D6FF00] bg-[#D6FF00]' : 'border-white/20'}`}>{o.sel && <div className="h-2 w-2 bg-black rounded-full"/>}</div>
+                      <div><div className="text-white text-[12px] font-bold">{o.n}</div><div className="mono text-[10px] text-white/40">{o.d}</div></div>
+                    </div>
+                    <div className="text-right"><div className="text-white font-black text-[13px]">{o.p}</div>{o.old && <div className="mono text-[10px] text-white/30 line-through">{o.old}</div>}</div>
+                    {o.save && <div className="absolute -top-2 right-6 bg-[#FF8DA1] text-white mono text-[10px] font-bold px-2 py-0.5 rounded-full">{o.save}</div>}
+                  </div>
+                ))}
+              </div>
+              <Link href="/dashboard" className="mt-6 block h-12 rounded-full bg-[#D6FF00] text-black font-black text-[13px] flex items-center justify-center hover:brightness-105 transition">Get Premium Plan</Link>
+              <div className="flex justify-center gap-1 mt-4 mono text-[10px] text-white/20">★★★★★ <span className="text-white/60">Trusted by 12k devs — “Best editor I’ve tried!”</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ===== LIVE PLAYGROUND — Premium Demo ===== */}
+      <section id="playground" className="mx-auto max-w-[1280px] px-4 sm:px-6 py-10 sm:py-14">
+        <div className="text-center max-w-[640px] mx-auto">
+          <div className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-full px-3 py-1 mono text-[11px] font-bold text-primary">LIVE DEMO</div>
+          <h2 className="hero-title text-[32px] sm:text-[40px] mt-4">Try it live.<br/><span className="text-muted-foreground">No signup.</span></h2>
+        </div>
+        <div className="mt-8 rounded-[24px] border border-border bg-card overflow-hidden shadow-xl">
+          <div className="flex items-center justify-between h-[48px] px-4 border-b border-border bg-muted/30">
+            <div className="flex items-center gap-2">
+              <span className="h-3 w-3 rounded-full bg-[#FF5F57]"/><span className="h-3 w-3 rounded-full bg-[#FFBD2E]"/><span className="h-3 w-3 rounded-full bg-[#28CA42]"/>
+              <span className="ml-3 mono text-[11px] font-bold hidden sm:inline">CodePilot — App.tsx • Live</span>
+            </div>
+            <span className="bg-primary text-primary-foreground px-3 py-1 rounded-full mono text-[11px] font-bold flex items-center gap-1"><span className="h-1.5 w-1.5 bg-primary-foreground rounded-full animate-pulse"/>LIVE</span>
+          </div>
+          <div className="grid md:grid-cols-[1.15fr_0.85fr] min-h-[380px]">
+            <div className="bg-[#0B0F1A] p-4 border-b md:border-b-0 md:border-r border-border">
+              <div className="mono text-[10px] tracking-widest text-[#475569] mb-3 flex justify-between"><span>SRC / APP.TSX</span><span className="text-[#D6FF00]">● editing</span></div>
+              <textarea value={code} onChange={e => setCode(e.target.value)} className="w-full h-[300px] bg-transparent text-[#E2E8F0] mono text-[12px] leading-[18px] resize-none focus:outline-none" spellCheck={false} />
+            </div>
+            <div className="bg-white min-h-[300px] relative">
+              <div className="h-6 bg-[#F8FAFC] border-b border-border flex items-center px-3 mono text-[10px] text-muted-foreground gap-2"><span className="h-2 w-2 rounded-full bg-emerald-500"/> Preview • 350ms</div>
+              <iframe title="preview" srcDoc={srcDoc} className="w-full h-[276px] border-0" sandbox="allow-scripts allow-same-origin" />
             </div>
           </div>
         </div>

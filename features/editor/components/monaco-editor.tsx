@@ -27,39 +27,50 @@ function getMonacoLanguage(filename: string, fallback: string) {
 export function MonacoEditor({ value, language, onChange }: MonacoEditorProps) {
   const { theme } = useTheme();
 
-  const handleMount: OnMount = (editor, monaco) => {
-    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {});
-    // Ensure layout on container resize
-    const ro = new ResizeObserver(() => editor.layout());
-    const dom = editor.getDomNode();
-    if (dom) ro.observe(dom);
+  const handleMount: OnMount = (editor) => {
+    // Smooth resize — observe the wrapper, not the editor dom (which is already managed by monaco)
+    const container = editor.getDomNode()?.parentElement;
+    if (!container) return;
+    const ro = new ResizeObserver(() => {
+      try { editor.layout(); } catch {}
+    });
+    ro.observe(container);
+    // Also observe window for panel resizes
+    const onWin = () => { try { editor.layout(); } catch {} };
+    window.addEventListener("resize", onWin);
+    editor.onDidDispose(() => {
+      ro.disconnect();
+      window.removeEventListener("resize", onWin);
+    });
   };
 
   return (
-    <div className="h-full w-full min-h-0 min-w-0 overflow-hidden">
+    <div className="h-full w-full min-h-0 min-w-0 overflow-hidden bg-[#0B0F1A] rounded-none">
       <Editor
         height="100%"
         language={language}
         value={value}
-        onChange={(v) => onChange(v || "")}
+        onChange={(v) => onChange(v ?? "")}
         onMount={handleMount}
-        theme={theme === "dark" ? "vs-dark" : "light"}
+        theme="vs-dark"
         options={{
           fontSize: 13,
           fontFamily: "JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, monospace",
           lineHeight: 20,
+          letterSpacing: -0.1,
           minimap: { enabled: false },
           scrollBeyondLastLine: false,
-          padding: { top: 12, bottom: 12 },
+          padding: { top: 14, bottom: 14 },
           wordWrap: "on",
           wrappingStrategy: "advanced",
-          wordWrapColumn: 120,
+          wrappingIndent: "indent",
+          wordWrapColumn: 100,
           tabSize: 2,
           renderLineHighlight: "none",
           cursorBlinking: "smooth",
           smoothScrolling: true,
           bracketPairColorization: { enabled: true },
-          guides: { bracketPairs: true },
+          guides: { bracketPairs: true, indentation: false },
           automaticLayout: true,
           fixedOverflowWidgets: true,
           scrollbar: {
@@ -72,10 +83,15 @@ export function MonacoEditor({ value, language, onChange }: MonacoEditorProps) {
           overviewRulerLanes: 0,
           hideCursorInOverviewRuler: true,
           overviewRulerBorder: false,
+          lineNumbersMinChars: 3,
+          glyphMargin: false,
+          folding: true,
+          suggest: { preview: true },
+          quickSuggestions: true,
         }}
         loading={
-          <div className="flex h-full items-center justify-center text-[13px] text-muted-foreground">
-            Loading editor…
+          <div className="flex h-full items-center justify-center bg-[#0B0F1A] text-[12px] text-white/40 mono gap-2">
+            <span className="h-3 w-3 rounded-full border-2 border-white/20 border-t-[#6366F1] animate-spin" /> Loading editor…
           </div>
         }
       />
