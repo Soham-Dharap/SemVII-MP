@@ -1,15 +1,85 @@
 "use client";
 
-import { useState } from "react";
-import { File, Folder, Plus, Trash2, Pencil, FileCode, ChevronRight, ChevronDown } from "lucide-react";
+import { useState, useMemo } from "react";
+import { Folder, FolderOpen, FileCode, Plus, Trash2, Pencil, ChevronRight, ChevronDown, FilePlus, FolderPlus, MoreHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export interface EditorFile {
   id: string;
   name: string;
   content: string | null;
-  language?: string;
+}
+
+type TreeNode = {
+  name: string;
+  path: string;
+  type: "file" | "folder";
+  file?: EditorFile;
+  children?: TreeNode[];
+};
+
+function buildTree(files: EditorFile[]): TreeNode[] {
+  // Hide .keep placeholder files used for empty folders
+  const visibleFiles = files.filter(f => !f.name.endsWith("/.keep"));
+  const result: TreeNode[] = [];
+  // Also collect folder paths from .keep to show empty folders
+  const folderPaths = new Set(
+    files.filter(f => f.name.endsWith("/.keep")).map(f => f.name.replace("/.keep", ""))
+  );
+
+  for (const file of visibleFiles) {
+    const parts = file.name.split("/");
+    let current = result;
+    let currentPath = "";
+    for (let i = 0; i < parts.length; i++) {
+      const part = parts[i];
+      currentPath = currentPath ? `${currentPath}/${part}` : part;
+      const isFile = i === parts.length - 1;
+      if (isFile) {
+        current.push({ name: part, path: currentPath, type: "file", file });
+      } else {
+        let folder = current.find(n => n.name === part && n.type === "folder");
+        if (!folder) {
+          folder = { name: part, path: currentPath, type: "folder", children: [] };
+          current.push(folder);
+        }
+        current = folder.children!;
+      }
+    }
+  }
+
+  // Ensure empty folders from .keep are shown
+  for (const folderPath of folderPaths) {
+    const parts = folderPath.split("/");
+    let current = result;
+    let currentPath = "";
+    for (const part of parts) {
+      currentPath = currentPath ? `${currentPath}/${part}` : part;
+      let folder = current.find(n => n.name === part && n.type === "folder");
+      if (!folder) {
+        folder = { name: part, path: currentPath, type: "folder", children: [] };
+        current.push(folder);
+      }
+      current = folder.children!;
+    }
+  }
+
+  return result;
+}
+
+function getFileIcon(name: string) {
+  const ext = name.split(".").pop()?.toLowerCase();
+  const map: Record<string, string> = {
+    ts: "TS", tsx: "TSX", js: "JS", jsx: "JSX", json: "JSON", css: "CSS", html: "HTML", vue: "VUE"
+  };
+  return map[ext || ""] || "FILE";
 }
 
 interface FileExplorerProps {
@@ -22,116 +92,153 @@ interface FileExplorerProps {
 }
 
 export function FileExplorer({ files, activeFileId, onSelect, onCreate, onDelete, onRename }: FileExplorerProps) {
-  const [isCreating, setIsCreating] = useState(false);
+  const [isCreating, setIsCreating] = useState<null | "file" | "folder">(null);
   const [newName, setNewName] = useState("");
+  const [parentPath, setParentPath] = useState("");
+  const [expanded, setExpanded] = useState<Record<string, boolean>>({ src: true, app: true, components: true });
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editName, setEditName] = useState("");
 
+  const tree = useMemo(() => buildTree(files), [files]);
+
   const handleCreate = () => {
     if (!newName.trim()) return;
-    onCreate(newName.trim());
+    const fullName = parentPath ? `${parentPath}/${newName.trim()}` : newName.trim();
+    // For folder, create a placeholder file inside it
+    const finalName = isCreating === "folder" ? `${fullName}/.keep` : fullName;
+    onCreate(finalName);
     setNewName("");
-    setIsCreating(false);
+    setIsCreating(null);
+    setParentPath("");
   };
 
   const handleRename = (id: string) => {
     if (!editName.trim()) return;
-    onRename(id, editName.trim());
+    // Preserve folder path if renaming file inside folder
+    const file = files.find(f => f.id === id);
+    if (!file) return;
+    const dir = file.name.includes("/") ? file.name.substring(0, file.name.lastIndexOf("/")) : "";
+    const newFull = dir ? `${dir}/${editName.trim()}` : editName.trim();
+    onRename(id, newFull);
     setEditingId(null);
+  };
+
+  const toggle = (path: string) => setExpanded(e => ({ ...e, [path]: !e[path] }));
+
+  const renderNode = (node: TreeNode, depth = 0) => {
+    if (node.type === "folder") {
+      const isOpen = expanded[node.path] ?? true;
+      return (
+        <div key={node.path}>
+          <div
+            onClick={() => toggle(node.path)}
+            className="group flex items-center gap-1.5 rounded-md px-2 py-1 text-[12.5px] cursor-pointer hover:bg-black/[0.04] dark:hover:bg-white/10 text-[#555] dark:text-[#aaa] w-full"
+            style={{ paddingLeft: 8 + depth * 14 }}
+          >
+            {isOpen ? <ChevronDown className="h-3 w-3 opacity-50" /> : <ChevronRight className="h-3 w-3 opacity-50" />}
+            {isOpen ? <FolderOpen className="h-3.5 w-3.5 text-[#6e6e73]" /> : <Folder className="h-3.5 w-3.5 text-[#6e6e73]" />}
+            <span className="flex-1 truncate font-medium">{node.name}</span>
+            <div className="hidden group-hover:flex gap-0.5">
+              <button onClick={(e) => { e.stopPropagation(); setParentPath(node.path); setIsCreating("file"); }} className="p-1 rounded hover:bg-black/10"><FilePlus className="h-3 w-3" /></button>
+              <button onClick={(e) => { e.stopPropagation(); setParentPath(node.path); setIsCreating("folder"); }} className="p-1 rounded hover:bg-black/10"><FolderPlus className="h-3 w-3" /></button>
+            </div>
+          </div>
+          {isOpen && (
+            <div className="mt-0.5 space-y-0.5">
+              {node.children?.map(c => renderNode(c, depth + 1))}
+              {node.children?.length === 0 && <div className="text-[11px] text-[#aaa] pl-8 py-1">Empty</div>}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    const file = node.file!;
+    const isActive = activeFileId === file.id;
+    return (
+      <div
+        key={file.id}
+        onClick={() => onSelect(file.id)}
+        className={`group flex items-center gap-2 rounded-md px-2 py-1.5 text-[12.5px] cursor-pointer border ml-2 ${isActive ? "bg-[#111] text-white dark:bg-white dark:text-black border-transparent" : "text-[#555] dark:text-[#aaa] hover:bg-black/[0.04] dark:hover:bg-white/10 border-transparent"}`}
+        style={{ marginLeft: depth * 14 }}
+      >
+        <span className={`shrink-0 text-[9px] font-bold tracking-wide px-1 py-0.5 rounded ${isActive ? "bg-white/20" : "bg-black/5 dark:bg-white/10 text-[#777]"}`}>{getFileIcon(file.name)}</span>
+        {editingId === file.id ? (
+          <Input
+            value={editName}
+            onChange={(e) => setEditName(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleRename(file.id)}
+            onBlur={() => setEditingId(null)}
+            className="h-5 text-[12px] py-0 px-1 rounded flex-1"
+            autoFocus
+            onClick={(e) => e.stopPropagation()}
+          />
+        ) : (
+          <span className="flex-1 truncate">{node.name}</span>
+        )}
+        <div className={`hidden group-hover:flex items-center gap-0.5 ${isActive ? "text-white/70" : ""}`}>
+          <button onClick={(e) => { e.stopPropagation(); setEditingId(file.id); setEditName(node.name); }} className="p-1 rounded hover:bg-black/10 dark:hover:bg-white/20"><Pencil className="h-3 w-3" /></button>
+          <button onClick={(e) => { e.stopPropagation(); onDelete(file.id); }} className="p-1 rounded hover:bg-red-500/20 hover:text-red-500"><Trash2 className="h-3 w-3" /></button>
+        </div>
+      </div>
+    );
   };
 
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center justify-between px-3 h-8 border-b border-black/[0.06] dark:border-white/10 bg-[#fafafa] dark:bg-[#111]">
-        <div className="flex items-center gap-1.5 text-[11px] font-semibold tracking-widest uppercase text-[#888]">
+        <div className="flex items-center gap-1.5 text-[11px] font-semibold tracking-widest uppercase text-[#666] dark:text-[#999]">
           <Folder className="h-3.5 w-3.5" />
           Explorer
         </div>
-        <Button variant="ghost" size="icon-xs" onClick={() => setIsCreating(true)} className="h-6 w-6 rounded-md">
-          <Plus className="h-3.5 w-3.5" />
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger className="h-6 w-6 rounded-md inline-flex items-center justify-center hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+            <Plus className="h-3.5 w-3.5" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-44 rounded-lg">
+            <DropdownMenuItem onClick={() => { setParentPath(""); setIsCreating("file"); }}>
+              <FilePlus className="h-4 w-4 mr-2" /> New File
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => { setParentPath(""); setIsCreating("folder"); }}>
+              <FolderPlus className="h-4 w-4 mr-2" /> New Folder
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {isCreating && (
-        <div className="p-2 border-b border-black/[0.06] dark:border-white/10 flex gap-1">
-          <Input
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleCreate()}
-            placeholder="new-file.ts"
-            className="h-7 text-[12px] rounded-md"
-            autoFocus
-          />
-          <Button size="sm" onClick={handleCreate} className="h-7 px-2 rounded-md text-[11px]">
-            Add
-          </Button>
-          <Button size="sm" variant="ghost" onClick={() => setIsCreating(false)} className="h-7 px-2">
-            Cancel
-          </Button>
+        <div className="p-2 border-b border-black/[0.06] dark:border-white/10 bg-white dark:bg-[#111]">
+          <div className="text-[11px] text-[#888] mb-1">{isCreating === "folder" ? "New folder:" : "New file:"} {parentPath && `in ${parentPath}/`}</div>
+          <div className="flex gap-1">
+            <Input
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleCreate()}
+              placeholder={isCreating === "folder" ? "components" : "App.tsx"}
+              className="h-7 text-[12px] rounded-md flex-1"
+              autoFocus
+            />
+            <Button size="sm" onClick={handleCreate} className="h-7 px-3 rounded-md bg-[#111] dark:bg-white text-white dark:text-black text-[11px]">Create</Button>
+            <Button size="sm" variant="ghost" onClick={() => { setIsCreating(null); setParentPath(""); }} className="h-7 px-2">Cancel</Button>
+          </div>
         </div>
       )}
 
-      <div className="flex-1 overflow-y-auto py-1">
-        <div className="px-2 py-1 flex items-center gap-1 text-[11px] font-medium text-[#111] dark:text-white">
-          <ChevronDown className="h-3 w-3 text-[#999]" />
-          Project files
-        </div>
-        <div className="mt-1 space-y-0.5 px-2">
-          {files.map((f) => (
-            <div
-              key={f.id}
-              onClick={() => onSelect(f.id)}
-              className={`group flex items-center gap-2 rounded-md px-2 py-1.5 text-[12.5px] cursor-pointer border ${
-                activeFileId === f.id
-                  ? "bg-[#111] text-white dark:bg-white dark:text-black border-transparent"
-                  : "text-[#555] dark:text-[#aaa] hover:bg-black/[0.04] dark:hover:bg-white/10 border-transparent"
-              }`}
-            >
-              <FileCode className={`h-3.5 w-3.5 shrink-0 ${activeFileId === f.id ? "opacity-80" : "opacity-50"}`} />
-              {editingId === f.id ? (
-                <Input
-                  value={editName}
-                  onChange={(e) => setEditName(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && handleRename(f.id)}
-                  onBlur={() => setEditingId(null)}
-                  className="h-5 text-[12px] py-0 px-1 rounded"
-                  autoFocus
-                  onClick={(e) => e.stopPropagation()}
-                />
-              ) : (
-                <span className="flex-1 truncate">{f.name}</span>
-              )}
-              <div className={`hidden group-hover:flex items-center gap-0.5 ${activeFileId === f.id ? "text-white/70" : ""}`}>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setEditingId(f.id);
-                    setEditName(f.name);
-                  }}
-                  className="p-1 rounded hover:bg-black/10 dark:hover:bg-white/20"
-                >
-                  <Pencil className="h-3 w-3" />
-                </button>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onDelete(f.id);
-                  }}
-                  className="p-1 rounded hover:bg-black/10 dark:hover:bg-white/20"
-                >
-                  <Trash2 className="h-3 w-3" />
-                </button>
-              </div>
-            </div>
-          ))}
-          {files.length === 0 && (
-            <div className="px-2 py-4 text-center text-[12px] text-[#999]">No files yet. Create one.</div>
-          )}
-        </div>
+      <div className="flex-1 overflow-y-auto py-2">
+        {tree.length === 0 ? (
+          <div className="px-3 py-8 text-center">
+            <div className="mx-auto h-8 w-8 rounded-lg bg-black/5 dark:bg-white/10 flex items-center justify-center mb-2"><FileCode className="h-4 w-4 text-[#888]" /></div>
+            <div className="text-[12px] font-medium text-[#111] dark:text-white">No files</div>
+            <div className="text-[11px] text-[#888] mt-1">Create a file or folder to start</div>
+          </div>
+        ) : (
+          <div className="space-y-0.5 px-2">{tree.map(n => renderNode(n))}</div>
+        )}
       </div>
 
-      <div className="p-2 border-t border-black/[0.06] dark:border-white/10 text-[11px] text-[#888]">
-        {files.length} file{files.length !== 1 ? "s" : ""}
+      <div className="p-2 border-t border-black/[0.06] dark:border-white/10 flex items-center justify-between text-[11px] text-[#888] bg-[#fafafa] dark:bg-[#111]">
+        <span>{files.filter(f => !f.name.endsWith("/.keep")).length} files</span>
+        <span className="flex items-center gap-1">● Saved</span>
       </div>
     </div>
   );
