@@ -5,8 +5,8 @@ services:
   - type: web
     name: code-pilot-ai-editor
     runtime: node
-    # Free tier uses 'free', Starter is $7/mo. Change as needed.
-    plan: starter
+    # Free tier - no charge, sleeps after 15min inactivity. Change to 'starter' ($7/mo) for always-on.
+    plan: free
     region: singapore # closest to India (Mumbai not available, Singapore is nearest)
     branch: arena/4983422a-semvii-mp
     # Render auto-detects Node version from package.json engines, but pin it:
