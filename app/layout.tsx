@@ -6,11 +6,11 @@ import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: {
-    default: "Codepilot — Intelligent Code Editor",
+    default: "Codepilot — Code in the browser",
     template: "%s · Codepilot",
   },
   description:
-    "Codepilot is an AI-ready cloud code editor with a live preview, file explorer and instant project setup.",
+    "Codepilot is a browser-native code editor with a live preview, organized file explorer and instant project setup.",
 };
 
 export default function RootLayout({

@@ -25,21 +25,27 @@ export function GitHubComingSoonDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <div className="mb-2 flex size-11 items-center justify-center rounded-2xl bg-zinc-900">
-            <Image src="/github.svg" alt="GitHub" width={22} height={22} />
+          <div className="mb-2 flex size-12 items-center justify-center rounded-2xl bg-foreground">
+            <Image
+              src="/github.svg"
+              alt="GitHub"
+              width={22}
+              height={22}
+              unoptimized
+            />
           </div>
           <DialogTitle>GitHub import</DialogTitle>
           <DialogDescription>
             Cloning a repository straight into Codepilot is being built for the
-            Version 2 release. In the meantime you can create a project from a
-            template and bring your code over manually.
+            Version 2 release. For now, create a project from a template and
+            bring your code over manually.
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex items-center gap-2 rounded-xl bg-blue-50 px-3.5 py-3 text-sm text-blue-800">
-          <Sparkles className="size-4 shrink-0 text-blue-600" />
-          Planned for Version 2 — repository sync, branch awareness and
-          one-click pull requests.
+        <div className="flex items-center gap-2.5 rounded-xl bg-iris-soft px-4 py-3.5 text-sm text-iris">
+          <Sparkles className="size-4 shrink-0" />
+          Planned for v2 — repository sync, branch awareness and one-click pull
+          requests.
         </div>
 
         <DialogFooter>

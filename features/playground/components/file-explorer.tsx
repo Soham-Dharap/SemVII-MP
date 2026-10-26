@@ -21,18 +21,20 @@ import type { ProjectFile } from "@/features/dashboard/type";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-const FILE_ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> =
-  {
-    javascript: FileCode2,
-    jsx: FileCode2,
-    typescript: FileCode2,
-    tsx: FileCode2,
-    html: FileType2,
-    css: FileCog,
-    json: FileJson2,
-    markdown: FileText,
-    plaintext: FileText,
-  };
+const FILE_ICON_MAP: Record<
+  string,
+  React.ComponentType<{ className?: string }>
+> = {
+  javascript: FileCode2,
+  jsx: FileCode2,
+  typescript: FileCode2,
+  tsx: FileCode2,
+  html: FileType2,
+  css: FileCog,
+  json: FileJson2,
+  markdown: FileText,
+  plaintext: FileText,
+};
 
 const FileIcon = ({ language }: { language: string }) => {
   const Icon = FILE_ICON_MAP[language] ?? FileText;
@@ -69,27 +71,27 @@ const FileExplorer = ({
   };
 
   const renderNode = (node: TreeNode, depth: number): React.ReactNode => {
-    const paddingLeft = 10 + depth * 14;
+    const paddingLeft = 12 + depth * 14;
 
     if (node.isDirectory) {
       const isCollapsed = collapsed.has(node.path);
       return (
         <div key={node.id}>
           <div
-            className="group flex h-8 cursor-pointer items-center gap-1 pr-2 text-sm text-zinc-700 transition-colors hover:bg-zinc-100"
+            className="group flex h-8 cursor-pointer items-center gap-1 rounded-lg pr-1.5 text-sm text-foreground/80 transition-colors hover:bg-muted"
             style={{ paddingLeft }}
             onClick={() => toggleFolder(node.path)}
           >
             <ChevronRight
               className={cn(
-                "size-3.5 shrink-0 text-zinc-400 transition-transform",
+                "size-3.5 shrink-0 text-muted-foreground transition-transform",
                 !isCollapsed && "rotate-90",
               )}
             />
             {isCollapsed ? (
-              <Folder className="size-4 shrink-0 text-zinc-400" />
+              <Folder className="size-4 shrink-0 fill-amber-100 text-amber-500" />
             ) : (
-              <FolderOpen className="size-4 shrink-0 text-zinc-400" />
+              <FolderOpen className="size-4 shrink-0 fill-amber-100 text-amber-500" />
             )}
             <span className="truncate font-medium">{node.name}</span>
             <span className="ml-auto hidden items-center gap-0.5 group-hover:flex">
@@ -142,12 +144,12 @@ const FileExplorer = ({
       <div
         key={node.id}
         className={cn(
-          "group flex h-8 cursor-pointer items-center gap-2 pr-2 text-sm transition-colors",
+          "group flex h-8 cursor-pointer items-center gap-2 rounded-lg pr-1.5 text-sm transition-colors",
           activeFileId === node.id
-            ? "bg-blue-50 font-medium text-blue-700"
-            : "text-zinc-700 hover:bg-zinc-100",
+            ? "bg-iris-soft font-medium text-iris"
+            : "text-foreground/75 hover:bg-muted",
         )}
-        style={{ paddingLeft: paddingLeft + 18 }}
+        style={{ paddingLeft: paddingLeft + 16 }}
         onClick={() => node.file && onOpenFile(node.file)}
       >
         <FileIcon language={node.language} />
@@ -181,12 +183,12 @@ const FileExplorer = ({
   };
 
   return (
-    <section className="flex h-full flex-col overflow-hidden rounded-2xl border border-zinc-200/80 bg-white">
-      <div className="flex h-11 shrink-0 items-center justify-between border-b border-zinc-100 px-3">
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-zinc-500">
+    <section className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+      <div className="flex h-12 shrink-0 items-center justify-between border-b border-border/70 px-4">
+        <h2 className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
           Explorer
         </h2>
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-0.5">
           <Button
             variant="ghost"
             size="icon-sm"
@@ -207,13 +209,13 @@ const FileExplorer = ({
       </div>
 
       <ScrollArea className="min-h-0 flex-1">
-        <div className="py-2">
+        <div className="space-y-0.5 p-2">
           {tree.length === 0 ? (
-            <div className="px-4 py-10 text-center">
-              <FileCode2 className="mx-auto mb-2 size-6 text-zinc-300" />
-              <p className="text-sm text-zinc-500">No files yet</p>
+            <div className="px-4 py-12 text-center">
+              <FileCode2 className="mx-auto mb-3 size-7 text-zinc-300" />
+              <p className="text-sm text-muted-foreground">No files yet</p>
               <button
-                className="mt-2 text-sm font-medium text-blue-600 hover:underline"
+                className="mt-2 text-sm font-medium text-iris hover:underline"
                 onClick={() => onCreate("", false)}
               >
                 Create your first file

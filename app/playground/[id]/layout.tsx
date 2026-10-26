@@ -14,7 +14,7 @@ export default function PlaygroundLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex h-dvh w-full flex-col overflow-hidden bg-[#f5f5f7]">
+    <div className="flex h-dvh w-full flex-col overflow-hidden bg-muted/40">
       {children}
     </div>
   );

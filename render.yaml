@@ -6,6 +6,7 @@ services:
     runtime: node
     plan: free
     region: oregon
+    # Root Directory must be left empty — package.json lives at the repo root.
     buildCommand: npm install && npx prisma generate && npm run build
     startCommand: npm start
     healthCheckPath: /auth/sign-in
@@ -31,9 +32,6 @@ services:
       # Required so NextAuth builds correct callback URLs behind Render's proxy.
       - key: AUTH_TRUST_HOST
         value: "true"
-      # Public URL of this service. Update it if Render assigns a different name.
-      - key: AUTH_URL
-        value: https://code-pilot-ai-editor.onrender.com
-      # Pin the Node runtime (Render's free default works too).
+      # Pin the Node runtime — Next.js 16 requires Node 20+.
       - key: NODE_VERSION
         value: 22.12.0
