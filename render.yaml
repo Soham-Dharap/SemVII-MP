@@ -1,0 +1,58 @@
+# Render Blueprint for CodePilot — AI-Intelligent Code Editor
+# Docs: https://render.com/docs/blueprint-spec
+
+services:
+  - type: web
+    name: code-pilot-ai-editor
+    runtime: node
+    # Free tier uses 'free', Starter is $7/mo. Change as needed.
+    plan: starter
+    region: singapore # closest to India (Mumbai not available, Singapore is nearest)
+    branch: arena/4983422a-semvii-mp
+    # Render auto-detects Node version from package.json engines, but pin it:
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npm start
+    healthCheckPath: /
+    # Auto-deploy on git push
+    autoDeploy: true
+    # Preview environments for PRs
+    previews:
+      generation: manual
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: NEXT_TELEMETRY_DISABLED
+        value: 1
+      # Render provides RENDER_EXTERNAL_URL automatically. NextAuth uses AUTH_URL or auto-detects.
+      # Set AUTH_URL to your deployed URL after first deploy if auth redirects fail.
+      - key: AUTH_URL
+        sync: false # e.g. https://code-pilot-ai-editor.onrender.com
+        # Leave empty on first deploy; set after Render assigns URL
+      - key: AUTH_TRUST_HOST
+        value: true
+      - key: AUTH_SECRET
+        generateValue: true # Render will generate a secure random value
+        sync: false
+      - key: DATABASE_URL
+        sync: false # e.g. mongodb+srv://user:pass@cluster.mongodb.net/codepilot?retryWrites=true&w=majority
+      - key: AUTH_GITHUB_ID
+        sync: false
+      - key: AUTH_GITHUB_SECRET
+        sync: false
+      - key: AUTH_GOOGLE_ID
+        sync: false
+      - key: AUTH_GOOGLE_SECRET
+        sync: false
+      # Optional: skip type checking during build if you want faster builds
+      # - key: SKIP_ENV_VALIDATION
+      #   value: true
+
+# Uncomment if you want Render-managed MongoDB alternative (Postgres)
+# But current Prisma schema uses MongoDB — keep external Mongo Atlas
+# databases:
+#   - name: codepilot-db
+#     plan: free
+#     databaseName: codepilot
+#     user: codepilot
