@@ -1,0 +1,39 @@
+# Render Blueprint — Codepilot (free tier)
+# Docs: https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: codepilot
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npm start
+    healthCheckPath: /auth/sign-in
+    autoDeploy: true
+    envVars:
+      # Full MongoDB Atlas connection string, e.g.
+      # mongodb+srv://codepilot_user:<password>@cluster0.3amwwry.mongodb.net/codepilot?retryWrites=true&w=majority&appName=Cluster0
+      - key: DATABASE_URL
+        sync: false
+      # Render generates a strong random secret on first deploy.
+      - key: AUTH_SECRET
+        generateValue: true
+      # GitHub OAuth app credentials (Developer settings -> OAuth Apps).
+      - key: AUTH_GITHUB_ID
+        sync: false
+      - key: AUTH_GITHUB_SECRET
+        sync: false
+      # Google OAuth client credentials (Google Cloud Console -> Credentials).
+      - key: AUTH_GOOGLE_ID
+        sync: false
+      - key: AUTH_GOOGLE_SECRET
+        sync: false
+      # Required so NextAuth builds correct callback URLs behind Render's proxy.
+      - key: AUTH_TRUST_HOST
+        value: "true"
+      # Public URL of this service. Update it if Render assigns a different name.
+      - key: AUTH_URL
+        value: https://code-pilot-ai-editor.onrender.com
+      # Pin the Node runtime (Render's free default works too).
+      - key: NODE_VERSION
+        value: 22.12.0
