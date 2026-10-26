@@ -34,8 +34,8 @@
   --sidebar-accent-foreground: #0F1115;
   --sidebar-border: #E8EEF6;
   --sidebar-ring: #2563EB;
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  --font-display: "Instrument Sans", "Inter", sans-serif;
+  --font-sans: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  --font-display: "Newsreader", Georgia, serif;
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
   --radius: 14px;
 }
@@ -104,12 +104,20 @@
 
 @layer base {
   * { @apply border-border outline-ring/50; }
-  html { @apply antialiased; font-family: var(--font-sans); letter-spacing: -0.01em; -webkit-font-smoothing: antialiased; }
-  body { @apply bg-background text-foreground; line-height: 1.6; }
+  html { @apply antialiased overflow-x-hidden; font-family: var(--font-sans); letter-spacing: -0.01em; -webkit-font-smoothing: antialiased; }
+  body { @apply bg-background text-foreground overflow-x-hidden; line-height: 1.6; min-width: 0; }
   ::selection { background: var(--primary); color: var(--primary-foreground); }
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
 }
 
-.display { font-family: var(--font-display); letter-spacing: -0.03em; line-height: 1; font-weight: 600; }
+.display { font-family: var(--font-display); letter-spacing: -0.02em; line-height: 0.95; font-weight: 600; }
 .mono { font-family: var(--font-mono); }
+
+/* Prevent horizontal page scroll from resizable panels */
+[data-slot="resizable-panel-group"] { min-width: 0; }
+[data-slot="resizable-panel"] { min-width: 0; overflow: hidden; }
+
+/* Hide scrollbar while keeping scroll on mobile ticker */
+.scrollbar-none { scrollbar-width: none; -ms-overflow-style: none; }
+.scrollbar-none::-webkit-scrollbar { display: none; }

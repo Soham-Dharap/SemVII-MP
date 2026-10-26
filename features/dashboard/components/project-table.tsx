@@ -31,7 +31,7 @@ export default function ProjectTable({ projects, onDeleteProject, onDuplicatePro
   return (
     <>
       <div className="border border-border bg-card rounded-[16px] overflow-hidden">
-        <div className="flex items-center justify-between px-4 h-[40px] bg-muted border-b border-border">
+        <div className="flex items-center justify-between px-3 sm:px-4 h-[40px] bg-muted border-b border-border">
           <h2 className="mono text-[11px] font-semibold tracking-widest">Recent playgrounds</h2><span className="mono text-[10px] bg-secondary border border-border px-2 py-1 rounded-full">{projects.length} total</span>
         </div>
         <div className="hidden sm:block overflow-x-auto">
@@ -40,7 +40,7 @@ export default function ProjectTable({ projects, onDeleteProject, onDuplicatePro
             <tbody className="divide-y divide-border">
               {projects.map((p) => (
                 <tr key={p.id} className="hover:bg-accent bg-card">
-                  <td className="px-4 py-3">
+                  <td className="px-3 sm:px-4 py-3">
                     <Link href={`/playground/${p.id}`} className="flex items-center gap-3 group">
                       <span className="h-7 w-7 rounded-[8px] bg-foreground text-background flex items-center justify-center mono text-[10px] font-bold shrink-0">{p.template[0]}</span>
                       <div className="min-w-0"><div className="text-[12px] font-semibold group-hover:underline truncate max-w-[260px]">{p.title}</div><div className="text-[11px] text-muted-foreground truncate max-w-[260px]">{p.description || "No description"}</div></div>
@@ -71,7 +71,7 @@ export default function ProjectTable({ projects, onDeleteProject, onDuplicatePro
         </div>
         <div className="sm:hidden divide-y divide-border">
           {projects.map((p) => (
-            <div key={p.id} className="flex items-center gap-3 px-4 py-3 hover:bg-accent">
+            <div key={p.id} className="flex items-center gap-3 px-3 sm:px-4 py-3 hover:bg-accent">
               <Link href={`/playground/${p.id}`} className="flex items-center gap-3 flex-1 min-w-0">
                 <span className="h-8 w-8 rounded-[10px] bg-foreground text-background flex items-center justify-center mono text-[10px] font-bold shrink-0">{p.template[0]}</span>
                 <div className="flex-1 min-w-0"><div className="text-[12px] font-semibold truncate">{p.title}</div><div className="mono text-[10px] text-muted-foreground">{p.template} · {format(new Date(p.createdAt), "MMM d")}</div></div>

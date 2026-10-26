@@ -6,7 +6,7 @@ import { ThemeToggle } from "@/components/ui/theme-toggle";
 export function Header() {
   return (
     <header className="sticky top-0 z-50 w-full bg-background/70 backdrop-blur-xl border-b border-border/60">
-      <div className="mx-auto max-w-[1160px] px-6">
+      <div className="mx-auto max-w-[1160px] px-4 sm:px-6">
         <div className="flex h-[48px] items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="h-7 w-7 rounded-[8px] bg-foreground flex items-center justify-center">

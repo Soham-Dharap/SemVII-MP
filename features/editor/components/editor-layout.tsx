@@ -110,7 +110,7 @@ export function EditorLayout({ playground, initialFiles }: EditorLayoutProps) {
   };
 
   return (
-    <div className="flex h-screen flex-col bg-background overflow-hidden">
+    <div className="flex h-screen h-[100dvh] flex-col bg-background overflow-hidden min-w-0">
       <Topbar
         title={playground.title}
         template={playground.template}
@@ -121,30 +121,30 @@ export function EditorLayout({ playground, initialFiles }: EditorLayoutProps) {
       />
 
       {/* Mobile tab bar */}
-      <div className="flex md:hidden items-center gap-1 p-1.5 border-b border-border bg-muted/30 shrink-0">
+      <div className="flex md:hidden items-center gap-1 p-1 border-b border-border bg-muted/30 shrink-0 min-w-0">
         <button
           type="button"
           onClick={() => setMobileTab("code")}
-          className={`flex-1 h-8 rounded-full text-[12px] font-medium transition-colors ${mobileTab === "code" ? "bg-foreground text-background shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+          className={`flex-1 min-w-0 h-8 rounded-full text-[12px] font-medium transition-colors truncate ${mobileTab === "code" ? "bg-foreground text-background shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
         >
           Code
         </button>
         <button
           type="button"
           onClick={() => setMobileTab("preview")}
-          className={`flex-1 h-8 rounded-full text-[12px] font-medium transition-colors ${mobileTab === "preview" ? "bg-foreground text-background shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+          className={`flex-1 min-w-0 h-8 rounded-full text-[12px] font-medium transition-colors truncate ${mobileTab === "preview" ? "bg-foreground text-background shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
         >
           Preview
         </button>
-        <Button variant="outline" size="sm" onClick={() => setShowMobileExplorer(v => !v)} className="h-8 rounded-full ml-1 text-[12px] shrink-0">
-          {showMobileExplorer ? "Hide files" : "Files"}
+        <Button variant="outline" size="sm" onClick={() => setShowMobileExplorer(v => !v)} className="h-8 rounded-full ml-1 text-[11px] sm:text-[12px] shrink-0 px-2 sm:px-3">
+          {showMobileExplorer ? "Hide" : "Files"}
         </Button>
       </div>
 
       {/* Desktop: resizable 3 panels */}
-      <div className="hidden md:flex flex-1 overflow-hidden">
-        <ResizablePanelGroup orientation="horizontal" className="flex-1">
-          <ResizablePanel defaultSize={22} minSize={15} maxSize={32} className="bg-card">
+      <div className="hidden md:flex flex-1 overflow-hidden min-h-0 min-w-0">
+        <ResizablePanelGroup orientation="horizontal" className="flex-1 min-w-0">
+          <ResizablePanel defaultSize={20} minSize={14} maxSize={30} className="bg-card min-w-0">
             <FileExplorer
               files={files}
               activeFileId={activeId}
@@ -155,22 +155,22 @@ export function EditorLayout({ playground, initialFiles }: EditorLayoutProps) {
             />
           </ResizablePanel>
 
-          <ResizableHandle withHandle className="bg-border w-px" />
+          <ResizableHandle withHandle className="bg-border w-px shrink-0" />
 
-          <ResizablePanel defaultSize={48} minSize={30} className="flex flex-col min-w-0">
-            <div className="flex h-8 items-center gap-0 border-b border-border bg-muted/50 px-2 overflow-x-auto shrink-0">
+          <ResizablePanel defaultSize={50} minSize={30} className="flex flex-col min-w-0">
+            <div className="flex h-8 items-center gap-0 border-b border-border bg-muted/50 px-2 overflow-x-auto scrollbar-none shrink-0 min-w-0">
               {files.filter(f => !f.name.endsWith("/.keep")).slice(0, 8).map(f => (
                 <button
                   key={f.id}
                   onClick={() => setActiveId(f.id)}
-                  className={`flex h-6 items-center gap-1.5 rounded-full px-2.5 text-[12px] font-medium whitespace-nowrap border shrink-0 transition-colors cursor-pointer ${activeId === f.id ? "bg-foreground text-background border-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+                  className={`flex h-6 items-center gap-1.5 rounded-full px-2.5 text-[11px] sm:text-[12px] font-medium whitespace-nowrap border shrink-0 transition-colors cursor-pointer min-w-0 ${activeId === f.id ? "bg-foreground text-background border-foreground" : "border-transparent text-muted-foreground hover:text-foreground"}`}
                 >
-                  {f.name.split("/").pop()}
+                  <span className="truncate max-w-[120px]">{f.name.split("/").pop()}</span>
                 </button>
               ))}
             </div>
 
-            <div className="flex-1 bg-background min-h-0">
+            <div className="flex-1 bg-background min-h-0 min-w-0 overflow-hidden">
               {activeFile ? (
                 <MonacoEditor
                   value={activeFile.content || ""}
@@ -178,34 +178,34 @@ export function EditorLayout({ playground, initialFiles }: EditorLayoutProps) {
                   onChange={handleFileChange}
                 />
               ) : (
-                <div className="flex h-full flex-col items-center justify-center text-center p-8">
-                  <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center mb-3">
+                <div className="flex h-full flex-col items-center justify-center text-center p-6 sm:p-8 min-w-0">
+                  <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center mb-3 shrink-0">
                     <span className="text-[16px]">📄</span>
                   </div>
                   <div className="text-[13px] font-medium">No file selected</div>
-                  <div className="text-[12px] text-muted-foreground mt-1">Choose a file from the explorer or create a new one</div>
+                  <div className="text-[12px] text-muted-foreground mt-1 max-w-[280px]">Choose a file from the explorer or create a new one</div>
                 </div>
               )}
             </div>
 
-            <div className="h-5 flex items-center justify-between border-t border-border bg-muted px-3 text-[11px] text-muted-foreground shrink-0">
-              <span className="truncate">{activeFile ? `${activeFile.name} • ${getMonacoLanguage(activeFile.name, "typescript")}` : "No file"} • UTF-8 • LF</span>
-              <span className="hidden lg:inline">Ln 1, Col 1 • Spaces: 2 • {files.filter(f => !f.name.endsWith("/.keep")).length} files</span>
+            <div className="h-5 flex items-center justify-between border-t border-border bg-muted px-2 sm:px-3 text-[11px] text-muted-foreground shrink-0 gap-2 min-w-0">
+              <span className="truncate min-w-0 flex-1">{activeFile ? `${activeFile.name} • ${getMonacoLanguage(activeFile.name, "typescript")}` : "No file"} • UTF-8 • LF</span>
+              <span className="hidden lg:inline shrink-0">Ln 1, Col 1 • Spaces: 2 • {files.filter(f => !f.name.endsWith("/.keep")).length} files</span>
             </div>
           </ResizablePanel>
 
-          <ResizableHandle withHandle className="bg-border w-px" />
+          <ResizableHandle withHandle className="bg-border w-px shrink-0" />
 
-          <ResizablePanel defaultSize={30} minSize={20} maxSize={45} className="bg-card min-w-[280px]">
+          <ResizablePanel defaultSize={30} minSize={20} maxSize={50} className="bg-card min-w-0">
             <Preview files={files.map(f => ({ name: f.name, content: f.content }))} template={playground.template} />
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
 
       {/* Mobile: stacked */}
-      <div className="flex md:hidden flex-1 overflow-hidden flex-col">
+      <div className="flex md:hidden flex-1 overflow-hidden flex-col min-h-0 min-w-0">
         {showMobileExplorer && (
-          <div className="h-[45%] border-b border-border bg-card overflow-hidden shrink-0">
+          <div className="h-[42%] max-h-[50%] border-b border-border bg-card overflow-hidden shrink-0 min-h-0">
             <FileExplorer
               files={files}
               activeFileId={activeId}
@@ -216,21 +216,21 @@ export function EditorLayout({ playground, initialFiles }: EditorLayoutProps) {
             />
           </div>
         )}
-        <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
+        <div className="flex-1 min-h-0 min-w-0 flex flex-col overflow-hidden">
           {mobileTab === "code" ? (
             <>
-              <div className="flex h-8 items-center gap-1 border-b border-border bg-muted/50 px-2 overflow-x-auto shrink-0">
+              <div className="flex h-8 items-center gap-1 border-b border-border bg-muted/50 px-2 overflow-x-auto scrollbar-none shrink-0 min-w-0">
                 {files.filter(f => !f.name.endsWith("/.keep")).slice(0, 6).map(f => (
                   <button
                     key={f.id}
                     onClick={() => setActiveId(f.id)}
-                    className={`flex h-6 items-center gap-1.5 rounded-full px-2.5 text-[12px] font-medium whitespace-nowrap border shrink-0 cursor-pointer ${activeId === f.id ? "bg-foreground text-background border-foreground" : "border-transparent text-muted-foreground"}`}
+                    className={`flex h-6 items-center gap-1.5 rounded-full px-2.5 text-[11px] sm:text-[12px] font-medium whitespace-nowrap border shrink-0 cursor-pointer ${activeId === f.id ? "bg-foreground text-background border-foreground" : "border-transparent text-muted-foreground"}`}
                   >
-                    {f.name.split("/").pop()}
+                    <span className="truncate max-w-[90px]">{f.name.split("/").pop()}</span>
                   </button>
                 ))}
               </div>
-              <div className="flex-1 bg-background min-h-0">
+              <div className="flex-1 bg-background min-h-0 min-w-0 overflow-hidden">
                 {activeFile ? (
                   <MonacoEditor
                     value={activeFile.content || ""}
@@ -238,16 +238,16 @@ export function EditorLayout({ playground, initialFiles }: EditorLayoutProps) {
                     onChange={handleFileChange}
                   />
                 ) : (
-                  <div className="flex h-full items-center justify-center text-[12px] text-muted-foreground p-6 text-center">Select a file</div>
+                  <div className="flex h-full items-center justify-center text-[12px] text-muted-foreground p-4 text-center">Select a file</div>
                 )}
               </div>
-              <div className="h-5 flex items-center justify-between border-t border-border bg-muted px-3 text-[11px] text-muted-foreground shrink-0">
-                <span className="truncate">{activeFile?.name || "No file"}</span>
-                <span>{files.filter(f => !f.name.endsWith("/.keep")).length} files</span>
+              <div className="h-5 flex items-center justify-between border-t border-border bg-muted px-2 sm:px-3 text-[11px] text-muted-foreground shrink-0 gap-2 min-w-0">
+                <span className="truncate min-w-0 flex-1">{activeFile?.name || "No file"}</span>
+                <span className="shrink-0">{files.filter(f => !f.name.endsWith("/.keep")).length} files</span>
               </div>
             </>
           ) : (
-            <div className="flex-1 bg-card min-h-0 overflow-hidden">
+            <div className="flex-1 bg-card min-h-0 min-w-0 overflow-hidden">
               <Preview files={files.map(f => ({ name: f.name, content: f.content }))} template={playground.template} />
             </div>
           )}

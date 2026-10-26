@@ -39,10 +39,10 @@ export default function Home() {
   useEffect(() => { const t = setTimeout(() => setSrcDoc(buildPreview(code)), 250); return () => clearTimeout(t); }, [code]);
 
   return (
-    <div className="bg-background text-foreground selection:bg-primary selection:text-primary-foreground">
+    <div className="bg-background text-foreground overflow-x-hidden min-w-0 selection:bg-primary selection:text-primary-foreground">
       {/* ── Announcement ── */}
       <div className="border-b border-border bg-muted/40">
-        <div className="mx-auto max-w-[1280px] px-6 h-8 flex items-center justify-between mono text-[11px]">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6 h-8 flex items-center justify-between mono text-[11px]">
           <span className="flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
             <span className="hidden sm:inline text-muted-foreground">LIVE</span>
@@ -55,8 +55,8 @@ export default function Home() {
       </div>
 
       {/* ── HERO: editorial + embedded editor ── */}
-      <section className="mx-auto max-w-[1280px] px-6 pt-8 pb-10 lg:pt-10 lg:pb-12">
-        <div className="grid lg:grid-cols-[560px_1fr] gap-8 lg:gap-10 items-start">
+      <section className="mx-auto max-w-[1280px] px-4 sm:px-6 pt-6 sm:pt-8 pb-8 sm:pb-10 lg:pt-10 lg:pb-12 overflow-hidden">
+        <div className="grid xl:grid-cols-[560px_1fr] gap-8 xl:gap-10 items-start">
           {/* Left: type */}
           <div className="pt-2 lg:pt-6">
             <div className="inline-flex items-center gap-2 rounded-full bg-card border border-border px-3 py-1.5 shadow-sm mono text-[11px]">
@@ -65,12 +65,12 @@ export default function Home() {
               <span className="text-muted-foreground hidden sm:inline">— no setup</span>
             </div>
 
-            <h1 className="display text-[38px] sm:text-[44px] lg:text-[52px] leading-[0.95] tracking-[-0.04em] mt-6">
+            <h1 className="display text-[30px] xs:text-[34px] sm:text-[44px] lg:text-[52px] leading-[0.95] tracking-[-0.04em] mt-6">
               Your localhost,
               <span className="block font-normal tracking-[-0.03em] text-muted-foreground">in the browser.</span>
             </h1>
 
-            <p className="mt-4 text-[15px] leading-6 text-muted-foreground max-w-[480px]">
+            <p className="mt-4 text-[15px] leading-6 text-muted-foreground max-w-[480px] min-w-0">
               A browser editor that behaves like your local one. Real files, nested folders, Monaco with go-to-definition. Paste your <span className="text-foreground font-medium bg-secondary px-1.5 py-0.5 rounded text-[13px]">vite.config.ts</span> and it runs.
             </p>
 
@@ -85,7 +85,7 @@ export default function Home() {
               <span className="mono text-[11px] text-muted-foreground hidden sm:inline">Free • Private by default</span>
             </div>
 
-            <div className="mt-8 grid grid-cols-3 gap-3 max-w-[480px]">
+            <div className="mt-8 grid grid-cols-3 gap-3 max-w-[480px] min-w-0">
               {[
                 { k: "0.8s", l: "Avg boot" },
                 { k: "Monaco", l: "Same as VS Code" },
@@ -135,7 +135,7 @@ export default function Home() {
               </div>
 
               {/* Split: code + preview */}
-              <div className="grid md:grid-cols-[1.15fr_0.85fr] min-h-[360px]">
+              <div className="grid grid-cols-1 md:grid-cols-[1.15fr_0.85fr] min-h-[360px]">
                 <div className="bg-[#0B0F1A] p-4 border-b md:border-b-0 md:border-r border-border">
                   <div className="mono text-[10px] tracking-widest text-[#475569] mb-3 flex items-center justify-between">
                     <span>SRC / APP.TSX</span>
@@ -144,7 +144,7 @@ export default function Home() {
                   <textarea
                     value={code}
                     onChange={e => setCode(e.target.value)}
-                    className="w-full h-[280px] bg-transparent text-[#E2E8F0] mono text-[11px] leading-[18px] resize-none focus:outline-none"
+                    className="w-full h-[240px] sm:h-[280px] bg-transparent min-w-0 text-[#E2E8F0] mono text-[11px] leading-[18px] resize-none focus:outline-none"
                     spellCheck={false}
                   />
                 </div>
@@ -153,7 +153,7 @@ export default function Home() {
                     <span className="h-2 w-2 rounded-full bg-emerald-500" /> Preview • 350ms
                   </div>
                   <div className="pt-6 h-full">
-                    <iframe title="preview" srcDoc={srcDoc} className="w-full h-[280px] md:h-[312px] border-0" sandbox="allow-scripts allow-same-origin" />
+                    <iframe title="preview" srcDoc={srcDoc} className="w-full h-[240px] sm:h-[280px] md:h-[312px] border-0" sandbox="allow-scripts allow-same-origin" />
                   </div>
                 </div>
               </div>
@@ -176,7 +176,7 @@ export default function Home() {
 
       {/* ── Imports ticker — replaces pill pills with CODE ── */}
       <section className="border-y border-border bg-card overflow-hidden">
-        <div className="mx-auto max-w-[1280px] px-6">
+        <div className="mx-auto max-w-[1280px] px-4 sm:px-6">
           <div className="flex items-center gap-6 h-[52px] mono text-[12px] overflow-x-auto scrollbar-none">
             <span className="text-muted-foreground whitespace-nowrap">SUPPORTED •</span>
             <code className="whitespace-nowrap"><span className="text-muted-foreground">import</span> <span className="text-foreground font-medium">React</span> <span className="text-muted-foreground">from</span> <span className="text-primary">‘react’</span></code>
@@ -195,11 +195,11 @@ export default function Home() {
       </section>
 
       {/* ── FEATURES: editorial, not 3 cards ── */}
-      <section className="mx-auto max-w-[1280px] px-6 py-12 lg:py-16">
-        <div className="grid lg:grid-cols-[420px_1fr] gap-10 lg:gap-12">
+      <section className="mx-auto max-w-[1280px] px-4 sm:px-6 py-12 lg:py-16">
+        <div className="grid lg:grid-cols-[380px_1fr] xl:grid-cols-[420px_1fr] gap-8 lg:gap-10 xl:gap-12">
           <div className="lg:sticky lg:top-[80px] h-fit">
             <div className="mono text-[11px] font-semibold tracking-[0.14em] text-primary">[ THE PRODUCT ]</div>
-            <h2 className="display text-[30px] sm:text-[36px] leading-[0.95] tracking-[-0.03em] mt-3">
+            <h2 className="display text-[26px] sm:text-[30px] lg:text-[36px] leading-[0.95] tracking-[-0.03em] mt-3">
               Feels like
               <br />VS Code.
               <br /><span className="text-muted-foreground font-normal">Runs like a tab.</span>
@@ -255,7 +255,7 @@ export default function Home() {
       </section>
 
       {/* ── TEMPLATES BENTO — new bento, not pills ── */}
-      <section className="mx-auto max-w-[1280px] px-6 pb-6">
+      <section className="mx-auto max-w-[1280px] px-4 sm:px-6 pb-6">
         <div className="flex items-end justify-between gap-4">
           <div>
             <div className="mono text-[11px] font-semibold tracking-[0.14em] text-primary">[ TEMPLATES ]</div>
@@ -266,9 +266,9 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="mt-6 grid grid-cols-12 gap-4">
+        <div className="mt-6 grid grid-cols-12 gap-3 sm:gap-4">
           {/* Featured large */}
-          <Link href="/dashboard" className="col-span-12 lg:col-span-7 rounded-[20px] bg-foreground text-background p-6 sm:p-7 flex flex-col justify-between min-h-[280px] group overflow-hidden relative">
+          <Link href="/dashboard" className="col-span-12 lg:col-span-7 rounded-[20px] bg-foreground text-background p-6 sm:p-7 flex flex-col justify-between min-h-[240px] sm:min-h-[280px] group overflow-hidden relative">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(214,255,0,0.18),transparent_50%)] dark:opacity-100 opacity-10 pointer-events-none" />
             <div className="relative">
               <div className="flex items-center gap-3">
@@ -324,12 +324,12 @@ export default function Home() {
       </section>
 
       {/* ── FOOTER CTA: inverted, code as bg ── */}
-      <section className="mx-auto max-w-[1280px] px-6 pb-8">
+      <section className="mx-auto max-w-[1280px] px-4 sm:px-6 pb-8">
         <div className="rounded-[20px] bg-foreground text-background overflow-hidden border border-foreground">
-          <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-0">
+          <div className="grid lg:grid-cols-[1.05fr_0.95fr] xl:grid-cols-[1.1fr_0.9fr] gap-0">
             <div className="p-6 sm:p-8 lg:p-10">
               <div className="mono text-[11px] tracking-[0.14em] opacity-60">[ SHIP IT ]</div>
-              <h2 className="display text-[30px] sm:text-[36px] leading-[0.9] tracking-[-0.03em] mt-3">
+              <h2 className="display text-[26px] sm:text-[30px] lg:text-[36px] leading-[0.9] tracking-[-0.03em] mt-3">
                 Start in
                 <br />seconds.
                 <br /><span className="text-background/60 font-normal">Stay for hours.</span>

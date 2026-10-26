@@ -24,7 +24,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
       <div className="flex min-h-screen w-full bg-background">
         <DashboardSidebar initialPlaygroundData={formattedPlaygroundData} />
         <SidebarInset className="bg-background">
-          <header className="sticky top-0 z-10 flex h-[52px] items-center gap-4 border-b border-border bg-background/80 backdrop-blur-xl px-6">
+          <header className="sticky top-0 z-10 flex h-12 sm:h-[52px] items-center gap-2 sm:gap-4 border-b border-border bg-background/80 backdrop-blur-xl px-4 sm:px-4 sm:px-6">
             <SidebarTrigger className="rounded-full" />
             <Separator orientation="vertical" className="h-4" />
             <div className="flex items-center gap-2">
