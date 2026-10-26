@@ -28,7 +28,7 @@ import {
   Zap,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
 import { BrandMark } from "@/components/brand";
 
 interface PlaygroundDataProps {
@@ -64,11 +64,11 @@ export const DashboardSidebar = ({
     starredPlaygrounds.length === 0 && recentPlaygrounds.length === 0;
 
   return (
-    <Sidebar variant="inset" collapsible="icon" className="border-r">
+    <Sidebar variant="inset" collapsible="icon" className="border-r border-border">
       <SidebarHeader>
-        <div className="flex items-center gap-2 px-2 py-2">
+        <div className="flex items-center gap-2.5 px-2 py-2">
           <BrandMark size={32} />
-          <span className="text-sm font-semibold tracking-tight text-zinc-900 group-data-[collapsible=icon]:hidden">
+          <span className="text-[15px] font-semibold tracking-tight group-data-[collapsible=icon]:hidden">
             Codepilot
           </span>
         </div>
@@ -118,16 +118,14 @@ export const DashboardSidebar = ({
                   return (
                     <SidebarMenuItem key={playground.id}>
                       <SidebarMenuButton
-                        isActive={
-                          pathname === `/playground/${playground.id}`
-                        }
+                        isActive={pathname === `/playground/${playground.id}`}
                         tooltip={playground.name}
                         onClick={() =>
                           router.push(`/playground/${playground.id}`)
                         }
                       >
                         <IconComponent className="size-4" />
-                        <span>{playground.name}</span>
+                        <span className="truncate">{playground.name}</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   );
@@ -155,16 +153,14 @@ export const DashboardSidebar = ({
                   return (
                     <SidebarMenuItem key={playground.id}>
                       <SidebarMenuButton
-                        isActive={
-                          pathname === `/playground/${playground.id}`
-                        }
+                        isActive={pathname === `/playground/${playground.id}`}
                         tooltip={playground.name}
                         onClick={() =>
                           router.push(`/playground/${playground.id}`)
                         }
                       >
                         <IconComponent className="size-4" />
-                        <span>{playground.name}</span>
+                        <span className="truncate">{playground.name}</span>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
                   );
@@ -179,7 +175,7 @@ export const DashboardSidebar = ({
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton
-              tooltip="Back to dashboard"
+              tooltip="All projects"
               onClick={() => router.push("/dashboard")}
             >
               <LayoutDashboard className="size-4" />

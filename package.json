@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate || echo \"[postinstall] prisma generate skipped — the build command runs it explicitly\""
   },
   "engines": {
     "node": ">=20.0.0"

@@ -25,6 +25,7 @@ import {
 import EditorTopbar from "./editor-topbar";
 import FileExplorer from "./file-explorer";
 import CodeEditor from "./code-editor";
+import EditorStatusBar from "./editor-status-bar";
 import InspectorPanel from "./inspector-panel";
 import FileNameDialog from "./file-name-dialog";
 import ConfirmDeleteDialog from "./confirm-delete-dialog";
@@ -279,14 +280,23 @@ const PlaygroundWorkspace = ({
           minSize="28"
           className="overflow-hidden rounded-2xl"
         >
-          <CodeEditor
-            files={files}
-            openTabIds={openTabIds}
-            activeFileId={activeFileId}
-            onSelectTab={setActiveFileId}
-            onCloseTab={closeTab}
-            onChangeContent={updateLocalContent}
-          />
+          <div className="flex h-full flex-col gap-2">
+            <div className="min-h-0 flex-1">
+              <CodeEditor
+                files={files}
+                openTabIds={openTabIds}
+                activeFileId={activeFileId}
+                onSelectTab={setActiveFileId}
+                onCloseTab={closeTab}
+                onChangeContent={updateLocalContent}
+              />
+            </div>
+            <EditorStatusBar
+              file={activeFile}
+              saveStatus={saveStatus}
+              isDirty={isDirty}
+            />
+          </div>
         </ResizablePanel>
 
         <ResizableHandle

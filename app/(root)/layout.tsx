@@ -8,7 +8,7 @@ export default function HomeLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex min-h-dvh flex-col bg-[#fbfbfd]">
+    <div className="flex min-h-dvh flex-col bg-background">
       <Header />
       <main className="flex-1">{children}</main>
       <Footer />

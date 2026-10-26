@@ -7,39 +7,42 @@ import {
 } from "@/features/dashboard/actions";
 import AddNewButton from "@/features/dashboard/components/add-new-button";
 import AddRepoButton from "@/features/dashboard/components/add-repo-button";
-import ProjectTable from "@/features/dashboard/components/project-table";
+import ProjectCards from "@/features/dashboard/components/project-cards";
 import type { Project } from "@/features/dashboard/type";
-import React from "react";
 
 const Page = async () => {
   const playgrounds = await getAllPlaygroundForUser();
+  const projects = (playgrounds ?? []) as Project[];
 
   return (
-    <div className="mx-auto flex min-h-screen w-full max-w-7xl flex-col px-4 py-10 sm:px-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-950">
+    <div className="mx-auto w-full max-w-7xl px-4 py-10 sm:px-8">
+      <header className="mb-9">
+        <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-iris">
+          Workspace
+        </p>
+        <h1 className="text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">
           Your projects
         </h1>
-        <p className="mt-1.5 text-[15px] text-zinc-500">
-          Create a new project or reopen one of your recent workspaces.
+        <p className="mt-2 text-[15px] text-muted-foreground">
+          Spin up a new stack or jump back into a recent workspace.
         </p>
-      </div>
+      </header>
 
-      <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <AddNewButton />
         <AddRepoButton />
       </div>
 
-      <div className="mt-10 flex w-full flex-col">
-        {playgrounds && playgrounds.length === 0 ? (
+      <div className="mt-12">
+        {projects.length === 0 ? (
           <EmptyState
-            title="No project found"
-            description="Create a new project to get started"
+            title="No projects yet"
+            description="Create your first project to see it here."
             imageSrc="/empty-state.svg"
           />
         ) : (
-          <ProjectTable
-            projects={(playgrounds ?? []) as Project[]}
+          <ProjectCards
+            projects={projects}
             onDeleteProject={deleteProjectById}
             onUpdateProject={editProjectById}
             onDuplicateProject={duplicateProjectById}

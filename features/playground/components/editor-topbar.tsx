@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Check,
-  ChevronLeft,
   ChevronDown,
+  ChevronLeft,
   Loader2,
   Plus,
   TriangleAlert,
@@ -21,7 +21,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import UserButton from "@/features/auth/components/user-button";
-import type { PlaygroundMeta, ProjectSwitcherItem } from "./playground-workspace";
+import type {
+  PlaygroundMeta,
+  ProjectSwitcherItem,
+} from "./playground-workspace";
 
 const TEMPLATE_LABELS: Record<string, string> = {
   REACT: "React",
@@ -39,25 +42,25 @@ const SaveIndicator = ({
   saveStatus: "idle" | "saving" | "saved" | "error";
   isDirty: boolean;
 }) => {
-  if (saveStatus === "saving" || (isDirty && saveStatus !== "error")) {
-    return (
-      <span className="hidden items-center gap-1.5 text-xs text-zinc-500 sm:flex">
-        <Loader2 className="size-3.5 animate-spin" />
-        Saving
-      </span>
-    );
-  }
   if (saveStatus === "error") {
     return (
-      <span className="hidden items-center gap-1.5 text-xs text-red-600 sm:flex">
+      <span className="hidden items-center gap-1.5 rounded-full bg-red-50 px-3 py-1 text-xs font-medium text-red-600 sm:flex">
         <TriangleAlert className="size-3.5" />
         Save failed
       </span>
     );
   }
+  if (saveStatus === "saving" || isDirty) {
+    return (
+      <span className="hidden items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground sm:flex">
+        <Loader2 className="size-3.5 animate-spin" />
+        Saving
+      </span>
+    );
+  }
   return (
-    <span className="hidden items-center gap-1.5 text-xs text-zinc-500 sm:flex">
-      <Check className="size-3.5 text-emerald-600" />
+    <span className="hidden items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-600 sm:flex">
+      <Check className="size-3.5" />
       Saved
     </span>
   );
@@ -77,37 +80,38 @@ const EditorTopbar = ({
   const router = useRouter();
 
   return (
-    <header className="flex h-12 shrink-0 items-center justify-between gap-3 rounded-2xl border border-zinc-200/80 bg-white/90 px-3 shadow-sm backdrop-blur">
-      <div className="flex min-w-0 items-center gap-2">
+    <header className="flex h-13 shrink-0 items-center justify-between gap-3 rounded-2xl border border-border bg-card px-3 py-2 shadow-sm">
+      <div className="flex min-w-0 items-center gap-1.5">
         <Link href="/dashboard" aria-label="Back to dashboard">
           <Button variant="ghost" size="icon-sm" className="rounded-full">
             <ChevronLeft className="size-4" />
           </Button>
         </Link>
 
-        <Link href="/dashboard" className="flex items-center gap-2">
+        <Link href="/dashboard" className="ml-1">
           <Image
             src="/icon.svg"
             alt="Codepilot"
-            width={26}
-            height={26}
-            className="rounded-md"
+            width={28}
+            height={28}
+            unoptimized
+            className="rounded-[26%]"
           />
         </Link>
 
         <DropdownMenu>
-          <DropdownMenuTrigger className="flex min-w-0 items-center gap-1.5 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-zinc-100">
-            <span className="truncate text-sm font-semibold tracking-tight text-zinc-900">
+          <DropdownMenuTrigger className="ml-1 flex min-w-0 items-center gap-1.5 rounded-xl px-2.5 py-2 text-left transition-colors hover:bg-muted">
+            <span className="truncate text-sm font-semibold tracking-tight">
               {playground.title}
             </span>
-            <span className="hidden rounded-full bg-zinc-100 px-2 py-0.5 text-[11px] font-medium text-zinc-600 md:inline">
+            <span className="hidden rounded-full bg-iris-soft px-2.5 py-0.5 text-[11px] font-semibold text-iris md:inline">
               {TEMPLATE_LABELS[playground.template] ?? playground.template}
             </span>
-            <ChevronDown className="size-3.5 shrink-0 text-zinc-400" />
+            <ChevronDown className="size-3.5 shrink-0 text-muted-foreground" />
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-72">
-            <DropdownMenuLabel className="text-xs font-medium text-zinc-500">
-              Your projects
+            <DropdownMenuLabel className="text-xs font-medium text-muted-foreground">
+              Switch project
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <div className="max-h-72 overflow-y-auto">
@@ -116,13 +120,11 @@ const EditorTopbar = ({
                   key={project.id}
                   onClick={() => router.push(`/playground/${project.id}`)}
                   className={
-                    project.id === playground.id
-                      ? "bg-zinc-100 font-medium"
-                      : ""
+                    project.id === playground.id ? "bg-muted font-medium" : ""
                   }
                 >
                   <span className="truncate">{project.title}</span>
-                  <span className="ml-auto text-[11px] text-zinc-400">
+                  <span className="ml-auto text-[11px] text-muted-foreground">
                     {TEMPLATE_LABELS[project.template] ?? project.template}
                   </span>
                 </DropdownMenuItem>
@@ -140,7 +142,7 @@ const EditorTopbar = ({
       <div className="flex items-center gap-2">
         <SaveIndicator saveStatus={saveStatus} isDirty={isDirty} />
         <Link href="/dashboard" className="hidden sm:block">
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="rounded-full">
             Dashboard
           </Button>
         </Link>

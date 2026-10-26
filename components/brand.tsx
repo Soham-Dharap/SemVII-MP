@@ -15,7 +15,8 @@ export function BrandMark({
       alt="Codepilot logo"
       width={size}
       height={size}
-      className={cn("rounded-[22%]", className)}
+      unoptimized
+      className={cn("rounded-[26%]", className)}
       priority
     />
   );
@@ -33,12 +34,12 @@ export default function Brand({
   return (
     <Link
       href={href}
-      className={cn("flex items-center gap-2.5", className)}
+      className={cn("group flex items-center gap-2.5", className)}
       aria-label="Codepilot home"
     >
       <BrandMark size={30} />
       {showWordmark && (
-        <span className="text-[17px] font-semibold tracking-tight text-zinc-900">
+        <span className="text-[17px] font-semibold tracking-tight text-foreground">
           Codepilot
         </span>
       )}

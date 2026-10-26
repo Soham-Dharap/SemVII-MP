@@ -20,17 +20,17 @@ const InspectorPanel = ({
   template: TemplateName;
 }) => {
   return (
-    <section className="flex h-full flex-col overflow-hidden rounded-2xl border border-zinc-200/80 bg-white">
-      <div className="flex h-11 shrink-0 items-center justify-between border-b border-zinc-100 px-3">
-        <div className="flex items-center gap-1 rounded-lg bg-zinc-100 p-0.5">
+    <section className="flex h-full flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
+      <div className="flex h-12 shrink-0 items-center justify-between border-b border-border/70 px-3">
+        <div className="flex items-center gap-1 rounded-xl bg-muted p-1">
           <button
             type="button"
             onClick={() => onRightTabChange("preview")}
             className={cn(
-              "flex items-center gap-1.5 rounded-md px-3 py-1 text-xs font-medium transition-all",
+              "flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all",
               rightTab === "preview"
-                ? "bg-white text-zinc-900 shadow-sm"
-                : "text-zinc-500 hover:text-zinc-700",
+                ? "bg-card text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground",
             )}
           >
             <MonitorPlay className="size-3.5" />
@@ -40,17 +40,17 @@ const InspectorPanel = ({
             type="button"
             onClick={() => onRightTabChange("ai")}
             className={cn(
-              "flex items-center gap-1.5 rounded-md px-3 py-1 text-xs font-medium transition-all",
+              "flex items-center gap-1.5 rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all",
               rightTab === "ai"
-                ? "bg-white text-zinc-900 shadow-sm"
-                : "text-zinc-500 hover:text-zinc-700",
+                ? "bg-card text-foreground shadow-sm"
+                : "text-muted-foreground hover:text-foreground",
             )}
           >
             <Sparkles className="size-3.5" />
             AI
           </button>
         </div>
-        <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-[11px] font-medium text-zinc-500">
+        <span className="rounded-full bg-iris-soft px-2.5 py-1 text-[11px] font-semibold text-iris">
           v1
         </span>
       </div>

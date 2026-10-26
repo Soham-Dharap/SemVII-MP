@@ -1,8 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { ArrowDown } from "lucide-react";
+import { ArrowDownToLine, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { GitHubComingSoonDialog } from "@/components/coming-soon-dialog";
 
@@ -11,44 +10,35 @@ const AddRepoButton = () => {
 
   return (
     <>
-      <div
-        role="button"
-        tabIndex={0}
-        aria-label="Open a GitHub repository"
+      <button
+        type="button"
         onClick={() => setOpen(true)}
-        onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") setOpen(true);
-        }}
-        className="group flex cursor-pointer flex-row items-center justify-between rounded-2xl border border-zinc-200 bg-white px-6 py-6 shadow-sm transition-all duration-300 ease-in-out hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md"
+        className="group relative flex items-center justify-between overflow-hidden rounded-2xl border border-dashed border-border bg-muted/40 p-7 text-left transition-all duration-300 hover:-translate-y-1 hover:border-iris/40 hover:bg-card hover:shadow-lg"
       >
-        <div className="flex flex-row items-start gap-4">
-          <Button
-            variant="outline"
-            size="icon"
-            className="bg-white transition-colors group-hover:border-blue-300 group-hover:text-blue-600"
-          >
-            <ArrowDown size={26} />
-          </Button>
-
-          <div className="flex flex-col">
-            <h2 className="text-lg font-semibold tracking-tight text-zinc-900">
-              Open GitHub Repository
-            </h2>
-            <p className="max-w-60 text-sm text-zinc-500">
-              Import your repositories — arriving in Version 2
-            </p>
+        <div>
+          <div className="mb-4 flex size-11 items-center justify-center rounded-xl bg-foreground text-white transition-transform duration-300 group-hover:scale-105">
+            <ArrowDownToLine className="size-5" />
           </div>
+          <h2 className="text-lg font-semibold tracking-tight">
+            Import from GitHub
+          </h2>
+          <p className="mt-1 max-w-60 text-sm text-muted-foreground">
+            Clone an existing repository — arriving in Version 2
+          </p>
+          <span className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-foreground/5 px-2.5 py-1 text-xs font-semibold text-muted-foreground">
+            Roadmap
+            <ArrowUpRight className="size-3" />
+          </span>
         </div>
-        <div className="relative hidden overflow-hidden sm:block">
-          <Image
-            src="/github.svg"
-            alt="GitHub"
-            width={110}
-            height={110}
-            className="transition-transform duration-300 group-hover:scale-105"
-          />
-        </div>
-      </div>
+        <Image
+          src="/github.svg"
+          alt=""
+          width={120}
+          height={120}
+          unoptimized
+          className="absolute -bottom-4 -right-4 size-28 opacity-50 transition-transform duration-300 group-hover:scale-110 sm:size-32"
+        />
+      </button>
 
       <GitHubComingSoonDialog open={open} onOpenChange={setOpen} />
     </>
