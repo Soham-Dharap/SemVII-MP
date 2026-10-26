@@ -19,7 +19,14 @@ async function AuthSession({
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
+  let session = null;
+  try {
+    session = await auth();
+  } catch (e) {
+    console.error("Auth session fetch failed (DB not ready?):", e);
+    // Don't crash the whole site if DB is misconfigured — landing page should still show
+    session = null;
+  }
   return (
     <SessionProvider session={session}>
       {children}

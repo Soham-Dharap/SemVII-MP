@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import React from "react";
 
 const AuthLayout = ({ children }: { children: React.ReactNode }) => {
