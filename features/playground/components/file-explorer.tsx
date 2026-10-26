@@ -38,7 +38,7 @@ const FILE_ICON_MAP: Record<
 
 const FileIcon = ({ language }: { language: string }) => {
   const Icon = FILE_ICON_MAP[language] ?? FileText;
-  return <Icon className="size-4 shrink-0 text-zinc-400" />;
+  return <Icon className="size-4 shrink-0 text-muted-foreground" />;
 };
 
 interface FileExplorerProps {
@@ -212,7 +212,7 @@ const FileExplorer = ({
         <div className="space-y-0.5 p-2">
           {tree.length === 0 ? (
             <div className="px-4 py-12 text-center">
-              <FileCode2 className="mx-auto mb-3 size-7 text-zinc-300" />
+              <FileCode2 className="mx-auto mb-3 size-7 text-muted-foreground/40" />
               <p className="text-sm text-muted-foreground">No files yet</p>
               <button
                 className="mt-2 text-sm font-medium text-iris hover:underline"
