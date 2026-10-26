@@ -10,7 +10,7 @@ services:
     region: singapore # closest to India (Mumbai not available, Singapore is nearest)
     branch: arena/4983422a-semvii-mp
     # Render auto-detects Node version from package.json engines, but pin it:
-    buildCommand: npm install && npx prisma generate && npm run build
+    buildCommand: npm install --include=dev && npx prisma generate && npm run build
     startCommand: npm start
     healthCheckPath: /
     # Auto-deploy on git push
