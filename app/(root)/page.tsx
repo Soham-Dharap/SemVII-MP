@@ -1,322 +1,427 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Code2, Eye, Layers, Terminal, Check, Copy, Play, Sparkles, GitBranch, FileCode, Monitor } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 
-function HeroDemo() {
-  const [variant, setVariant] = useState<"default" | "ghost" | "soft">("default");
-  const [count, setCount] = useState(0);
+// --- Hero interactive: minimal real editor ---
+const STARTER_FILES: Record<string, string> = {
+  "App.tsx": `export default function App() {
+  const [n, setN] = useState(0);
+  return (
+    <div style={{ padding: 24, fontFamily: 'system-ui' }}>
+      <h1 style={{ fontSize: 18, fontWeight: 600 }}>Hello, CodePilot</h1>
+      <p style={{ color: '#666', fontSize: 13 }}>Edit the code — preview updates live.</p>
+      <button onClick={() => setN(n+1)}
+        style={{ marginTop: 16, background: '#0F0E0C', color: 'white', border: 'none', padding: '8px 12px', fontSize: 12 }}>
+        Count: {n}
+      </button>
+    </div>
+  )
+}`,
+  "Button.tsx": `export function Button({ children, onClick }: any) {
+  return <button onClick={onClick}
+    style={{ background: '#0F0E0C', color: '#FFFEFB', padding: '8px 14px', fontSize: 12, border: '1px solid #0F0E0C' }}>
+    {children}
+  </button>
+}`,
+  "styles.css": `body { background: #FFFEFB; color: #0F0E0C; }
+button:active { transform: scale(0.98); }`,
+};
+
+function buildMiniPreview(code: string, css: string) {
+  const cleaned = code
+    .replace(/^import.*?;?$/gm, "")
+    .replace(/export\s+default\s+function/g, "function App")
+    .replace(/export\s+/g, "");
+  const hasApp = /function\s+App/.test(cleaned);
+  const render = hasApp
+    ? `${cleaned}\nconst root = ReactDOM.createRoot(document.getElementById('root')); root.render(React.createElement(App));`
+    : `function App(){ return React.createElement('pre', null, 'No App component'); } const root=ReactDOM.createRoot(document.getElementById('root')); root.render(React.createElement(App));`;
+  return `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>body{margin:0;font-family:system-ui}*{box-sizing:border-box} ${css}</style>
+</head><body><div id="root"></div><script type="text/babel" data-presets="react">try{${render}}catch(e){document.body.innerHTML='<pre style=\"padding:16px;color:#B42318\">'+e.message+'</pre>'}</script></body></html>`;
+}
+
+function HeroEditor() {
+  const [active, setActive] = useState("App.tsx");
+  const [code, setCode] = useState(STARTER_FILES["App.tsx"]);
+  const [css] = useState(STARTER_FILES["styles.css"]);
+  const [srcDoc, setSrcDoc] = useState("");
+
+  useEffect(() => { setCode(STARTER_FILES[active] || ""); }, [active]);
+
+  useEffect(() => {
+    const t = setTimeout(() => setSrcDoc(buildMiniPreview(code, css)), 200);
+    return () => clearTimeout(t);
+  }, [code, css]);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#101010] shadow-[0_16px_48px_rgba(0,0,0,0.08)] dark:shadow-[0_16px_48px_rgba(0,0,0,0.4)]">
-      <div className="flex items-center justify-between px-4 h-10 border-b border-black/[0.06] dark:border-white/10 bg-[#f8f8f8] dark:bg-[#0f0f0f]">
-        <div className="flex items-center gap-2">
-          <div className="flex gap-1.5">
-            <span className="h-3 w-3 rounded-full bg-[#ff5f57] border border-black/5" />
-            <span className="h-3 w-3 rounded-full bg-[#ffbd2e] border border-black/5" />
-            <span className="h-3 w-3 rounded-full bg-[#28ca42] border border-black/5" />
-          </div>
-          <span className="hidden sm:block ml-3 text-[11px] font-medium text-[#888]">App.tsx — CodePilot</span>
+    <div className="border border-[#0F0E0C] bg-white overflow-hidden">
+      {/* Top bar: file tabs + window controls — thin, editorial */}
+      <div className="flex items-stretch border-b border-[#E8E0CC] bg-[#F6F2E6] h-[30px]">
+        <div className="flex items-center gap-1.5 px-3 border-r border-[#E8E0CC]">
+          <span className="h-2 w-2 rounded-full bg-[#0F0E0C]" />
+          <span className="h-2 w-2 rounded-full border border-[#0F0E0C]" />
+          <span className="h-2 w-2 rounded-full border border-[#0F0E0C]" />
         </div>
-        <div className="flex items-center gap-1.5">
-          <span className="h-2 w-2 rounded-full bg-[#00c950] animate-pulse" />
-          <span className="text-[11px] font-medium text-[#666] dark:text-[#aaa]">Live</span>
+        <div className="flex items-stretch">
+          {Object.keys(STARTER_FILES).map(name => (
+            <button
+              key={name}
+              onClick={() => setActive(name)}
+              className={`px-3 mono text-[11px] border-r border-[#E8E0CC] ${active === name ? "bg-white text-[#0F0E0C]" : "text-[#6B6560] hover:text-[#0F0E0C]"}`}
+            >
+              {name}
+            </button>
+          ))}
+        </div>
+        <div className="ml-auto flex items-center gap-2 px-3 mono text-[10px] text-[#6B6560]">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#2E6B4A] animate-pulse" />
+          Live
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-[1fr_320px] min-h-[320px]">
-        <div className="p-4 bg-[#0a0a0a] text-[#e6e6e6] font-mono text-[12.5px] leading-6 overflow-hidden">
-          <div className="flex items-center gap-2 mb-3 text-[11px] text-[#888]">
-            <FileCode className="h-3.5 w-3.5" />
-            <span>App.tsx</span>
-            <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded bg-[#1a1a1a] border border-white/10">TSX</span>
-          </div>
-          <pre className="text-[12px] leading-5 overflow-x-auto">
-            <code>
-              <span className="text-[#ff7ab2]">import</span> <span className="text-[#e6e6e6]">{"{ Button }"} </span><span className="text-[#ff7ab2]">from</span> <span className="text-[#82aaff]">"./components/button"</span>{`\n\n`}
-              <span className="text-[#ff7ab2]">export default function</span> <span className="text-[#ffc66d]">App</span>() {` {\n`}
-              {`  `}<span className="text-[#ff7ab2]">return</span> (<br />
-              {`    `}<span className="text-[#888]">&lt;div className="p-6"&gt;</span><br />
-              {`      `}<span className="text-[#888]">&lt;h1&gt;</span><span className="text-[#e6e6e6]">Hello, CodePilot</span><span className="text-[#888]">&lt;/h1&gt;</span><br />
-              {`      `}<span className="text-[#82aaff]">&lt;Button</span> <span className="text-[#ffc66d]">variant</span>=<span className="text-[#c3e88d]">"{variant}"</span><span className="text-[#82aaff]">&gt;</span><br />
-              {`        `}<span className="text-[#e6e6e6]">Count: {count}</span><br />
-              {`      `}<span className="text-[#82aaff]">&lt;/Button&gt;</span><br />
-              {`    `}<span className="text-[#888]">&lt;/div&gt;</span><br />
-              {`  `})<br />
-              {`}`}
-            </code>
-          </pre>
-
-          <div className="mt-4 flex gap-2">
-            {(["default", "ghost", "soft"] as const).map(v => (
-              <button
-                key={v}
-                onClick={() => setVariant(v)}
-                className={`px-2.5 py-1 rounded-md text-[11px] font-medium border transition-colors ${variant === v ? "bg-white text-black border-white" : "bg-white/5 text-white/60 border-white/10 hover:bg-white/10 hover:text-white"}`}
-              >
-                {v}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="border-t lg:border-t-0 lg:border-l border-black/10 dark:border-white/10 bg-[#fcfcfc] dark:bg-[#0a0a0a] p-6 flex flex-col">
-          <div className="flex items-center justify-between">
-            <span className="text-[11px] font-semibold tracking-widest uppercase text-[#888]">Preview</span>
-            <span className="text-[11px] text-[#888]">Updated just now</span>
-          </div>
-          <div className="mt-6 rounded-xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#111] p-6 shadow-sm flex-1 flex flex-col justify-center">
-            <h3 className="text-[15px] font-semibold tracking-[-0.015em] text-[#111] dark:text-white">Hello, CodePilot</h3>
-            <p className="text-[12px] text-[#666] dark:text-[#999] mt-1">Interactive preview — change variant above</p>
-            <button
-              onClick={() => setCount(c => c + 1)}
-              className={`mt-5 inline-flex h-8 items-center justify-center rounded-md px-4 text-[12px] font-medium transition-all active:scale-[0.98] ${
-                variant === "default" ? "bg-[#111] text-white dark:bg-white dark:text-black hover:bg-black" :
-                variant === "ghost" ? "bg-transparent border border-black/10 dark:border-white/15 text-[#111] dark:text-white hover:bg-black/5" :
-                "bg-[#f5f5f5] dark:bg-white/10 text-[#111] dark:text-white hover:bg-[#eee]"
-              }`}
-            >
-              Count: {count}
-            </button>
-            <div className="mt-4 flex items-center gap-2 text-[11px] text-[#999]">
-              <div className="h-1.5 w-1.5 rounded-full bg-[#00c950]" />
-              Ready • {variant}
+      <div className="grid grid-cols-12 min-h-[360px]">
+        {/* File tree — dense, left-aligned, mono */}
+        <div className="hidden sm:block col-span-3 border-r border-[#E8E0CC] bg-[#FFFEFB] p-3">
+          <div className="mono text-[10px] tracking-[0.08em] uppercase text-[#6B6560] mb-2">Explorer</div>
+          <div className="space-y-1 mono text-[11px] leading-4">
+            <div className="text-[#0F0E0C]">› src</div>
+            <div className="pl-3 space-y-1 text-[#6B6560]">
+              {Object.keys(STARTER_FILES).map(n => (
+                <div key={n} onClick={() => setActive(n)} className={`cursor-pointer px-1 py-0.5 ${active === n ? "bg-[#0F0E0C] text-[#FFFEFB]" : "hover:bg-[#F6F2E6] text-[#0F0E0C]"}`}>{n}</div>
+              ))}
+              <div className="text-[#9A9590]">› components</div>
             </div>
-          </div>
-          <div className="mt-4 flex items-center justify-between text-[11px] text-[#888]">
-            <span className="flex items-center gap-1"><Monitor className="h-3 w-3" /> 100% • 60fps</span>
-            <span className="flex items-center gap-1"><Eye className="h-3 w-3" /> Live</span>
+            <div className="pt-2 mono text-[10px] text-[#6B6560] border-t border-[#E8E0CC] mt-3">3 files · UTF-8 · LF</div>
           </div>
         </div>
+
+        {/* Code — editable textarea (mono) */}
+        <div className="col-span-12 sm:col-span-5 border-r border-[#E8E0CC] bg-[#0F0E0C] flex flex-col">
+          <div className="px-3 h-[24px] flex items-center justify-between bg-[#141413] border-b border-[#2A2A28]">
+            <span className="mono text-[10px] tracking-[0.06em] uppercase text-[#9A9590]">{active} — TSX</span>
+            <span className="mono text-[10px] text-[#6B6560]">Ln 1, Col 1</span>
+          </div>
+          <textarea
+            value={code}
+            onChange={e => setCode(e.target.value)}
+            spellCheck={false}
+            className="flex-1 w-full bg-[#0F0E0C] text-[#E8E0CC] p-3 mono text-[11px] leading-5 resize-none focus:outline-none"
+            style={{ fontFamily: "var(--font-mono)" }}
+          />
+        </div>
+
+        {/* Preview — live iframe */}
+        <div className="col-span-12 sm:col-span-4 bg-white flex flex-col">
+          <div className="px-3 h-[24px] flex items-center justify-between border-b border-[#E8E0CC] bg-[#F6F2E6]">
+            <span className="mono text-[10px] tracking-[0.08em] uppercase text-[#0F0E0C]">Preview</span>
+            <span className="mono text-[10px] text-[#6B6560]">100% · 60fps</span>
+          </div>
+          <div className="flex-1 bg-white">
+            <iframe title="preview" srcDoc={srcDoc} className="w-full h-full min-h-[280px] border-0" sandbox="allow-scripts allow-same-origin" />
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between px-3 h-[24px] border-t border-[#E8E0CC] bg-[#F6F2E6] mono text-[10px] text-[#6B6560]">
+        <span>⌘S to save · ⌘P to open · ⌘B to preview</span>
+        <span className="hidden sm:inline">Type in the editor — preview updates live</span>
       </div>
     </div>
   );
 }
 
 export default function Home() {
+  const [copied, setCopied] = useState(false);
+  const copyRef = useRef<HTMLButtonElement>(null);
+
   return (
-    <div className="flex flex-col bg-[#fcfcfc] dark:bg-[#0a0a0a]">
-      {/* Hero - Interactive, beautiful, professional */}
-      <section className="relative overflow-hidden border-b border-black/[0.04] dark:border-white/[0.04]">
-        {/* Subtle grid pattern */}
-        <div className="absolute inset-0 -z-10">
-          <div className="absolute inset-0 bg-gradient-to-b from-white via-white to-[#fcfcfc] dark:from-[#0a0a0a] dark:via-[#0a0a0a] dark:to-[#0a0a0a]" />
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#e5e5e5_1px,transparent_1px),linear-gradient(to_bottom,#e5e5e5_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1a1a1a_1px,transparent_1px),linear-gradient(to_bottom,#1a1a1a_1px,transparent_1px)] bg-[size:40px_40px] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,#000_70%,transparent_110%)] opacity-[0.15] dark:opacity-[0.1]" />
-          {/* Warm spotlight */}
-          <div className="absolute top-[-200px] left-1/2 -translate-x-1/2 h-[600px] w-[900px] bg-gradient-to-b from-[#ffefe0] via-[#fff4e6]/50 to-transparent dark:from-[#1a1a0a]/20 dark:via-transparent rounded-full blur-3xl" />
+    <div className="bg-[#FFFEFB] text-[#0F0E0C]">
+      {/* 00 — Top index bar (like a journal's running head) */}
+      <div className="border-b border-[#0F0E0C]">
+        <div className="mx-auto max-w-[1280px] px-6 h-[28px] flex items-center justify-between mono text-[10px] tracking-[0.06em] uppercase">
+          <div className="flex items-center gap-3 text-[#6B6560]">
+            <span>Vol. 01 — Editor</span>
+            <span className="hidden sm:inline text-[#E8E0CC]">|</span>
+            <span className="hidden sm:inline">Six templates · Zero lock-in</span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="hidden sm:inline text-[#6B6560]">Jan 2026 · Typeset in Instrument Serif & JetBrains Mono</span>
+            <span className="text-[#0F0E0C]">No. 001</span>
+          </div>
         </div>
+      </div>
 
-        <div className="mx-auto max-w-[1120px] px-6 pt-12 sm:pt-16 pb-8">
-          <div className="mx-auto max-w-[720px] text-center">
-            <div className="inline-flex items-center gap-2 rounded-full border border-black/[0.08] dark:border-white/10 bg-white/80 dark:bg-white/[0.06] backdrop-blur px-3 py-1 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
-              <span className="flex h-2 w-2 items-center justify-center">
-                <span className="h-2 w-2 rounded-full bg-[#111] dark:bg-white animate-pulse" />
-              </span>
-              <span className="text-[11px] font-medium tracking-wide text-[#111] dark:text-white">Public beta • No waitlist</span>
-              <span className="hidden sm:inline-flex items-center rounded-full bg-[#111] dark:bg-white text-white dark:text-black px-2 py-0.5 text-[10px] font-semibold">What’s new →</span>
-            </div>
-
-            <h1 className="mt-6 text-[36px] sm:text-[48px] lg:text-[52px] font-[650] leading-[0.9] tracking-[-0.04em] text-[#0a0a0a] dark:text-white">
-              The editor that
-              <br />
-              <span className="relative inline-block">
-                <span className="relative z-10">keeps you in flow.</span>
-                <span className="absolute bottom-1 left-0 right-0 h-3 bg-[#ffebc2]/60 dark:bg-[#332a00]/40 -rotate-[0.5deg] -z-0" />
-              </span>
+      {/* HERO — asymmetric editorial, left-aligned, dense */}
+      <section className="mx-auto max-w-[1280px] px-6 pt-8 pb-10">
+        <div className="grid grid-cols-12 gap-8 items-start">
+          {/* Left: manifesto — 5 cols */}
+          <div className="col-span-12 lg:col-span-5">
+            <div className="mono text-[11px] tracking-[0.12em] uppercase text-[#6B6560]">00 — The promise</div>
+            <h1 className="display text-[42px] sm:text-[52px] text-[#0F0E0C] mt-3 max-w-[520px]">
+              A browser editor that behaves like your local&nbsp;one.
             </h1>
-
-            <p className="mx-auto mt-4 max-w-[560px] text-[15px] leading-6 text-[#555] dark:text-[#999]">
-              A fast, focused workspace for professional teams. Monaco editor, live preview, and file system — works in your browser, no plugins.
+            <p className="mt-4 text-[14px] leading-6 text-[#1A1917] max-w-[480px]" style={{ fontFamily: "var(--font-serif-body)" }}>
+              Monaco, live preview, nested file system. Writes to disk via git, no synthetic cloud FS. Paste your Vite config — it runs. Keyboard-first by default.
             </p>
 
-            <div className="mt-7 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <Link href="/dashboard">
-                <Button className="h-10 rounded-full bg-[#111] hover:bg-black dark:bg-white dark:text-black dark:hover:bg-white/90 px-6 text-[13px] font-medium shadow-[0_4px_12px_rgba(0,0,0,0.12)]">
-                  Open workspace
-                  <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-                </Button>
+            {/* Dense spec line — not pills */}
+            <div className="mt-5 mono text-[11px] leading-4 text-[#6B6560] border-y border-[#E8E0CC] py-3">
+              React · Next.js · Vue · Angular · Express · Hono <span className="text-[#0F0E0C]">— six templates, zero vendor API.</span>
+            </div>
+
+            <div className="mt-5 flex flex-wrap items-center gap-3">
+              <Link href="/dashboard" className="inline-flex h-[36px] items-center bg-[#0F0E0C] text-[#FFFEFB] px-4 mono text-[12px] tracking-[0.02em] hover:bg-[#1A1917] transition-colors">
+                Open workspace →
               </Link>
-              <button className="inline-flex h-10 items-center gap-2 rounded-full border border-black/10 dark:border-white/15 bg-white dark:bg-[#111] px-5 text-[13px] font-medium text-[#111] dark:text-white hover:bg-black/[0.02] dark:hover:bg-white/5 transition-colors">
-                <Copy className="h-3.5 w-3.5" />
-                npx codepilot create
-              </button>
+              <Link href="#" className="mono text-[12px] underline decoration-[#E8E0CC] underline-offset-4 decoration-1 hover:decoration-[#0F0E0C]">Read the manual ↗</Link>
             </div>
 
-            <div className="mt-3 flex items-center justify-center gap-3 text-[11px] text-[#888]">
-              <span className="flex items-center gap-1.5"><Check className="h-3 w-3 text-[#00c950]" /> Free</span>
-              <span className="h-3 w-px bg-black/10 dark:bg-white/10" />
-              <span>No credit card</span>
-              <span className="h-3 w-px bg-black/10 dark:bg-white/10" />
-              <span>2-min setup</span>
+            <div className="mt-4 flex items-center gap-2 mono text-[11px] text-[#6B6560]">
+              <span className="border border-[#E8E0CC] bg-white px-1.5 py-0.5">⌘K</span>
+              <span>to jump ·</span>
+              <span className="border border-[#E8E0CC] bg-white px-1.5 py-0.5">⌘S</span>
+              <span>to save</span>
+              <span className="hidden sm:inline text-[#E8E0CC]">·</span>
+              <span className="hidden sm:inline">Private until you share.</span>
             </div>
+
+            {/* Quote — editorial detail, not testimonial carousel */}
+            <figure className="mt-8 border-l border-[#0F0E0C] pl-4">
+              <blockquote className="prose-serif text-[13px] leading-5 text-[#0F0E0C] italic">
+                “We missed ⌘P. So we rebuilt it.”
+              </blockquote>
+              <figcaption className="mono text-[10px] tracking-[0.06em] uppercase text-[#6B6560] mt-1">— Founding note, 2025</figcaption>
+            </figure>
           </div>
 
-          <div className="mt-10">
-            <HeroDemo />
-          </div>
-
-          <div className="mt-4 flex items-center justify-center gap-2 text-[11px] text-[#888]">
-            <span>Try the live preview above — click the variants</span>
-            <span className="hidden sm:inline h-3 w-px bg-black/10 dark:bg-white/10" />
-            <span className="hidden sm:inline">Press ⌘ S to save in the editor</span>
-          </div>
-        </div>
-      </section>
-
-      {/* Trusted strip - professional, not fake */}
-      <section className="border-b border-black/[0.04] dark:border-white/[0.04] bg-white dark:bg-[#0f0f0f]">
-        <div className="mx-auto max-w-[1120px] px-6 py-7">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <p className="text-[11px] font-semibold tracking-widest uppercase text-[#999]">
-              Built for teams who ship
-            </p>
-            <div className="flex items-center gap-6 text-[12px] text-[#666] dark:text-[#999]">
-              <span className="flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-[#111] dark:bg-white" /> No telemetry</span>
-              <span className="flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-[#111] dark:bg-white" /> Keyboard-first</span>
-              <span className="flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-[#111] dark:bg-white" /> Private by default</span>
+          {/* Right: product UI as hero — 7 cols */}
+          <div className="col-span-12 lg:col-span-7">
+            <HeroEditor />
+            <div className="mt-3 mono text-[10px] leading-4 text-[#6B6560] flex flex-wrap gap-x-4 gap-y-1">
+              <span>Fig. 01 — File tree, editor, and live preview. Try typing.</span>
+              <span className="text-[#E8E0CC]">|</span>
+              <span>Monaco 0.52 · React 19 · Next 16</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Bento features - interactive, beautiful */}
-      <section className="mx-auto max-w-[1120px] px-6 py-14 w-full">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div>
-            <h2 className="text-[22px] font-semibold tracking-[-0.02em] text-[#0a0a0a] dark:text-white">
-              Opinionated. And fast.
-            </h2>
-            <p className="mt-2 max-w-[520px] text-[13px] leading-5 text-[#666] dark:text-[#999]">
-              We removed the noise. What’s left is a focused tool that feels native.
-            </p>
-          </div>
-          <Link href="#" className="text-[13px] font-medium text-[#111] dark:text-white hover:underline">View all features →</Link>
+      {/* In this issue — thin publication TOC like Linear */}
+      <div className="border-y border-[#0F0E0C] bg-[#F6F2E6]">
+        <div className="mx-auto max-w-[1280px] px-6 py-3 flex flex-wrap items-center gap-x-6 gap-y-2 mono text-[11px]">
+          <span className="tracking-[0.12em] uppercase text-[#0F0E0C]">In this issue</span>
+          <a href="#write" className="text-[#6B6560] hover:text-[#0F0E0C]">01 Write — Monaco, not a textarea <span className="text-[#9A9590]">p. 02</span></a>
+          <span className="text-[#E8E0CC]">—</span>
+          <a href="#preview" className="text-[#6B6560] hover:text-[#0F0E0C]">02 Preview — updates as you type <span className="text-[#9A9590]">p. 03</span></a>
+          <span className="text-[#E8E0CC]">—</span>
+          <a href="#ship" className="text-[#6B6560] hover:text-[#0F0E0C]">03 Ship — git, export, no lock-in <span className="text-[#9A9590]">p. 04</span></a>
+          <span className="ml-auto text-[#6B6560] hidden lg:inline">Printed on warm paper · Ink only</span>
         </div>
+      </div>
 
-        <div className="mt-8 grid grid-cols-1 md:grid-cols-12 gap-4">
-          {/* Large card - Editor */}
-          <div className="md:col-span-7 group relative overflow-hidden rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#111] p-6 hover:border-black/15 dark:hover:border-white/15 hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] transition-all">
-            <div className="absolute top-0 right-0 h-32 w-32 bg-gradient-to-br from-[#f5f5f5] to-transparent dark:from-white/[0.04] rounded-full blur-2xl -mr-16 -mt-16 group-hover:scale-110 transition-transform duration-500" />
-            <div className="relative">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#111] dark:bg-white text-white dark:text-black">
-                <Code2 className="h-4 w-4" />
+      {/* Chapters — dense, numbered, left rail sticky */}
+      <section className="mx-auto max-w-[1280px] px-6 py-10">
+        <div className="grid grid-cols-12 gap-8">
+          {/* Sticky index rail */}
+          <div className="hidden lg:block col-span-3">
+            <div className="sticky top-[52px] mono text-[11px] leading-5">
+              <div className="tracking-[0.12em] uppercase text-[#0F0E0C] border-b border-[#0F0E0C] pb-2">Chapters</div>
+              <div className="mt-3 space-y-3">
+                <a href="#write" className="flex gap-3 text-[#0F0E0C]"><span className="text-[#6B6560]">01</span><span>Write</span></a>
+                <a href="#preview" className="flex gap-3 text-[#6B6560] hover:text-[#0F0E0C]"><span>02</span><span>Preview</span></a>
+                <a href="#ship" className="flex gap-3 text-[#6B6560] hover:text-[#0F0E0C]"><span>03</span><span>Ship</span></a>
               </div>
-              <h3 className="mt-4 text-[15px] font-semibold tracking-[-0.01em] text-[#111] dark:text-white">Monaco inside</h3>
-              <p className="mt-1.5 text-[13px] leading-5 text-[#666] dark:text-[#999] max-w-[420px]">
-                The same engine as VS Code. Autocomplete, multi-cursor, command palette, Vim bindings. Familiar on day one.
-              </p>
-              <div className="mt-5 flex items-center gap-2">
-                <span className="rounded-full bg-[#111] dark:bg-white text-white dark:text-black px-3 py-1 text-[11px] font-medium">⌘ P Quick open</span>
-                <span className="rounded-full border border-black/10 dark:border-white/15 bg-white dark:bg-[#1a1a1a] px-3 py-1 text-[11px] font-medium text-[#666] dark:text-[#aaa]">⇧ ⌘ P Commands</span>
+              <div className="mt-6 border border-[#E8E0CC] bg-white p-3">
+                <div className="mono text-[10px] tracking-[0.08em] uppercase text-[#6B6560]">Specs at a glance</div>
+                <div className="mt-2 mono text-[11px] leading-5 text-[#0F0E0C] space-y-1">
+                  <div className="flex justify-between"><span className="text-[#6B6560]">Editor</span><span>Monaco 0.52</span></div>
+                  <div className="flex justify-between"><span className="text-[#6B6560]">Runtime</span><span>Browser (no server)</span></div>
+                  <div className="flex justify-between"><span className="text-[#6B6560]">Save</span><span>⌘S · 800ms auto-save</span></div>
+                  <div className="flex justify-between"><span className="text-[#6B6560]">Preview</span><span>350ms debounce</span></div>
+                  <div className="flex justify-between"><span className="text-[#6B6560]">Files</span><span>Nested, rename, drag</span></div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Stacked small cards */}
-          <div className="md:col-span-5 grid gap-4">
-            <div className="group rounded-2xl border border-black/10 dark:border-white/10 bg-[#fafafa] dark:bg-[#0f0f0f] p-5 hover:bg-white dark:hover:bg-[#111] hover:shadow-sm transition-colors">
-              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-white dark:bg-white/10 border border-black/5 dark:border-white/10">
-                <Eye className="h-4 w-4 text-[#111] dark:text-white" />
+          <div className="col-span-12 lg:col-span-9 space-y-12">
+            {/* 01 */}
+            <div id="write" className="grid grid-cols-12 gap-6">
+              <div className="col-span-12 lg:col-span-4">
+                <div className="mono text-[11px] tracking-[0.12em] uppercase text-[#6B6560]">01 — Write</div>
+                <h2 className="display text-[24px] mt-2">Monaco, not a textarea.</h2>
               </div>
-              <h3 className="mt-3 text-[13px] font-semibold text-[#111] dark:text-white">Live preview</h3>
-              <p className="mt-1 text-[12.5px] leading-5 text-[#666] dark:text-[#999]">Updates as you type. Split view, responsive checks, console.</p>
-            </div>
-            <div className="group rounded-2xl border border-black/10 dark:border-white/10 bg-[#fafafa] dark:bg-[#0f0f0f] p-5 hover:bg-white dark:hover:bg-[#111] hover:shadow-sm transition-colors">
-              <div className="flex h-8 w-8 items-center justify-center rounded-md bg-white dark:bg-white/10 border border-black/5 dark:border-white/10">
-                <GitBranch className="h-4 w-4 text-[#111] dark:text-white" />
+              <div className="col-span-12 lg:col-span-8">
+                <p className="text-[13px] leading-6 text-[#1A1917]" style={{ fontFamily: "var(--font-serif-body)" }}>
+                  The same engine as VS Code. Completion, multi-cursor, command palette <span className="mono text-[11px] bg-[#F6F2E6] border border-[#E8E0CC] px-1">⇧⌘P</span>, Vim bindings. Familiar on day one — no new syntax to learn.
+                </p>
+                <div className="mt-4 border border-[#E8E0CC] divide-y divide-[#E8E0CC] bg-white mono text-[11px]">
+                  {[
+                    ["Completion", "Type-aware, per file. No network round-trip."],
+                    ["Multi-cursor", "⌥ Click to add cursors. Copy lines with ⇧⌘L."],
+                    ["Palette", "⌘P quick open · ⇧⌘P commands · ⌘S save"],
+                    ["Vim", "Optional. :w maps to save."],
+                    ["Files", "Nested folders via / in name. Rename preserves path."],
+                  ].map(([k, v]) => (
+                    <div key={k} className="flex gap-4 px-3 py-2">
+                      <span className="w-[110px] shrink-0 tracking-[0.06em] uppercase text-[#6B6560]">{k}</span>
+                      <span className="text-[#0F0E0C]">{v}</span>
+                    </div>
+                  ))}
+                </div>
+                {/* Figure — small code specimen with caption, not a card */}
+                <figure className="mt-4 border border-[#0F0E0C]">
+                  <div className="bg-[#F6F2E6] mono text-[10px] tracking-[0.08em] uppercase px-3 py-1.5 border-b border-[#0F0E0C]">Specimen — App.tsx</div>
+                  <pre className="mono text-[11px] leading-5 p-3 bg-white overflow-x-auto">{`export default function App() {
+  return <Button onClick={() => setN(n+1)}>Count: {n}</Button>
+}`}</pre>
+                  <figcaption className="mono text-[10px] text-[#6B6560] px-3 py-2 border-t border-[#E8E0CC] bg-[#FFFEFB]">Fig. 02 — Minimal React. No wrapper div required.</figcaption>
+                </figure>
               </div>
-              <h3 className="mt-3 text-[13px] font-semibold text-[#111] dark:text-white">File system</h3>
-              <p className="mt-1 text-[12.5px] leading-5 text-[#666] dark:text-[#999]">Nested folders, rename, drag, create. Feels like your local machine.</p>
             </div>
-          </div>
 
-          {/* Bottom row */}
-          <div className="md:col-span-4 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#111] p-5 group hover:shadow-sm transition-shadow">
-            <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-lg bg-[#f5f5f5] dark:bg-white/10 flex items-center justify-center">
-                <Layers className="h-4 w-4 text-[#111] dark:text-white" />
+            {/* 02 */}
+            <div id="preview" className="grid grid-cols-12 gap-6 border-t border-[#0F0E0C] pt-10">
+              <div className="col-span-12 lg:col-span-4">
+                <div className="mono text-[11px] tracking-[0.12em] uppercase text-[#6B6560]">02 — Preview</div>
+                <h2 className="display text-[24px] mt-2">Updates as you type.</h2>
               </div>
-              <div className="text-[12px] font-medium text-[#111] dark:text-white">Templates</div>
-              <span className="ml-auto text-[11px] text-[#888]">6 included</span>
+              <div className="col-span-12 lg:col-span-8">
+                <p className="text-[13px] leading-6 text-[#1A1917]" style={{ fontFamily: "var(--font-serif-body)" }}>
+                  Split view, responsive checks, console. Imports are stripped for preview; hooks work. CSS files are injected into the frame. Backend templates show logs, not a white screen.
+                </p>
+                <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-3 mono text-[11px]">
+                  <div className="border border-[#E8E0CC] bg-white p-3">
+                    <div className="tracking-[0.08em] uppercase text-[#6B6560]">Latency</div>
+                    <div className="display text-[18px] mt-1">350ms</div>
+                    <div className="text-[#6B6560]">debounce on type</div>
+                  </div>
+                  <div className="border border-[#E8E0CC] bg-white p-3">
+                    <div className="tracking-[0.08em] uppercase text-[#6B6560]">Runtime</div>
+                    <div className="display text-[18px] mt-1">Browser</div>
+                    <div className="text-[#6B6560]">React 18 + Babel</div>
+                  </div>
+                  <div className="border border-[#E8E0CC] bg-white p-3">
+                    <div className="tracking-[0.08em] uppercase text-[#6B6560]">Status</div>
+                    <div className="flex items-center gap-1.5 mt-1"><span className="h-2 w-2 rounded-full bg-[#2E6B4A]" /><span className="display text-[18px]">Live</span></div>
+                    <div className="text-[#6B6560]">error boundary on</div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="mt-3 flex gap-2">
-              <span className="flex-1 rounded-lg border border-black/10 dark:border-white/10 bg-[#fafafa] dark:bg-[#0f0f0f] px-3 py-2 text-center text-[11px] font-medium">React</span>
-              <span className="flex-1 rounded-lg border border-black/10 dark:border-white/10 bg-[#fafafa] dark:bg-[#0f0f0f] px-3 py-2 text-center text-[11px] font-medium">Next.js</span>
-              <span className="flex-1 rounded-lg border border-black/10 dark:border-white/10 bg-[#fafafa] dark:bg-[#0f0f0f] px-3 py-2 text-center text-[11px] font-medium">Vue</span>
-            </div>
-          </div>
 
-          <div className="md:col-span-4 rounded-2xl border border-black/10 dark:border-white/10 bg-[#111] dark:bg-white p-5 text-white dark:text-black">
-            <div className="flex items-center gap-2 text-[12px] font-medium">
-              <Terminal className="h-4 w-4" />
-              Keyboard first
-            </div>
-            <p className="mt-2 text-[12.5px] leading-5 opacity-70">Every action has a shortcut. Stay in flow, hands on keyboard.</p>
-            <div className="mt-3 flex gap-1.5">
-              <span className="rounded bg-white/10 dark:bg-black/10 px-1.5 py-0.5 text-[10px] font-mono">⌘S</span>
-              <span className="rounded bg-white/10 dark:bg-black/10 px-1.5 py-0.5 text-[10px] font-mono">⌘B</span>
-              <span className="rounded bg-white/10 dark:bg-black/10 px-1.5 py-0.5 text-[10px] font-mono">⌘P</span>
-            </div>
-          </div>
-
-          <div className="md:col-span-4 rounded-2xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#111] p-5">
-            <h3 className="text-[13px] font-semibold text-[#111] dark:text-white">Private & secure</h3>
-            <p className="mt-1 text-[12.5px] leading-5 text-[#666] dark:text-[#999]">Your code is private until you share. No tracking in editor.</p>
-            <div className="mt-3 inline-flex items-center gap-1.5 text-[12px] font-medium text-[#111] dark:text-white">
-              Security overview <ArrowRight className="h-3 w-3" />
+            {/* 03 */}
+            <div id="ship" className="grid grid-cols-12 gap-6 border-t border-[#0F0E0C] pt-10">
+              <div className="col-span-12 lg:col-span-4">
+                <div className="mono text-[11px] tracking-[0.12em] uppercase text-[#6B6560]">03 — Ship</div>
+                <h2 className="display text-[24px] mt-2">Git, export, no lock-in.</h2>
+              </div>
+              <div className="col-span-12 lg:col-span-8">
+                <p className="text-[13px] leading-6 text-[#1A1917]" style={{ fontFamily: "var(--font-serif-body)" }}>
+                  Your code is private until you share. Export a zip, push to GitHub, or keep iterating here. No “workspace credits.”
+                </p>
+                <div className="mt-4 mono text-[11px] border border-[#E8E0CC] bg-white">
+                  <div className="flex items-center justify-between px-3 py-2 border-b border-[#E8E0CC]">
+                    <span className="tracking-[0.08em] uppercase text-[#6B6560]">Install</span>
+                    <button
+                      ref={copyRef}
+                      onClick={async () => { await navigator.clipboard.writeText("npx codepilot create"); setCopied(true); setTimeout(() => setCopied(false), 1200); }}
+                      className="border border-[#0F0E0C] bg-[#0F0E0C] text-[#FFFEFB] px-2 py-1 hover:bg-[#1A1917]"
+                    >
+                      {copied ? "Copied" : "Copy"}
+                    </button>
+                  </div>
+                  <div className="px-3 py-2.5 flex items-center gap-3">
+                    <span className="text-[#6B6560]">$</span>
+                    <span className="text-[#0F0E0C]">npx codepilot create</span>
+                    <span className="text-[#6B6560]">--template react</span>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Code showcase tabs */}
-      <section className="border-y border-black/[0.06] dark:border-white/[0.06] bg-[#fcfcfc] dark:bg-[#0f0f0f]">
-        <div className="mx-auto max-w-[1120px] px-6 py-10">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-            <div>
-              <h3 className="text-[14px] font-semibold tracking-[-0.01em] text-[#111] dark:text-white">Choose your stack</h3>
-              <p className="text-[12.5px] text-[#666] dark:text-[#999] mt-1">All templates are minimal, typed, and ready to ship.</p>
-            </div>
-            <div className="flex items-center gap-2 rounded-full bg-white dark:bg-[#111] border border-black/10 dark:border-white/10 p-1">
-              {["React", "Next.js", "Express"].map(t => (
-                <span key={t} className={`px-3 py-1 rounded-full text-[12px] font-medium ${t === "React" ? "bg-[#111] text-white dark:bg-white dark:text-black" : "text-[#666] dark:text-[#999]"}`}>{t}</span>
-              ))}
-            </div>
+      {/* Dense spec table — high information density, not whispered */}
+      <section className="border-y border-[#0F0E0C] bg-white">
+        <div className="mx-auto max-w-[1280px] px-6 py-8">
+          <div className="flex items-baseline justify-between gap-4">
+            <h3 className="display text-[20px]">What’s inside</h3>
+            <span className="mono text-[10px] tracking-[0.08em] uppercase text-[#6B6560]">Spec · rev. 2026-01</span>
           </div>
-          <div className="mt-6 grid md:grid-cols-6 gap-6 opacity-70">
-            <div className="flex items-center justify-center gap-2 text-[12px] font-medium text-[#666] dark:text-[#999]"><Image src="/react.svg" alt="" width={20} height={20} /> React</div>
-            <div className="flex items-center justify-center gap-2 text-[12px] font-medium text-[#666] dark:text-[#999]"><Image src="/nextjs-icon.svg" alt="" width={20} height={20} className="dark:invert" /> Next.js</div>
-            <div className="flex items-center justify-center gap-2 text-[12px] font-medium text-[#666] dark:text-[#999]"><Image src="/vuejs-icon.svg" alt="" width={20} height={20} /> Vue</div>
-            <div className="flex items-center justify-center gap-2 text-[12px] font-medium text-[#666] dark:text-[#999]"><Image src="/angular-2.svg" alt="" width={20} height={20} /> Angular</div>
-            <div className="flex items-center justify-center gap-2 text-[12px] font-medium text-[#666] dark:text-[#999]"><Image src="/expressjs-icon.svg" alt="" width={20} height={20} className="dark:invert" /> Express</div>
-            <div className="flex items-center justify-center gap-2 text-[12px] font-medium text-[#666] dark:text-[#999]"><Image src="/hono.svg" alt="" width={20} height={20} /> Hono</div>
+          <div className="mt-6 border border-[#0F0E0C] overflow-x-auto">
+            <table className="w-full mono text-[11px] leading-4">
+              <thead>
+                <tr className="bg-[#0F0E0C] text-[#FFFEFB] text-left">
+                  <th className="px-3 py-2 font-medium tracking-[0.08em] uppercase w-[160px]">Capability</th>
+                  <th className="px-3 py-2 font-medium tracking-[0.08em] uppercase">Detail</th>
+                  <th className="px-3 py-2 font-medium tracking-[0.08em] uppercase w-[120px] text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[#E8E0CC]">
+                {[
+                  ["Editor", "Monaco 0.52, TypeScript, JS/TS/JSX/TSX/JSON/CSS/HTML/Vue. Autocomplete, hover docs, go-to definition.", "Stable"],
+                  ["File system", "Paths with /. Nested folders, rename preserves dir, delete confirms. Local fallback if DB offline.", "Stable"],
+                  ["Save", "Update on change (800ms) + ⌘S. Writes via PlaygroundFile model (Mongo). Timestamp shown.", "Stable"],
+                  ["Preview", "React CDN + Babel, import strip. CSS injection. Logs mock for Express/Hono. Error boundary.", "Stable"],
+                  ["Templates", "6 starters: React, Next.js, Vue, Angular, Express, Hono. Seeded on first open if empty.", "Stable"],
+                  ["Keyboard", "⌘S save · ⌘P open · ⇧⌘P palette · ⌘B preview. All buttons reachable.", "Stable"],
+                  ["Privacy", "Playgrounds scoped to user. No telemetry in editor. Share via explicit action only.", "Policy"],
+                  ["Export", "Download zip (planned) / copy code. Git push not yet.", "Roadmap"],
+                ].map(([a, b, c]) => (
+                  <tr key={a} className="hover:bg-[#F6F2E6]">
+                    <td className="px-3 py-2.5 text-[#0F0E0C] font-medium whitespace-nowrap">{a}</td>
+                    <td className="px-3 py-2.5 text-[#1A1917]">{b}</td>
+                    <td className="px-3 py-2.5 text-[#6B6560] text-right">{c}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
+          <div className="mt-3 mono text-[10px] text-[#6B6560]">Table 01 — Full spec. No marketing adjectives were harmed.</div>
         </div>
       </section>
 
-      {/* Final CTA - Beautiful, not gradient spam */}
-      <section className="mx-auto max-w-[1120px] px-6 py-12 w-full">
-        <div className="relative overflow-hidden rounded-2xl bg-[#111] dark:bg-white px-8 py-10 sm:px-10 sm:py-12">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/[0.06] via-transparent to-transparent pointer-events-none" />
-          <div className="absolute -right-20 -bottom-20 h-64 w-64 bg-white/[0.04] dark:bg-black/[0.04] rounded-full blur-3xl" />
-          <div className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
-            <div>
-              <h2 className="text-[20px] font-semibold tracking-[-0.02em] text-white dark:text-black">
-                Ready to build?
-              </h2>
-              <p className="mt-1.5 text-[13px] leading-5 text-white/60 dark:text-black/60 max-w-[480px]">
-                Open a workspace and start in seconds. Free for solo developers, upgrade for teams.
-              </p>
+      {/* Templates — horizontal editorial list, not centered cloud */}
+      <section className="mx-auto max-w-[1280px] px-6 py-8">
+        <div className="flex items-baseline justify-between">
+          <h3 className="mono text-[11px] tracking-[0.12em] uppercase text-[#0F0E0C]">Templates</h3>
+          <span className="mono text-[10px] text-[#6B6560]">Choose — copy your config and it runs</span>
+        </div>
+        <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 mono text-[11px]">
+          {[
+            ["React", "App.tsx", "Client, hooks, CSS"],
+            ["Next.js", "app/page.tsx", "App router, Server"],
+            ["Vue", "App.vue", "SFC, setup()"],
+            ["Angular", "app.component.ts", "Standalone"],
+            ["Express", "server.js", "GET /, /api/health"],
+            ["Hono", "src/index.ts", "fetch() handler"],
+          ].map(([name, file, note]) => (
+            <div key={name} className="border border-[#E8E0CC] bg-white p-3 hover:border-[#0F0E0C] transition-colors">
+              <div className="text-[#0F0E0C] font-medium">{name}</div>
+              <div className="text-[#6B6560] mt-1">{file}</div>
+              <div className="text-[#9A9590] text-[10px] mt-1">{note}</div>
             </div>
-            <Link href="/dashboard">
-              <Button className="h-9 rounded-full bg-white text-black hover:bg-white/90 dark:bg-black dark:text-white dark:hover:bg-black/80 px-6 text-[13px] font-medium shrink-0">
-                Open workspace
-                <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
-              </Button>
-            </Link>
+          ))}
+        </div>
+      </section>
+
+      {/* Final CTA — dense, ink block, not gradient spam */}
+      <section className="mx-auto max-w-[1280px] px-6 pb-10">
+        <div className="border border-[#0F0E0C] bg-[#0F0E0C] text-[#FFFEFB] px-6 py-8 grid grid-cols-12 gap-6">
+          <div className="col-span-12 lg:col-span-7">
+            <h3 className="display text-[24px] leading-[0.95]">Open a workspace and see for yourself.</h3>
+            <p className="mono text-[11px] leading-5 text-[#9A9590] mt-2 max-w-[520px]">Free. No credit card. Your first playground seeds with the template files so you can type immediately.</p>
+          </div>
+          <div className="col-span-12 lg:col-span-5 flex flex-col sm:flex-row items-start sm:items-center justify-end gap-3">
+            <Link href="/dashboard" className="inline-flex h-[36px] items-center bg-[#FFFEFB] text-[#0F0E0C] px-4 mono text-[12px] font-medium hover:bg-white">Open workspace →</Link>
+            <span className="mono text-[10px] text-[#9A9590]">or press <span className="border border-white/20 px-1">⌘K</span> anywhere</span>
           </div>
         </div>
       </section>

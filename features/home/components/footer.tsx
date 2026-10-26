@@ -2,59 +2,50 @@ import Link from "next/link";
 
 export function Footer() {
   return (
-    <footer className="bg-white dark:bg-[#0a0a0a] border-t border-black/[0.06] dark:border-white/[0.06]">
-      <div className="mx-auto max-w-[1120px] px-6 py-12">
-        <div className="flex flex-col md:flex-row md:justify-between gap-10">
-          <div className="max-w-[320px]">
-            <div className="flex items-center gap-2">
-              <div className="h-6 w-6 rounded bg-[#111] dark:bg-white text-white dark:text-black flex items-center justify-center">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="16 18 22 12 16 6" />
-                  <polyline points="8 6 2 12 8 18" />
-                </svg>
-              </div>
-              <span className="text-[14px] font-semibold tracking-[-0.015em] text-[#111] dark:text-white">CodePilot</span>
-            </div>
-            <p className="mt-3 text-[13px] leading-5 text-[#666] dark:text-[#888]">
-              A fast, minimal code workspace for professional teams. No telemetry, no clutter.
+    <footer className="border-t border-[#0F0E0C] bg-[#FFFEFB]">
+      {/* Statement — large serif, left-aligned, not centered 3-col */}
+      <div className="mx-auto max-w-[1280px] px-6 py-10">
+        <div className="grid grid-cols-12 gap-6">
+          <div className="col-span-12 lg:col-span-7">
+            <p className="display text-[30px] sm:text-[36px] text-[#0F0E0C] leading-[0.9] max-w-[560px]">
+              Built by people who missed the local.
+            </p>
+            <p className="mt-3 mono text-[11px] leading-5 text-[#6B6560] max-w-[520px]">
+              No synthetic cloud FS. No “AI-powered” banner. Just Monaco, a real file tree, and a preview that updates as you type. Copy your Vite config — it runs.
             </p>
           </div>
-
-          <div className="grid grid-cols-3 gap-10 text-[13px]">
-            <div>
-              <h4 className="font-medium text-[#111] dark:text-white mb-3">Product</h4>
-              <ul className="space-y-2 text-[#666] dark:text-[#999]">
-                <li><Link href="#" className="hover:text-[#111] dark:hover:text-white">Editor</Link></li>
-                <li><Link href="#" className="hover:text-[#111] dark:hover:text-white">Templates</Link></li>
-                <li><Link href="#" className="hover:text-[#111] dark:hover:text-white">Changelog</Link></li>
-              </ul>
+          <div className="col-span-12 lg:col-span-5 flex flex-col justify-between">
+            <div className="grid grid-cols-3 gap-6 mono text-[11px] leading-4">
+              <div>
+                <div className="tracking-[0.08em] uppercase text-[#6B6560] mb-2">Product</div>
+                <div className="space-y-1.5 text-[#0F0E0C]">
+                  <Link href="#" className="block hover:underline decoration-[#E8E0CC] underline-offset-4">Editor</Link>
+                  <Link href="#" className="block hover:underline decoration-[#E8E0CC] underline-offset-4">Templates</Link>
+                  <Link href="#" className="block hover:underline decoration-[#E8E0CC] underline-offset-4">Keyboard</Link>
+                </div>
+              </div>
+              <div>
+                <div className="tracking-[0.08em] uppercase text-[#6B6560] mb-2">Manual</div>
+                <div className="space-y-1.5 text-[#0F0E0C]">
+                  <Link href="#" className="block hover:underline decoration-[#E8E0CC] underline-offset-4">Docs</Link>
+                  <Link href="#" className="block hover:underline decoration-[#E8E0CC] underline-offset-4">API</Link>
+                  <Link href="#" className="block hover:underline decoration-[#E8E0CC] underline-offset-4">Changelog</Link>
+                </div>
+              </div>
+              <div>
+                <div className="tracking-[0.08em] uppercase text-[#6B6560] mb-2">Legal</div>
+                <div className="space-y-1.5 text-[#0F0E0C]">
+                  <Link href="#" className="block hover:underline decoration-[#E8E0CC] underline-offset-4">Privacy</Link>
+                  <Link href="#" className="block hover:underline decoration-[#E8E0CC] underline-offset-4">Terms</Link>
+                  <Link href="#" className="block hover:underline decoration-[#E8E0CC] underline-offset-4">Security</Link>
+                </div>
+              </div>
             </div>
-            <div>
-              <h4 className="font-medium text-[#111] dark:text-white mb-3">Resources</h4>
-              <ul className="space-y-2 text-[#666] dark:text-[#999]">
-                <li><Link href="#" className="hover:text-[#111] dark:hover:text-white">Documentation</Link></li>
-                <li><Link href="#" className="hover:text-[#111] dark:hover:text-white">API</Link></li>
-                <li><Link href="#" className="hover:text-[#111] dark:hover:text-white">Support</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-medium text-[#111] dark:text-white mb-3">Legal</h4>
-              <ul className="space-y-2 text-[#666] dark:text-[#999]">
-                <li><Link href="#" className="hover:text-[#111] dark:hover:text-white">Privacy</Link></li>
-                <li><Link href="#" className="hover:text-[#111] dark:hover:text-white">Terms</Link></li>
-                <li><Link href="#" className="hover:text-[#111] dark:hover:text-white">Security</Link></li>
-              </ul>
+            <div className="mt-8 flex items-center justify-between border-t border-[#E8E0CC] pt-4 mono text-[10px] text-[#6B6560]">
+              <span>© 2026 CodePilot, Inc. — Private by default.</span>
+              <span className="hidden sm:inline">Set in Instrument Serif & JetBrains Mono.</span>
             </div>
           </div>
-        </div>
-
-        <div className="mt-10 pt-6 border-t border-black/[0.06] dark:border-white/[0.06] flex flex-col sm:flex-row justify-between gap-4">
-          <p className="text-[12px] text-[#888]">
-            © 2026 CodePilot, Inc.
-          </p>
-          <p className="text-[12px] text-[#888]">
-            Built for developers who value clarity.
-          </p>
         </div>
       </div>
     </footer>

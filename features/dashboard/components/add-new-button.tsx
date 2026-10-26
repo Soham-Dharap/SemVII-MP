@@ -1,6 +1,5 @@
 "use client";
 import React, { useState } from "react";
-import { Plus, ArrowUpRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import TemplateSelectionModal from "./template-selection-modal";
 import { createPlayground } from "../actions";
@@ -23,32 +22,20 @@ const AddNewButton = () => {
 
   return (
     <>
-      <div
+      <button
         onClick={() => setIsModalOpen(true)}
-        className="group flex flex-col justify-between rounded-xl border border-black/10 dark:border-white/10 bg-white dark:bg-[#111] p-5 cursor-pointer hover:border-black/20 dark:hover:border-white/20 transition-colors"
+        className="group w-full text-left border border-[#0F0E0C] bg-[#0F0E0C] text-[#FFFEFB] p-4 hover:bg-[#1A1917] transition-colors flex flex-col"
       >
-        <div className="flex items-start justify-between">
-          <div className="flex h-9 w-9 items-center justify-center rounded-md bg-[#111] dark:bg-white text-white dark:text-black">
-            <Plus className="h-4 w-4" />
-          </div>
-          <ArrowUpRight className="h-4 w-4 text-[#999] group-hover:text-[#111] dark:group-hover:text-white transition-colors" />
+        <div className="flex items-start justify-between w-full">
+          <div className="mono text-[10px] tracking-[0.08em] uppercase text-white/60">New playground</div>
+          <span className="mono text-[12px]">→</span>
         </div>
-
-        <div className="mt-5">
-          <h3 className="text-[14px] font-semibold tracking-[-0.01em] text-[#111] dark:text-white">
-            New project
-          </h3>
-          <p className="mt-1 text-[13px] leading-5 text-[#666] dark:text-[#999]">
-            Start from a template — React, Next.js, Vue and more.
-          </p>
+        <div className="display text-[18px] mt-2">Start from a template</div>
+        <div className="mono text-[11px] leading-5 text-white/70 mt-1">React, Next.js, Vue, Angular, Express, Hono — six starters, paste your config and it runs.</div>
+        <div className="mt-3 mono text-[10px] tracking-[0.06em] uppercase text-white/50 flex gap-3">
+          <span>6 templates</span><span className="text-white/20">·</span><span>Takes 10s</span>
         </div>
-
-        <div className="mt-4 flex items-center gap-3 text-[12px] text-[#888]">
-          <span>6 templates</span>
-          <span className="h-3 w-px bg-black/10 dark:bg-white/10" />
-          <span>Takes 10s</span>
-        </div>
-      </div>
+      </button>
 
       <TemplateSelectionModal
         isOpen={isModalOpen}

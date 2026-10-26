@@ -1,29 +1,13 @@
 "use client";
 import React from "react";
-import { ArrowUpRight, GitBranch } from "lucide-react";
 
 const AddRepoButton = () => {
   return (
-    <div className="group flex flex-col justify-between rounded-xl border border-black/10 dark:border-white/10 bg-[#fafafa] dark:bg-[#111] p-5 hover:border-black/20 dark:hover:border-white/20 transition-colors">
-      <div className="flex items-start justify-between">
-        <div className="flex h-9 w-9 items-center justify-center rounded-md border border-black/10 dark:border-white/10 bg-white dark:bg-[#1a1a1a] text-[#111] dark:text-white">
-          <GitBranch className="h-4 w-4" />
-        </div>
-        <ArrowUpRight className="h-4 w-4 text-[#999] group-hover:text-[#111] dark:group-hover:text-white transition-colors" />
-      </div>
-
-      <div className="mt-5">
-        <h3 className="text-[14px] font-semibold tracking-[-0.01em] text-[#111] dark:text-white">
-          Import repository
-        </h3>
-        <p className="mt-1 text-[13px] leading-5 text-[#666] dark:text-[#999]">
-          Clone from GitHub and edit directly — no local setup.
-        </p>
-      </div>
-
-      <div className="mt-4 inline-flex items-center rounded-full bg-white dark:bg-[#1a1a1a] border border-black/10 dark:border-white/10 px-2.5 py-1 text-[11px] font-medium text-[#666] dark:text-[#999] w-fit">
-        Coming soon
-      </div>
+    <div className="border border-[#E8E0CC] bg-white p-4 flex flex-col">
+      <div className="mono text-[10px] tracking-[0.08em] uppercase text-[#6B6560]">Import</div>
+      <div className="display text-[16px] mt-1 text-[#0F0E0C]">From GitHub</div>
+      <div className="mono text-[11px] leading-5 text-[#6B6560] mt-1">Clone and edit directly — no local setup. Public repos only for now.</div>
+      <div className="mt-3 mono text-[10px] tracking-[0.06em] uppercase border border-[#E8E0CC] bg-[#F6F2E6] px-2 py-1 w-fit text-[#6B6560]">Coming soon</div>
     </div>
   );
 };
