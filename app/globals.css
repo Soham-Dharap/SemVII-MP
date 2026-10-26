@@ -4,68 +4,49 @@
 
 @custom-variant dark (&:is(.dark *));
 
-/* Editorial warm palette — no purple, one warm ink accent */
+/* GEN-Z MODERN — brutalist + lime + ink */
 :root {
-  --background: #FFFEFB;
-  --foreground: #0F0E0C;
-  --card: #FFFFFF;
-  --card-foreground: #0F0E0C;
-  --popover: #FFFFFF;
-  --popover-foreground: #0F0E0C;
-  --primary: #0F0E0C;
-  --primary-foreground: #FFFEFB;
-  --secondary: #F6F2E6;
-  --secondary-foreground: #0F0E0C;
-  --muted: #F6F2E6;
-  --muted-foreground: #6B6560;
-  --accent: #E8E0CC;
-  --accent-foreground: #0F0E0C;
-  --destructive: #B42318;
+  --background: #0A0A0B;
+  --foreground: #F4F4F0;
+  --card: #141417;
+  --card-foreground: #F4F4F0;
+  --popover: #141417;
+  --popover-foreground: #F4F4F0;
+  --primary: #D6FF00;
+  --primary-foreground: #0A0A0B;
+  --secondary: #1C1C1F;
+  --secondary-foreground: #F4F4F0;
+  --muted: #1E1E22;
+  --muted-foreground: #9A9AA0;
+  --accent: #1E1E22;
+  --accent-foreground: #F4F4F0;
+  --destructive: #FF2B6E;
   --destructive-foreground: #FFFFFF;
-  --border: #E8E0CC;
-  --input: #E8E0CC;
-  --ring: #0F0E0C;
-  --sidebar: #FFFEFB;
-  --sidebar-foreground: #0F0E0C;
-  --sidebar-primary: #0F0E0C;
-  --sidebar-primary-foreground: #FFFEFB;
-  --sidebar-accent: #F6F2E6;
-  --sidebar-accent-foreground: #0F0E0C;
-  --sidebar-border: #E8E0CC;
-  --sidebar-ring: #0F0E0C;
-  --chart-1: #7C4D12;
-  --chart-2: #2E6B4A;
-  --chart-3: #6B4C7A;
-  --chart-4: #8A3D2B;
-  --chart-5: #6B6560;
-  --font-sans: "Instrument Serif", "Newsreader", Georgia, serif;
-  --font-serif-display: "Instrument Serif", Georgia, serif;
-  --font-serif-body: "Newsreader", Georgia, serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-  --radius: 6px;
-  --tracking-tight: -0.02em;
+  --border: #2A2A2E;
+  --input: #2A2A2E;
+  --ring: #D6FF00;
+  --chart-1: #D6FF00;
+  --chart-2: #00E5FF;
+  --chart-3: #FF2B6E;
+  --chart-4: #7B61FF;
+  --chart-5: #FFB800;
+  --sidebar: #0A0A0B;
+  --sidebar-foreground: #F4F4F0;
+  --sidebar-primary: #D6FF00;
+  --sidebar-primary-foreground: #0A0A0B;
+  --sidebar-accent: #1C1C1F;
+  --sidebar-accent-foreground: #F4F4F0;
+  --sidebar-border: #2A2A2E;
+  --sidebar-ring: #D6FF00;
+  --font-sans: "Space Grotesk", system-ui, sans-serif;
+  --font-display: "Syne", "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --radius: 16px;
 }
 
 .dark {
   --background: #0A0A0B;
-  --foreground: #F6F2E6;
-  --card: #141413;
-  --card-foreground: #F6F2E6;
-  --popover: #141413;
-  --popover-foreground: #F6F2E6;
-  --primary: #F6F2E6;
-  --primary-foreground: #0A0A0B;
-  --secondary: #1C1C1A;
-  --secondary-foreground: #F6F2E6;
-  --muted: #1C1C1A;
-  --muted-foreground: #9A9590;
-  --accent: #2A2A28;
-  --accent-foreground: #F6F2E6;
-  --border: #2A2A28;
-  --input: #2A2A28;
-  --ring: #F6F2E6;
-  --sidebar: #0A0A0B;
-  --sidebar-foreground: #F6F2E6;
+  --foreground: #F4F4F0;
 }
 
 @theme inline {
@@ -88,54 +69,40 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
   --color-sidebar: var(--sidebar);
   --color-sidebar-foreground: var(--sidebar-foreground);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-xl: 12px;
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
 }
 
-/* Base: left-aligned, high contrast, serif headlines */
 @layer base {
   * { @apply border-border outline-ring/50; }
   html {
     @apply antialiased;
-    font-family: ui-sans-system, -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, system-ui, sans-serif;
-    letter-spacing: -0.011em;
+    font-family: var(--font-sans);
+    letter-spacing: -0.02em;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
-  body {
-    @apply bg-background text-foreground;
-    line-height: 1.5;
-  }
-  ::selection { background: #0F0E0C; color: #FFFEFB; }
-  ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-thumb { background: #D6CEB8; border-radius: 999px; }
+  body { @apply bg-background text-foreground; line-height: 1.5; }
+  ::selection { background: #D6FF00; color: #0A0A0B; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: #2A2A2E; border-radius: 999px; }
   ::-webkit-scrollbar-track { background: transparent; }
 }
 
-/* Editorial hairline + paper texture utilities */
-.hairline { border-color: #E8E0CC; }
-.hairline-dark { border-color: #2A2A28; }
-.paper { background: #FFFEFB; }
-.ink { color: #0F0E0C; }
+/* Gen-Z utilities */
+.display { font-family: var(--font-display); letter-spacing: -0.04em; line-height: 0.9; font-weight: 800; }
 .mono { font-family: var(--font-mono); font-variant-ligatures: none; }
-.display { font-family: var(--font-serif-display); letter-spacing: -0.03em; line-height: 0.95; }
-.prose-serif { font-family: var(--font-serif-body); }
-
-/* Radius scale: 2 steps only — 4px and 8px (no 999) */
-.radius-sm { border-radius: 4px; }
-.radius-md { border-radius: 8px; }
-
-/* Single quiet shadow (no colored glow) */
-.shadow-quiet { box-shadow: 0 1px 2px rgba(16,14,12,0.06), 0 4px 12px rgba(16,14,12,0.04); }
-
+.brutal { border: 2px solid #F4F4F0; box-shadow: 4px 4px 0 #F4F4F0; }
+.brutal-dark { border: 2px solid #0A0A0B; box-shadow: 4px 4px 0 #0A0A0B; }
+.brutal-lime { border: 2px solid #0A0A0B; box-shadow: 4px 4px 0 #D6FF00; }
+.ticker { animation: ticker 18s linear infinite; }
+@keyframes ticker { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes float { 0%,100% { transform: translateY(0) rotate(var(--r,0deg)); } 50% { transform: translateY(-6px) rotate(var(--r,0deg)); } }
+@keyframes jitter { 0%,100% { transform: translate(0,0); } 25% { transform: translate(0.5px, -0.5px); } 50% { transform: translate(-0.5px, 0.5px); } }
+.float { animation: float 4s ease-in-out infinite; }
