@@ -12,7 +12,7 @@ const EmptyState = ({ title, description, imageSrc }: Props) => {
     <div className="flex flex-col items-center justify-center py-10 text-center">
       {imageSrc && (
         <div className="relative mb-5">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#0071e3]/10 to-transparent blur-2xl rounded-full" />
+          <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent blur-2xl rounded-full" />
           <Image
             src={imageSrc}
             alt={title}
@@ -22,10 +22,10 @@ const EmptyState = ({ title, description, imageSrc }: Props) => {
           />
         </div>
       )}
-      <h2 className="text-[17px] font-semibold tracking-[-0.02em] text-[#1d1d1f] dark:text-white">
+      <h2 className="text-[17px] font-semibold tracking-[-0.02em]">
         {title}
       </h2>
-      <p className="mt-1.5 text-[13px] leading-5 text-[#86868b] max-w-[360px]">
+      <p className="mt-1.5 text-[13px] leading-5 text-muted-foreground max-w-[360px]">
         {description}
       </p>
     </div>
