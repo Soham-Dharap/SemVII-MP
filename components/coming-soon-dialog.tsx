@@ -32,6 +32,7 @@ export function GitHubComingSoonDialog({
               width={22}
               height={22}
               unoptimized
+              className="invert dark:invert-0"
             />
           </div>
           <DialogTitle>GitHub import</DialogTitle>

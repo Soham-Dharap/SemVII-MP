@@ -32,7 +32,7 @@ const AddNewButton = () => {
       <button
         type="button"
         onClick={() => setIsModalOpen(true)}
-        className="group flex h-full w-full flex-col justify-between gap-8 rounded-2xl border border-iris/25 bg-iris-soft/40 p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-iris/50 hover:shadow-lg hover:shadow-iris/10"
+        className="group flex h-full w-full flex-col justify-between gap-8 rounded-2xl border border-iris/25 bg-iris-soft/40 p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-iris/50 hover:shadow-lg hover:shadow-iris/10 dark:border-iris/30 dark:bg-iris/10 dark:hover:border-iris/50 dark:hover:shadow-iris/20"
       >
         <div className="flex size-11 items-center justify-center rounded-xl bg-iris text-white shadow-sm shadow-iris/30 transition-transform duration-300 group-hover:scale-105">
           <Plus className="size-5" />
@@ -44,7 +44,7 @@ const AddNewButton = () => {
           <p className="mt-1 text-sm leading-6 text-muted-foreground">
             Pick a starter stack and open the editor in seconds.
           </p>
-          <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-iris">
+          <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-iris-bright">
             Start building
             <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-1" />
           </span>

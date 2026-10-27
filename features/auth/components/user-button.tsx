@@ -20,6 +20,56 @@ import {
 import { useCurrentUser } from "../hooks/use-current-user";
 
 /**
+ * Last-line defense: if anything inside the open menu ever fails to render,
+ * show a minimal safe panel instead of letting the global error boundary
+ * blank the whole page.
+ */
+class MenuBoundary extends React.Component<
+  { children: React.ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: unknown) {
+    console.error("Profile menu render failed:", error);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div
+          role="menu"
+          className="absolute right-0 top-full z-[60] mt-2 w-60 origin-top-right animate-scale-in rounded-xl bg-popover p-1.5 text-popover-foreground shadow-xl ring-1 ring-foreground/10"
+        >
+          <Link
+            href="/dashboard"
+            role="menuitem"
+            className="flex w-full items-center rounded-lg px-2.5 py-2 text-sm transition-colors hover:bg-muted"
+          >
+            <LayoutDashboard className="mr-2 size-4" />
+            Dashboard
+          </Link>
+          <button
+            type="button"
+            role="menuitem"
+            onClick={() => signOut({ redirectTo: "/" })}
+            className="flex w-full items-center rounded-lg px-2.5 py-2 text-sm text-destructive transition-colors hover:bg-destructive/10"
+          >
+            <LogOut className="mr-2 size-4" />
+            Sign out
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+/**
  * Hand-rolled menu (no portal/floating-ui dependency): a controlled popover
  * with click-outside and Escape handling. Every navigation target is a real
  * anchor, so links work regardless of hydration or focus-manager state.
@@ -85,6 +135,7 @@ const UserButton = () => {
       </button>
 
       {open && (
+        <MenuBoundary>
         <div
           id={menuId}
           role="menu"
@@ -132,6 +183,7 @@ const UserButton = () => {
             Sign out
           </button>
         </div>
+        </MenuBoundary>
       )}
     </div>
   );
