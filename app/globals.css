@@ -43,6 +43,8 @@
   --iris: oklch(0.52 0.2 280);
   --iris-deep: oklch(0.46 0.2 280);
   --iris-soft: oklch(0.955 0.03 280);
+  /* Accent text/icon that must stay legible on both light and dark fills */
+  --iris-bright: oklch(0.48 0.2 280);
   --coral: oklch(0.68 0.2 35);
 
   /* Apple-inspired system font stacks — no build-time font downloads */
@@ -101,6 +103,9 @@
   --sidebar-accent-foreground: oklch(0.96 0.004 95);
   --sidebar-border: oklch(0.32 0.012 280);
   --sidebar-ring: oklch(0.7 0.15 280);
+
+  /* Brighter accent for dark surfaces so iris text never looks muddy */
+  --iris-bright: oklch(0.76 0.15 280);
 }
 
 @theme inline {
@@ -139,6 +144,7 @@
   --color-iris: var(--iris);
   --color-iris-deep: var(--iris-deep);
   --color-iris-soft: var(--iris-soft);
+  --color-iris-bright: var(--iris-bright);
   --color-coral: var(--coral);
 
   --font-sans: var(--font-sans);
