@@ -17,6 +17,8 @@ import {
   Code2,
   Compass,
   Database,
+  FileCode2,
+  FilePlus2,
   FlameIcon,
   History,
   Home,
@@ -50,6 +52,8 @@ const lucideIconMap: Record<string, LucideIcon> = {
   FlameIcon,
   Terminal,
   Code2,
+  FilePlus2,
+  FileCode2,
 };
 
 export const DashboardSidebar = ({
@@ -182,15 +186,17 @@ export const DashboardSidebar = ({
 
       <SidebarFooter>
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton
-              tooltip="All projects"
-              onClick={() => router.push("/dashboard")}
-            >
-              <LayoutDashboard className="size-4" />
-              <span>All projects</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          {pathname !== "/dashboard" && (
+            <SidebarMenuItem>
+              <SidebarMenuButton
+                tooltip="All projects"
+                onClick={() => router.push("/dashboard")}
+              >
+                <LayoutDashboard className="size-4" />
+                <span>All projects</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          )}
           <SidebarMenuItem>
             <div className="flex items-center gap-2 rounded-lg px-2 py-1.5">
               <UserButton />

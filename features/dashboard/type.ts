@@ -1,10 +1,13 @@
 export const TEMPLATES = [
+  "BLANK",
+  "VANILLA",
   "REACT",
   "NEXTJS",
   "EXPRESS",
   "VUE",
   "HONO",
   "ANGULAR",
+  "PYTHON",
 ] as const;
 
 export type TemplateName = (typeof TEMPLATES)[number];

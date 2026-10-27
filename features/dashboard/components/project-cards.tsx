@@ -15,12 +15,13 @@ import {
   Trash2,
 } from "lucide-react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  SimpleDropdown,
+  SimpleDropdownAction,
+  SimpleDropdownContent,
+  SimpleDropdownLink,
+  SimpleDropdownSeparator,
+  SimpleDropdownTrigger,
+} from "@/components/ui/simple-dropdown";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -48,12 +49,15 @@ import { toggleProjectStar } from "../actions";
 import type { Project, TemplateName } from "../type";
 
 const TEMPLATE_STYLE: Record<TemplateName, { label: string }> = {
+  BLANK: { label: "Blank" },
+  VANILLA: { label: "HTML/CSS/JS" },
   REACT: { label: "React" },
   NEXTJS: { label: "Next.js" },
   EXPRESS: { label: "Express" },
   VUE: { label: "Vue" },
   HONO: { label: "Hono" },
   ANGULAR: { label: "Angular" },
+  PYTHON: { label: "Python" },
 };
 
 interface ProjectCardsProps {
@@ -207,42 +211,40 @@ export default function ProjectCards({
                 </AvatarFallback>
               </Avatar>
 
-              <DropdownMenu>
-                <DropdownMenuTrigger
+              <SimpleDropdown>
+                <SimpleDropdownTrigger
+                  ariaLabel="Project actions"
                   className="shrink-0 rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                  aria-label="Project actions"
                 >
                   <MoreHorizontal className="size-4" />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-52">
-                  <DropdownMenuItem
-                    render={<Link href={`/playground/${project.id}`} />}
-                  >
+                </SimpleDropdownTrigger>
+                <SimpleDropdownContent className="w-52">
+                  <SimpleDropdownLink href={`/playground/${project.id}`}>
                     <ExternalLink className="mr-2 size-4" />
                     Open in editor
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => openEdit(project)}>
+                  </SimpleDropdownLink>
+                  <SimpleDropdownAction onSelect={() => openEdit(project)}>
                     <Edit3 className="mr-2 size-4" />
                     Edit details
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => duplicate(project)}>
+                  </SimpleDropdownAction>
+                  <SimpleDropdownAction onSelect={() => duplicate(project)}>
                     <Copy className="mr-2 size-4" />
                     Duplicate
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => copyLink(project.id)}>
+                  </SimpleDropdownAction>
+                  <SimpleDropdownAction onSelect={() => copyLink(project.id)}>
                     <Link2 className="mr-2 size-4" />
                     Copy link
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem
-                    onClick={() => setDeleteTarget(project)}
-                    className="text-destructive focus:text-destructive"
+                  </SimpleDropdownAction>
+                  <SimpleDropdownSeparator />
+                  <SimpleDropdownAction
+                    onSelect={() => setDeleteTarget(project)}
+                    className="text-destructive hover:bg-destructive/10"
                   >
                     <Trash2 className="mr-2 size-4" />
                     Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                  </SimpleDropdownAction>
+                </SimpleDropdownContent>
+              </SimpleDropdown>
             </div>
           );
         })}

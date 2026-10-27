@@ -137,6 +137,41 @@ const EditorSurface = ({
   );
 };
 
+class EditorSurfaceBoundary extends React.Component<
+  { file: ProjectFile; onChange: (content: string) => void; children: React.ReactNode },
+  { hasError: boolean }
+> {
+  state = { hasError: false };
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error: unknown) {
+    console.error("Editor highlight failed, falling back to plain text:", error);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-0 flex-1 bg-card p-4 pl-14">
+          <textarea
+            value={this.props.file.content}
+            onChange={(event) => this.props.onChange(event.target.value)}
+            spellCheck={false}
+            autoCapitalize="off"
+            autoCorrect="off"
+            wrap="off"
+            aria-label={`Editing ${this.props.file.path} (plain mode)`}
+            className="size-full resize-none border-0 bg-transparent font-mono text-[13px] leading-6 text-foreground outline-none"
+          />
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 const CodeEditor = ({
   files,
   openTabIds,
@@ -236,11 +271,16 @@ const CodeEditor = ({
       )}
 
       {activeFile && !activeFile.isDirectory ? (
-        <EditorSurface
+        <EditorSurfaceBoundary
           key={activeFile.id}
           file={activeFile}
           onChange={(content) => onChangeContent(activeFile.id, content)}
-        />
+        >
+          <EditorSurface
+            file={activeFile}
+            onChange={(content) => onChangeContent(activeFile.id, content)}
+          />
+        </EditorSurfaceBoundary>
       ) : (
         <div className="flex min-h-0 flex-1 flex-col items-center justify-center gap-3 p-8 text-center">
           <div className="flex size-14 items-center justify-center rounded-2xl bg-muted">
