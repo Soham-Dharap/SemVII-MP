@@ -17,15 +17,15 @@ const AddNewButton = () => {
     title: string;
     template: TemplateName;
     description?: string;
-  }) => {
+  }): Promise<boolean> => {
     const result = await createPlayground(data);
     if (!result) {
       toast.error("Could not create the project. Please try again.");
-      return;
+      return false;
     }
-    toast.success("Project created");
-    setIsModalOpen(false);
+    toast.success("Project created — opening your editor");
     router.push(`/playground/${result.id}`);
+    return true;
   };
 
   return (

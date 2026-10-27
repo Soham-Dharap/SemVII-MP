@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import {
   Globe,
+  Loader2,
   Monitor,
   RotateCcw,
   Smartphone,
@@ -51,6 +52,13 @@ const PreviewPane = ({
   const [document, setDocument] = useState<string | null>(builtDocument);
   const [deviceMode, setDeviceMode] = useState<DeviceMode>("fit");
   const [reloadKey, setReloadKey] = useState(0);
+
+  // A new srcDoc means the iframe re-runs its scripts (Babel compile, React
+  // mount). Derive the loading state during render by comparing the frame's
+  // current signature with the last one that fired onLoad — no effect needed.
+  const frameSignature = `${reloadKey}:${document ?? ""}`;
+  const [loadedSignature, setLoadedSignature] = useState<string | null>(null);
+  const isFrameLoading = loadedSignature !== frameSignature;
 
   // Debounce rebuilds so typing does not reload the iframe on every keystroke.
   useEffect(() => {
@@ -138,7 +146,7 @@ const PreviewPane = ({
 
       <div className="min-h-0 flex-1 bg-muted/50 p-3">
         <div
-          className="mx-auto h-full overflow-hidden rounded-xl bg-card shadow-sm ring-1 ring-border transition-all duration-300"
+          className="relative mx-auto h-full overflow-hidden rounded-xl bg-card shadow-sm ring-1 ring-border transition-all duration-300"
           style={{
             maxWidth:
               deviceMode === "fit"
@@ -146,12 +154,21 @@ const PreviewPane = ({
                 : DEVICE_WIDTHS[deviceMode as Exclude<DeviceMode, "fit">],
           }}
         >
+          {isFrameLoading && (
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 bg-card/90 backdrop-blur-sm">
+              <Loader2 className="size-6 animate-spin text-iris" />
+              <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-muted-foreground">
+                Compiling preview
+              </p>
+            </div>
+          )}
           <iframe
             key={reloadKey}
             title={`${template} preview`}
             srcDoc={document ?? ""}
             sandbox="allow-scripts"
             className="h-full w-full border-0"
+            onLoad={() => setLoadedSignature(frameSignature)}
           />
         </div>
       </div>

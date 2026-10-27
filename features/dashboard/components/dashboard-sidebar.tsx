@@ -27,6 +27,7 @@ import {
   Terminal,
   Zap,
 } from "lucide-react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { BrandMark } from "@/components/brand";
@@ -66,12 +67,16 @@ export const DashboardSidebar = ({
   return (
     <Sidebar variant="inset" collapsible="icon" className="border-r border-border">
       <SidebarHeader>
-        <div className="flex items-center gap-2.5 px-2 py-2">
+        <Link
+          href="/dashboard"
+          aria-label="Go to dashboard"
+          className="flex items-center gap-2.5 rounded-lg px-2 py-2 transition-colors hover:bg-muted"
+        >
           <BrandMark size={32} />
           <span className="text-[15px] font-semibold tracking-tight group-data-[collapsible=icon]:hidden">
             Codepilot
           </span>
-        </div>
+        </Link>
       </SidebarHeader>
 
       <SidebarContent>

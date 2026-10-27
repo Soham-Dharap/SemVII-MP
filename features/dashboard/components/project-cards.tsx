@@ -146,7 +146,7 @@ export default function ProjectCards({
   return (
     <>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {projects.map((project) => {
+        {projects.map((project, index) => {
           const style =
             TEMPLATE_STYLE[project.template as TemplateName] ??
             TEMPLATE_STYLE.REACT;
@@ -155,7 +155,8 @@ export default function ProjectCards({
           return (
             <div
               key={project.id}
-              className="group flex flex-col rounded-2xl border border-border bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-iris/30 hover:shadow-lg"
+              style={{ animationDelay: `${Math.min(index, 8) * 60}ms` }}
+              className="group animate-fade-up flex flex-col rounded-2xl border border-border bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-iris/30 hover:shadow-lg"
             >
               <div className="mb-4 flex items-start justify-between">
                 <div className="flex size-11 items-center justify-center rounded-xl bg-iris-soft">

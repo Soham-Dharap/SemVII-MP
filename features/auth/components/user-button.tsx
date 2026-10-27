@@ -10,7 +10,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { LogOut, User } from "lucide-react";
+import { Home, LayoutDashboard, LogOut, User } from "lucide-react";
+import Link from "next/link";
 import LogoutButton from "./logout-button";
 import { useCurrentUser } from "../hooks/use-current-user";
 
@@ -44,6 +45,19 @@ const UserButton = () => {
             {user?.email}
           </span>
         </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <Link href="/dashboard">
+          <DropdownMenuItem>
+            <LayoutDashboard className="mr-2 size-4" />
+            Dashboard
+          </DropdownMenuItem>
+        </Link>
+        <Link href="/">
+          <DropdownMenuItem>
+            <Home className="mr-2 size-4" />
+            Home page
+          </DropdownMenuItem>
+        </Link>
         <DropdownMenuSeparator />
         <LogoutButton>
           <DropdownMenuItem variant="destructive">

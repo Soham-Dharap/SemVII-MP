@@ -20,6 +20,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* The live preview compiles JSX in-browser via Babel Standalone.
+            Warm up the CDN connection so the first preview renders faster. */}
+        <link rel="preconnect" href="https://unpkg.com" crossOrigin="" />
+        <link rel="dns-prefetch" href="https://unpkg.com" />
+      </head>
       <body className="antialiased">
         <ThemeProvider
           attribute="class"

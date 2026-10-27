@@ -12,37 +12,38 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import {
+  ArrowLeft,
   ChevronRight,
-  Search,
-  Star,
-  Code,
-  Server,
+  Code2,
+  Database,
   Globe,
-  Zap,
-  Clock,
+  Loader2,
+  Search,
+  Sparkles,
   Check,
-  Plus,
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
+
+type TemplateId = "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR";
 
 type TemplateSelectionModalProps = {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: {
     title: string;
-    template: "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR";
+    template: TemplateId;
     description?: string;
-  }) => void;
+  }) => Promise<boolean>;
 };
 
 interface TemplateOption {
   id: string;
+  template: TemplateId;
   name: string;
   description: string;
   icon: string;
-  color: string;
-  popularity: number;
   tags: string[];
   features: string[];
   category: "frontend" | "backend" | "fullstack";
@@ -51,87 +52,77 @@ interface TemplateOption {
 const templates: TemplateOption[] = [
   {
     id: "react",
+    template: "REACT",
     name: "React",
     description:
-      "A JavaScript library for building user interfaces with component-based architecture",
+      "Component-based UI library with JSX and a live in-browser preview.",
     icon: "/react.svg",
-    color: "#61DAFB",
-    popularity: 5,
     tags: ["UI", "Frontend", "JavaScript"],
-    features: ["Component-Based", "Virtual DOM", "JSX Support"],
+    features: ["Component-based", "Virtual DOM", "JSX support"],
     category: "frontend",
   },
   {
     id: "nextjs",
+    template: "NEXTJS",
     name: "Next.js",
     description:
-      "The React framework for production with server-side rendering and static site generation",
+      "The React framework with App Router layouts, server components and API routes.",
     icon: "/nextjs-icon.svg",
-    color: "#000000",
-    popularity: 4,
     tags: ["React", "SSR", "Fullstack"],
-    features: ["Server Components", "API Routes", "File-based Routing"],
+    features: ["App Router", "API routes", "File-based routing"],
     category: "fullstack",
   },
   {
     id: "express",
+    template: "EXPRESS",
     name: "Express",
     description:
-      "Fast, unopinionated, minimalist web framework for Node.js to build APIs and web applications",
+      "Minimalist Node.js framework for APIs and server-rendered web apps.",
     icon: "/expressjs-icon.svg",
-    color: "#000000",
-    popularity: 4,
     tags: ["Node.js", "API", "Backend"],
-    features: ["Middleware", "Routing", "HTTP Utilities"],
+    features: ["Middleware", "Routing", "HTTP utilities"],
     category: "backend",
   },
   {
     id: "vue",
+    template: "VUE",
     name: "Vue.js",
     description:
-      "Progressive JavaScript framework for building user interfaces with an approachable learning curve",
+      "Progressive framework with reactive data binding and an approachable API.",
     icon: "/vuejs-icon.svg",
-    color: "#4FC08D",
-    popularity: 4,
     tags: ["UI", "Frontend", "JavaScript"],
-    features: ["Reactive Data Binding", "Component System", "Virtual DOM"],
+    features: ["Reactive binding", "SFC components", "Virtual DOM"],
     category: "frontend",
   },
   {
     id: "hono",
+    template: "HONO",
     name: "Hono",
     description:
-      "Fast, lightweight, built on Web Standards. Support for any JavaScript runtime.",
+      "Ultra-lightweight, standards-based framework for any JS runtime.",
     icon: "/hono.svg",
-    color: "#e36002",
-    popularity: 3,
     tags: ["Node.js", "TypeScript", "Backend"],
-    features: [
-      "Dependency Injection",
-      "TypeScript Support",
-      "Modular Architecture",
-    ],
+    features: ["Edge-ready", "TypeScript", "Tiny footprint"],
     category: "backend",
   },
   {
     id: "angular",
+    template: "ANGULAR",
     name: "Angular",
     description:
-      "Angular is a web framework that empowers developers to build fast, reliable applications.",
+      "Batteries-included framework for fast, reliable enterprise applications.",
     icon: "/angular-2.svg",
-    color: "#DD0031",
-    popularity: 3,
-    tags: ["React", "Fullstack", "JavaScript"],
-    features: [
-      "Reactive Data Binding",
-      "Component System",
-      "Virtual DOM",
-      "Dependency Injection",
-      "TypeScript Support",
-    ],
+    tags: ["Fullstack", "TypeScript"],
+    features: ["Standalone components", "Dependency injection", "TypeScript"],
     category: "fullstack",
   },
 ];
+
+const CATEGORY_ICON = {
+  frontend: Code2,
+  backend: Database,
+  fullstack: Globe,
+} as const;
 
 const TemplateSelectionModal = ({
   isOpen,
@@ -145,6 +136,7 @@ const TemplateSelectionModal = ({
     "all" | "frontend" | "backend" | "fullstack"
   >("all");
   const [projectName, setProjectName] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const filteredTemplates = templates.filter((template) => {
     const matchesSearch =
@@ -153,109 +145,77 @@ const TemplateSelectionModal = ({
       template.tags.some((tag) =>
         tag.toLowerCase().includes(searchQuery.toLowerCase()),
       );
-
     const matchesCategory =
       category === "all" || template.category === category;
-
-    return matchesCategory && matchesSearch;
+    return matchesSearch && matchesCategory;
   });
 
-  const handleSelectTemplate = (templateId: string) => {
-    setSelectedTemplate(templateId);
-  };
-
-  const handleContinue = () => {
-    if (selectedTemplate) {
-      setStep("configure");
-    }
-  };
-
-  const renderStars = (count: number) => {
-    return Array(5)
-      .fill(0)
-      .map((_, i) => (
-        <Star
-          key={i}
-          size={14}
-          className={
-            i < count ? "fill-yellow-400 text-yellow-400" : "text-gray-300"
-          }
-        />
-      ));
-  };
-
-  const handleCreateProject = () => {
-    if(selectedTemplate){
-        const templateMap:Record<string, "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR"> = {
-            react:"REACT",
-            nextjs:"NEXTJS",
-            express:"EXPRESS",
-            vue:"VUE",
-            hono:"HONO",
-            angular:"ANGULAR",
-        };
-
-        const template = templates.find((t)=>t.id === selectedTemplate);
-        onSubmit({
-            title:projectName || `New ${template?.name} Project`,
-            template:templateMap[selectedTemplate] || "REACT",
-            description:template?.description
-        })
-    }
-
+  const resetAndClose = () => {
     onClose();
-    // Reset state for next time
     setStep("select");
     setSelectedTemplate(null);
     setProjectName("");
+    setSearchQuery("");
+    setCategory("all");
+    setIsSubmitting(false);
   };
 
-  const handleBack = ()=>{
-    setStep("select")
-  }
+  const handleCreateProject = async () => {
+    if (!selectedTemplate || isSubmitting) return;
+    const template = templates.find((t) => t.id === selectedTemplate);
+    if (!template) return;
+
+    setIsSubmitting(true);
+    try {
+      const ok = await onSubmit({
+        title: projectName.trim() || `New ${template.name} project`,
+        template: template.template,
+        description: template.description,
+      });
+      // Only close on success — failures keep the dialog open with the
+      // user's input intact so they can retry immediately.
+      if (ok) resetAndClose();
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const selected = templates.find((t) => t.id === selectedTemplate);
+
   return (
     <Dialog
       open={isOpen}
       onOpenChange={(open) => {
-        if (!open) {
-          onClose();
-
-          setStep("select");
-          setSelectedTemplate(null);
-          setProjectName("");
-        }
+        if (!open && !isSubmitting) resetAndClose();
       }}
     >
-      <DialogContent className="sm:max-w-200 max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-3xl">
         {step === "select" ? (
           <>
             <DialogHeader>
-              <DialogTitle className="text-2xl font-bold text-iris flex items-center gap-2">
-                <Plus size={24} className="text-iris" />
-                Select a Template
+              <DialogTitle className="flex items-center gap-2 text-xl font-semibold tracking-tight">
+                <Sparkles className="size-5 text-iris" />
+                Start from a template
               </DialogTitle>
-
               <DialogDescription>
-                Choose a template to create your project
+                Every template ships with a real file structure and a preview
+                that works on the first click.
               </DialogDescription>
             </DialogHeader>
-            <div className="flex flex-col gap-6 py-4">
-              <div className="flex flex-col sm:flex-row gap-4">
+
+            <div className="flex flex-col gap-4 py-2">
+              <div className="flex flex-col gap-3 sm:flex-row">
                 <div className="relative flex-1">
-                  <Search
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 outline-none"
-                    size={18}
-                  />
+                  <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
-                    placeholder="Search templates....."
+                    placeholder="Search templates…"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10"
+                    className="pl-9"
                   />
                 </div>
-
                 <Tabs
-                  defaultValue="all"
+                  value={category}
                   className="w-full sm:w-auto"
                   onValueChange={(value) =>
                     setCategory(
@@ -263,183 +223,177 @@ const TemplateSelectionModal = ({
                     )
                   }
                 >
-                  <TabsList className="grid grid-cols-4 w-full sm:w-100">
+                  <TabsList className="grid w-full grid-cols-4 sm:w-auto">
                     <TabsTrigger value="all">All</TabsTrigger>
                     <TabsTrigger value="frontend">Frontend</TabsTrigger>
                     <TabsTrigger value="backend">Backend</TabsTrigger>
-                    <TabsTrigger value="fullstack">FullStack</TabsTrigger>
+                    <TabsTrigger value="fullstack">Fullstack</TabsTrigger>
                   </TabsList>
                 </Tabs>
               </div>
 
               <RadioGroup
-                value={selectedTemplate || ""}
-                onValueChange={handleSelectTemplate}
+                value={selectedTemplate ?? ""}
+                onValueChange={setSelectedTemplate}
               >
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                   {filteredTemplates.length > 0 ? (
-                    filteredTemplates.map((template) => (
-                      <div
-                        key={template.id}
-                        className={`relative flex p-6 border rounded-lg cursor-pointer
-                          transition-all duration-300 hover:scale-[1.02]
-                          ${
-                            selectedTemplate === template.id
-                              ? "border-iris  shadow-lg shadow-iris/15 ring-1 ring-iris"
-                              : "hover:border-iris shadow-[0_2px_8px_rgba(0,0,0,0.05)] hover:shadow-[0_8px_20px_rgba(0,0,0,0.1)]"
-                          }`}
-                        onClick={() => handleSelectTemplate(template.id)}
-                      >
-                        <div className="absolute top-4 right-4 flex gap-1">
-                          {renderStars(template.popularity)}
-                        </div>
-
-                        {selectedTemplate === template.id && (
-                          <div className="absolute top-2 left-2 bg-iris text-white rounded-full p-1">
-                            <Check size={14} />
-                          </div>
-                        )}
-
-                        <div className="flex gap-4">
-                          <div
-                            className="relative w-16 h-16 shrink-0 flex items-center justify-center rounded-full"
-                            style={{ backgroundColor: `${template.color}15` }}
-                          >
-                            <Image
-                              src={template.icon || "/placeholder.svg"}
-                              alt={`${template.name} icon`}
-                              width={40}
-                              height={40}
-                              className="object-contain"
-                            />
-                          </div>
-
-                          <div className="flex flex-col">
-                            <div className="flex items-center gap-2 mb-1">
-                              <h3 className="text-lg font-semibold">
-                                {template.name}
-                              </h3>
-                              <div className="flex gap-1">
-                                {template.category === "frontend" && (
-                                  <Code size={14} className="text-blue-500" />
-                                )}
-                                {template.category === "backend" && (
-                                  <Server
-                                    size={14}
-                                    className="text-green-500"
-                                  />
-                                )}
-                                {template.category === "fullstack" && (
-                                  <Globe
-                                    size={14}
-                                    className="text-purple-500"
-                                  />
-                                )}
+                    filteredTemplates.map((template, index) => {
+                      const CategoryIcon =
+                        CATEGORY_ICON[template.category];
+                      const isActive = selectedTemplate === template.id;
+                      return (
+                        <div
+                          key={template.id}
+                          onClick={() => setSelectedTemplate(template.id)}
+                          className={cn(
+                            "group animate-fade-up relative cursor-pointer rounded-2xl border bg-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-iris/40 hover:shadow-md",
+                            isActive &&
+                              "border-iris shadow-lg shadow-iris/10 ring-1 ring-iris",
+                          )}
+                          style={{ animationDelay: `${index * 50}ms` }}
+                        >
+                          {isActive && (
+                            <span className="absolute right-3 top-3 flex size-5 items-center justify-center rounded-full bg-iris text-white">
+                              <Check className="size-3" />
+                            </span>
+                          )}
+                          <div className="flex items-start gap-3.5">
+                            <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-muted">
+                              <Image
+                                src={template.icon}
+                                alt={`${template.name} icon`}
+                                width={28}
+                                height={28}
+                                unoptimized
+                                className="object-contain"
+                              />
+                            </div>
+                            <div className="min-w-0">
+                              <div className="flex items-center gap-1.5">
+                                <h3 className="text-base font-semibold tracking-tight">
+                                  {template.name}
+                                </h3>
+                                <CategoryIcon className="size-3.5 text-muted-foreground" />
+                              </div>
+                              <p className="mt-1 line-clamp-2 text-sm leading-6 text-muted-foreground">
+                                {template.description}
+                              </p>
+                              <div className="mt-2.5 flex flex-wrap gap-1.5">
+                                {template.tags.map((tag) => (
+                                  <span
+                                    key={tag}
+                                    className="rounded-full bg-muted px-2.5 py-0.5 text-[11px] font-medium text-muted-foreground"
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
                               </div>
                             </div>
-
-                            <p className="text-sm text-muted-foreground mb-3">
-                              {template.description}
-                            </p>
-
-                            <div className="flex flex-wrap gap-2 mt-auto">
-                              {template.tags.map((tag) => (
-                                <span
-                                  key={tag}
-                                  className="text-xs px-2 py-1 border rounded-2xl"
-                                >
-                                  {tag}
-                                </span>
-                              ))}
-                            </div>
                           </div>
+                          <RadioGroupItem
+                            value={template.id}
+                            id={template.id}
+                            className="sr-only"
+                          />
                         </div>
-
-                        <RadioGroupItem
-                          value={template.id}
-                          id={template.id}
-                          className="sr-only"
-                        />
-                      </div>
-                    ))
+                      );
+                    })
                   ) : (
-                    <div className="col-span-2 flex flex-col items-center justify-center p-8 text-center">
-                      <Search size={48} className="text-gray-300 mb-4" />
-                      <h3 className="text-lg font-medium">
+                    <div className="col-span-2 flex flex-col items-center justify-center gap-2 rounded-2xl border border-dashed p-10 text-center">
+                      <Search className="size-8 text-muted-foreground/50" />
+                      <h3 className="text-sm font-semibold">
                         No templates found
                       </h3>
                       <p className="text-sm text-muted-foreground">
-                        Try adjusting your search or filters
+                        Try adjusting your search or filters.
                       </p>
                     </div>
                   )}
                 </div>
               </RadioGroup>
-              <div className="flex justify-between gap-3 mt-4 pt-4 border-t">
-                <div className="flex items-center text-sm text-muted-foreground">
-                  <Clock size={14} className="mr-1" />
-                  <span>
-                    Estimated setup time:{" "}
-                    {selectedTemplate ? "2-5 minutes" : "Select a template"}
-                  </span>
-                </div>
 
-                <div className="flex gap-3">
-                  <Button variant={"outline"} onClick={onClose}>
-                    Cancel
-                  </Button>
-                  <Button
-                    className="bg-iris hover:bg-iris-deep text-white"
-                    onClick={handleContinue}
-                  >
-                    Continue <ChevronRight size={16} className="ml-1" />
-                  </Button>
-                </div>
+              <div className="flex justify-end gap-3 border-t border-border/70 pt-4">
+                <Button variant="outline" onClick={resetAndClose}>
+                  Cancel
+                </Button>
+                <Button
+                  variant="brand"
+                  disabled={!selectedTemplate}
+                  onClick={() => setStep("configure")}
+                >
+                  Continue
+                  <ChevronRight className="size-4" />
+                </Button>
               </div>
             </div>
           </>
         ) : (
           <>
             <DialogHeader>
-              <DialogTitle className="text-2xl font-bold text-iris">
-                Configure Your Project
+              <DialogTitle className="text-xl font-semibold tracking-tight">
+                Configure your project
               </DialogTitle>
               <DialogDescription>
-                {templates.find((t) => t.id === selectedTemplate)?.name} Project
-                Configuration
+                {selected?.name} — name it and you&apos;re one click away from
+                the editor.
               </DialogDescription>
             </DialogHeader>
 
-            <div className="flex flex-col gap-6 py-4">
+            <div className="flex flex-col gap-5 py-2">
               <div className="flex flex-col gap-2">
-                <Label htmlFor="project-name">Project Name</Label>
+                <Label htmlFor="project-name">Project name</Label>
                 <Input
                   id="project-name"
+                  autoFocus
                   placeholder="my-awesome-project"
                   value={projectName}
                   onChange={(e) => setProjectName(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") handleCreateProject();
+                  }}
                 />
               </div>
-              <div className="p-4 shadow-lg shadow-iris/15 ring-1 ring-iris rounded-lg border">
-                <h3 className="font-medium mb-2">Selected Template Features</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                  {templates
-                    .find((t) => t.id === selectedTemplate)
-                    ?.features.map((feature) => (
-                      <div key={feature} className="flex items-center gap-2">
-                        <Zap size={14} className="text-iris" />
-                        <span className="text-sm">{feature}</span>
-                      </div>
-                    ))}
+
+              <div className="rounded-2xl border border-border bg-muted/40 p-4">
+                <h3 className="mb-3 text-sm font-semibold">
+                  What&apos;s included
+                </h3>
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                  {selected?.features.map((feature) => (
+                    <div
+                      key={feature}
+                      className="flex items-center gap-2 text-sm text-muted-foreground"
+                    >
+                      <Check className="size-3.5 shrink-0 text-iris" />
+                      {feature}
+                    </div>
+                  ))}
                 </div>
               </div>
 
-              <div className="flex justify-between gap-3 mt-4 pt-4 border-t">
-                <Button variant="outline" onClick={handleBack}>
-                    Back
+              <div className="flex justify-between gap-3 border-t border-border/70 pt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setStep("select")}
+                  disabled={isSubmitting}
+                >
+                  <ArrowLeft className="size-4" />
+                  Back
                 </Button>
-                <Button className="bg-iris hover:bg-iris" onClick={handleCreateProject}>
-                    Create Project
+                <Button
+                  variant="brand"
+                  onClick={handleCreateProject}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="size-4 animate-spin" />
+                      Creating…
+                    </>
+                  ) : (
+                    "Create project"
+                  )}
                 </Button>
               </div>
             </div>

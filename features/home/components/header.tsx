@@ -35,7 +35,14 @@ export function Header() {
         <div className="flex items-center gap-2">
           <ThemeToggle />
           {user ? (
-            <UserButton />
+            <>
+              <Link href="/dashboard" className="hidden sm:block">
+                <Button variant="brand" size="sm" className="rounded-full px-4">
+                  Dashboard
+                </Button>
+              </Link>
+              <UserButton />
+            </>
           ) : (
             <Link href="/auth/sign-in">
               <Button variant="brand" size="sm" className="rounded-full px-4">

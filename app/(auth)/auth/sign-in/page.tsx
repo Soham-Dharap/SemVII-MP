@@ -4,7 +4,7 @@ import { BrandMark } from "@/components/brand";
 
 const SignInPage = () => {
   return (
-    <div className="w-full max-w-sm">
+    <div className="w-full max-w-sm animate-fade-up">
       <div className="mb-8 flex flex-col items-center text-center lg:hidden">
         <BrandMark size={52} className="mb-5" />
       </div>
