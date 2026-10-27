@@ -26,19 +26,25 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
   // one when it is absent.
   trustHost: true,
   callbacks: {
-    async jwt({ token }) {
+    async jwt({ token, trigger }) {
       if (!token.sub) return token;
 
-      const existingUser = await getUserById(token.sub);
-      if (!existingUser) return token;
+      // The user snapshot is cached on the token after the first sign-in, so
+      // normal navigation and preview polling do not pay for two Atlas
+      // round-trips per request. Re-read only on an explicit update or when
+      // the token predates the cache (e.g. an older session).
+      if (trigger === "update" || !token.role || !("provider" in token)) {
+        const existingUser = await getUserById(token.sub);
+        if (!existingUser) return token;
 
-      const existingAccount = await getAccountByUserId(existingUser.id);
+        const existingAccount = await getAccountByUserId(existingUser.id);
 
-      token.name = existingUser.name;
-      token.email = existingUser.email;
-      token.role = existingUser.role as UserRole;
-      // Keep the provider available for future provider-scoped features.
-      token.provider = existingAccount?.provider;
+        token.name = existingUser.name;
+        token.email = existingUser.email;
+        token.role = existingUser.role as UserRole;
+        // Keep the provider available for future provider-scoped features.
+        token.provider = existingAccount?.provider;
+      }
 
       return token;
     },

@@ -16,17 +16,30 @@ import {
   ChevronRight,
   Code2,
   Database,
+  FileCode2,
+  FilePlus2,
   Globe,
   Loader2,
   Search,
   Sparkles,
   Check,
+  Terminal,
+  type LucideIcon,
 } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-type TemplateId = "REACT" | "NEXTJS" | "EXPRESS" | "VUE" | "HONO" | "ANGULAR";
+type TemplateId =
+  | "BLANK"
+  | "VANILLA"
+  | "REACT"
+  | "NEXTJS"
+  | "EXPRESS"
+  | "VUE"
+  | "HONO"
+  | "ANGULAR"
+  | "PYTHON";
 
 type TemplateSelectionModalProps = {
   isOpen: boolean;
@@ -43,14 +56,50 @@ interface TemplateOption {
   template: TemplateId;
   name: string;
   description: string;
-  icon: string;
+  icon?: string;
+  lucideIcon?: LucideIcon;
   tags: string[];
   features: string[];
-  category: "frontend" | "backend" | "fullstack";
+  category: "frontend" | "backend" | "fullstack" | "other";
   mono?: boolean;
+  dashed?: boolean;
 }
 
 const templates: TemplateOption[] = [
+  {
+    id: "blank",
+    template: "BLANK",
+    name: "Start from scratch",
+    description:
+      "An empty workspace with a src folder — bring every file and framework yourself.",
+    lucideIcon: FilePlus2,
+    tags: ["Empty", "Any language", "No framework"],
+    features: ["Empty src folder", "Full freedom", "Pick your own stack"],
+    category: "other",
+    dashed: true,
+  },
+  {
+    id: "vanilla",
+    template: "VANILLA",
+    name: "HTML · CSS · JS",
+    description:
+      "Plain HTML, CSS and JavaScript with no build step and a live preview.",
+    lucideIcon: FileCode2,
+    tags: ["HTML", "CSS", "JavaScript"],
+    features: ["index.html entry", "styles.css", "script.js"],
+    category: "frontend",
+  },
+  {
+    id: "python",
+    template: "PYTHON",
+    name: "Python",
+    description:
+      "A clean Python scripting layout with syntax highlighting. In-browser execution arrives in v2.",
+    lucideIcon: Terminal,
+    tags: ["Python", "Scripting", "Backend"],
+    features: ["src/main.py", "requirements.txt", "README guide"],
+    category: "backend",
+  },
   {
     id: "react",
     template: "REACT",
@@ -125,6 +174,7 @@ const CATEGORY_ICON = {
   frontend: Code2,
   backend: Database,
   fullstack: Globe,
+  other: Sparkles,
 } as const;
 
 const TemplateSelectionModal = ({
@@ -136,7 +186,7 @@ const TemplateSelectionModal = ({
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [category, setCategory] = useState<
-    "all" | "frontend" | "backend" | "fullstack"
+    "all" | "frontend" | "backend" | "fullstack" | "other"
   >("all");
   const [projectName, setProjectName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -222,15 +272,21 @@ const TemplateSelectionModal = ({
                   className="w-full sm:w-auto"
                   onValueChange={(value) =>
                     setCategory(
-                      value as "all" | "frontend" | "backend" | "fullstack",
+                      value as
+                        | "all"
+                        | "frontend"
+                        | "backend"
+                        | "fullstack"
+                        | "other",
                     )
                   }
                 >
-                  <TabsList className="grid w-full grid-cols-4 sm:w-auto">
+                  <TabsList className="grid w-full grid-cols-5 sm:w-auto">
                     <TabsTrigger value="all">All</TabsTrigger>
                     <TabsTrigger value="frontend">Frontend</TabsTrigger>
                     <TabsTrigger value="backend">Backend</TabsTrigger>
                     <TabsTrigger value="fullstack">Fullstack</TabsTrigger>
+                    <TabsTrigger value="other">Other</TabsTrigger>
                   </TabsList>
                 </Tabs>
               </div>
@@ -251,6 +307,7 @@ const TemplateSelectionModal = ({
                           onClick={() => setSelectedTemplate(template.id)}
                           className={cn(
                             "group animate-fade-up relative cursor-pointer rounded-2xl border bg-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-iris/40 hover:shadow-md",
+                            template.dashed && "border-dashed",
                             isActive &&
                               "border-iris shadow-lg shadow-iris/10 ring-1 ring-iris",
                           )}
@@ -263,17 +320,22 @@ const TemplateSelectionModal = ({
                           )}
                           <div className="flex items-start gap-3.5">
                             <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-muted">
-                              <Image
-                                src={template.icon}
-                                alt={`${template.name} icon`}
-                                width={28}
-                                height={28}
-                                unoptimized
-                                className={cn(
-                                  "object-contain",
-                                  template.mono && "dark:invert dark:opacity-90",
-                                )}
-                              />
+                              {template.lucideIcon ? (
+                                <template.lucideIcon className="size-7 text-iris" />
+                              ) : (
+                                <Image
+                                  src={template.icon ?? ""}
+                                  alt={`${template.name} icon`}
+                                  width={28}
+                                  height={28}
+                                  unoptimized
+                                  className={cn(
+                                    "object-contain",
+                                    template.mono &&
+                                      "dark:invert dark:opacity-90",
+                                  )}
+                                />
+                              )}
                             </div>
                             <div className="min-w-0">
                               <div className="flex items-center gap-1.5">

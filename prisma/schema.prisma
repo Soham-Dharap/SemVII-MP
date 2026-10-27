@@ -50,12 +50,15 @@ model Account {
 }
 
 enum Templates {
+  BLANK
+  VANILLA
   REACT
   NEXTJS
   EXPRESS
   VUE
   HONO
   ANGULAR
+  PYTHON
 }
 
 model Playground{

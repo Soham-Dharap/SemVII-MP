@@ -771,7 +771,166 @@ Standalone Angular workspace created by Codepilot.
   },
 ];
 
+// Empty workspace — the user brings every file themselves.
+const blankFiles: StarterFile[] = [
+  { path: "src", content: "", language: "plaintext", isDirectory: true },
+  {
+    path: "README.md",
+    language: "markdown",
+    content: `# My project
+
+Start from scratch — create files with the + buttons in the explorer.
+`,
+  },
+];
+
+// Plain HTML + CSS + JS, no framework. Fully previewable in the browser.
+const vanillaFiles: StarterFile[] = [
+  {
+    path: "index.html",
+    language: "html",
+    content: `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vanilla JS App</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="card">
+      <span class="badge">HTML · CSS · JS</span>
+      <h1>Hello from vanilla code</h1>
+      <p>Edit the files and watch the preview refresh instantly.</p>
+      <button id="counter" type="button">Clicked 0 times</button>
+    </main>
+    <script src="/script.js"></script>
+  </body>
+</html>
+`,
+  },
+  {
+    path: "styles.css",
+    language: "css",
+    content: `:root {
+  color-scheme: light dark;
+  font-family: Inter, system-ui, -apple-system, sans-serif;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: #f6f5fb;
+}
+
+.card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 40px;
+  box-shadow: 0 20px 50px rgba(79, 70, 229, 0.12);
+  text-align: center;
+}
+
+.badge {
+  display: inline-block;
+  background: #eef2ff;
+  color: #4f46e5;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+button {
+  margin-top: 16px;
+  border: 0;
+  border-radius: 12px;
+  padding: 10px 18px;
+  background: #4f46e5;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #4338ca;
+}
+`,
+  },
+  {
+    path: "script.js",
+    language: "javascript",
+    content: `let count = 0;
+const button = document.getElementById("counter");
+
+button.addEventListener("click", () => {
+  count += 1;
+  button.textContent = \`Clicked \${count} time\${count === 1 ? "" : "s"}\`;
+});
+`,
+  },
+  {
+    path: "README.md",
+    language: "markdown",
+    content: `# Vanilla JS Starter
+
+No frameworks, no build step.
+
+- \`index.html\` — page markup
+- \`styles.css\` — styling
+- \`script.js\` — interactivity
+`,
+  },
+];
+
+// Python scripting workspace — syntax highlighting works; server runtimes
+// arrive in v2, so there is no live preview for Python projects yet.
+const pythonFiles: StarterFile[] = [
+  { path: "src", content: "", language: "plaintext", isDirectory: true },
+  {
+    path: "src/main.py",
+    language: "python",
+    content: `def greet(name: str) -> str:
+    return f"Hello, {name}!"
+
+
+def main() -> None:
+    names = ["world", "Codepilot"]
+    for name in names:
+        print(greet(name))
+
+
+if __name__ == "__main__":
+    main()
+`,
+  },
+  {
+    path: "requirements.txt",
+    language: "plaintext",
+    content: `# Pin your dependencies here, e.g.
+# requests==2.32.3
+`,
+  },
+  {
+    path: "README.md",
+    language: "markdown",
+    content: `# Python Starter
+
+A clean scripting layout with syntax highlighting.
+
+- Code lives in \`src/main.py\`.
+- Add dependencies to \`requirements.txt\`.
+- In-browser Python execution arrives in Version 2.
+`,
+  },
+];
+
 export const STARTER_TEMPLATES: Record<TemplateName, StarterFile[]> = {
+  BLANK: blankFiles,
+  VANILLA: vanillaFiles,
+  PYTHON: pythonFiles,
   REACT: reactFiles,
   NEXTJS: nextjsFiles,
   EXPRESS: expressFiles,

@@ -15,12 +15,15 @@ export default async function DashboardLayout({
     const playgroundData = await getAllPlaygroundForUser();
 
     const technologyIconMap:Record<string, string> = {
+        BLANK:"FilePlus2",
+        VANILLA:"FileCode2",
         REACT:"Zap",
         NEXTJS:"Lightbulb",
         EXPRESS:"Database",
         VUE:"Compass",
         HONO:"FlameIcon",
         ANGULAR:"Terminal",
+        PYTHON:"Terminal",
     }
 
     const formattedPlaygroundData = (

@@ -12,13 +12,12 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  SimpleDropdown,
+  SimpleDropdownContent,
+  SimpleDropdownLink,
+  SimpleDropdownSeparator,
+  SimpleDropdownTrigger,
+} from "@/components/ui/simple-dropdown";
 import UserButton from "@/features/auth/components/user-button";
 import type {
   PlaygroundMeta,
@@ -26,12 +25,15 @@ import type {
 } from "./playground-workspace";
 
 const TEMPLATE_LABELS: Record<string, string> = {
+  BLANK: "Blank",
+  VANILLA: "HTML/CSS/JS",
   REACT: "React",
   NEXTJS: "Next.js",
   EXPRESS: "Express",
   VUE: "Vue",
   HONO: "Hono",
   ANGULAR: "Angular",
+  PYTHON: "Python",
 };
 
 const SaveIndicator = ({
@@ -96,8 +98,11 @@ const EditorTopbar = ({
           />
         </Link>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger className="ml-1 flex min-w-0 items-center gap-1.5 rounded-xl px-2.5 py-2 text-left transition-colors hover:bg-muted">
+        <SimpleDropdown>
+          <SimpleDropdownTrigger
+            ariaLabel="Switch project"
+            className="ml-1 flex min-w-0 items-center gap-1.5 rounded-xl px-2.5 py-2 text-left transition-colors hover:bg-muted"
+          >
             <span className="truncate text-sm font-semibold tracking-tight">
               {playground.title}
             </span>
@@ -105,17 +110,17 @@ const EditorTopbar = ({
               {TEMPLATE_LABELS[playground.template] ?? playground.template}
             </span>
             <ChevronDown className="size-3.5 shrink-0 text-muted-foreground" />
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-72">
-            <DropdownMenuLabel className="text-xs font-medium text-muted-foreground">
+          </SimpleDropdownTrigger>
+          <SimpleDropdownContent align="start" className="w-72">
+            <p className="px-2.5 py-1.5 text-xs font-medium text-muted-foreground">
               Switch project
-            </DropdownMenuLabel>
-            <DropdownMenuSeparator />
+            </p>
+            <SimpleDropdownSeparator />
             <div className="max-h-72 overflow-y-auto">
               {projects.map((project) => (
-                <DropdownMenuItem
+                <SimpleDropdownLink
                   key={project.id}
-                  render={<Link href={`/playground/${project.id}`} />}
+                  href={`/playground/${project.id}`}
                   className={
                     project.id === playground.id ? "bg-muted font-medium" : ""
                   }
@@ -124,16 +129,16 @@ const EditorTopbar = ({
                   <span className="ml-auto text-[11px] text-muted-foreground">
                     {TEMPLATE_LABELS[project.template] ?? project.template}
                   </span>
-                </DropdownMenuItem>
+                </SimpleDropdownLink>
               ))}
             </div>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem render={<Link href="/dashboard" />}>
+            <SimpleDropdownSeparator />
+            <SimpleDropdownLink href="/dashboard">
               <Plus className="size-4" />
               New project
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+            </SimpleDropdownLink>
+          </SimpleDropdownContent>
+        </SimpleDropdown>
       </div>
 
       <div className="flex items-center gap-2">
