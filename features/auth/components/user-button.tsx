@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,13 +11,13 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Home, LayoutDashboard, LogOut, User } from "lucide-react";
-import Link from "next/link";
+import { Home, LayoutDashboard, LogOut, User, UserRound } from "lucide-react";
 import LogoutButton from "./logout-button";
 import { useCurrentUser } from "../hooks/use-current-user";
 
 const UserButton = () => {
   const user = useCurrentUser();
+  const router = useRouter();
   const initials =
     user?.name
       ?.split(" ")
@@ -25,11 +26,22 @@ const UserButton = () => {
       .join("")
       .toUpperCase() ?? "U";
 
+  // Navigate from the item's onClick rather than nesting <Link> inside a menu
+  // item — base-ui tears the menu down on selection, which can throw when a
+  // child anchor starts a navigation mid-unmount.
+  const go = (path: string) => () => router.push(path);
+
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="rounded-full outline-none ring-ring/60 transition data-focus-visible:ring-3">
+      <DropdownMenuTrigger
+        aria-label="Open profile menu"
+        className="rounded-full outline-none ring-ring/60 transition data-focus-visible:ring-3"
+      >
         <Avatar className="size-9 border border-border shadow-sm transition-transform duration-200 hover:scale-105">
-          <AvatarImage src={user?.image ?? undefined} alt={user?.name ?? "User"} />
+          <AvatarImage
+            src={user?.image ?? undefined}
+            alt={user?.name ?? "User"}
+          />
           <AvatarFallback className="bg-iris text-sm font-semibold text-white">
             {user?.image ? <User className="size-4" /> : initials}
           </AvatarFallback>
@@ -46,18 +58,18 @@ const UserButton = () => {
           </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <Link href="/dashboard">
-          <DropdownMenuItem>
-            <LayoutDashboard className="mr-2 size-4" />
-            Dashboard
-          </DropdownMenuItem>
-        </Link>
-        <Link href="/">
-          <DropdownMenuItem>
-            <Home className="mr-2 size-4" />
-            Home page
-          </DropdownMenuItem>
-        </Link>
+        <DropdownMenuItem onClick={go("/dashboard/profile")}>
+          <UserRound className="mr-2 size-4" />
+          Your profile
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={go("/dashboard")}>
+          <LayoutDashboard className="mr-2 size-4" />
+          Dashboard
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={go("/")}>
+          <Home className="mr-2 size-4" />
+          Home page
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <LogoutButton>
           <DropdownMenuItem variant="destructive">
