@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+    <meta name="theme-color" content="#141019" />
+    <title>Road Rash — a browser tribute</title>
+    <meta
+      name="description"
+      content="A from-scratch tribute to Road Rash (1991): pseudo-3D motorcycle racing with punches, kicks, traffic and roadside chaos. Free, non-commercial, no install."
+    />
+    <link rel="stylesheet" href="/roadrash/style.css" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%8F%8D%EF%B8%8F%3C/text%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <canvas id="game" aria-label="Road Rash game canvas"></canvas>
+    <div class="scanlines" aria-hidden="true"></div>
+
+    <!-- ---------------------------------------------------------- menu -->
+    <section class="screen screen--active" id="screen-menu">
+      <div class="menu-bg" aria-hidden="true"></div>
+      <div class="menu-wrap">
+        <div class="menu-head">
+          <a class="back-link" href="/" target="_top">← back to Codepilot</a>
+          <h1 class="logo">
+            <span class="logo-road">ROAD</span><span class="logo-rash">RASH</span>
+          </h1>
+          <p class="tagline">illegal street racing &middot; no rules &middot; 1991 forever</p>
+        </div>
+
+        <div class="menu-grid">
+          <div class="card">
+            <h2 class="card-title">PICK A CIRCUIT</h2>
+            <div class="levels" id="level-list"></div>
+            <button class="btn btn--primary" id="btn-start">START ENGINE</button>
+            <p class="hint">Finish in the top 4 to move up the ladder.</p>
+          </div>
+
+          <div class="card">
+            <h2 class="card-title">CONTROLS</h2>
+            <ul class="keys">
+              <li><kbd>W</kbd><kbd>↑</kbd><span>Throttle</span></li>
+              <li><kbd>S</kbd><kbd>↓</kbd><span>Brake</span></li>
+              <li><kbd>A</kbd><kbd>D</kbd><span>Steer</span></li>
+              <li><kbd>J</kbd><kbd>Z</kbd><span>Punch / swing club</span></li>
+              <li><kbd>K</kbd><kbd>X</kbd><span>Kick</span></li>
+              <li><kbd>P</kbd><span>Pause</span></li>
+              <li><kbd>M</kbd><span>Music</span></li>
+            </ul>
+            <div class="bank">
+              <div><span class="label">CASH</span><strong id="menu-cash">$0</strong></div>
+              <div><span class="label">BIKE</span><strong id="menu-bike">SHURIKEN 400</strong></div>
+            </div>
+            <div class="menu-actions">
+              <button class="btn btn--ghost" id="btn-garage">GARAGE</button>
+              <button class="btn btn--ghost" id="btn-sound">SOUND: ON</button>
+            </div>
+          </div>
+        </div>
+
+        <footer class="legal">
+          A free, non-commercial fan tribute built from scratch with HTML, CSS and JavaScript.
+          Not affiliated with Electronic Arts. Road Rash is a trademark of its respective owner.
+          All art and audio here are procedurally generated originals.
+        </footer>
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------- garage -->
+    <section class="screen" id="screen-garage">
+      <div class="card card--wide">
+        <h2 class="card-title">GARAGE</h2>
+        <p class="hint">Race winnings buy you a faster machine. Fast bikes hurt more when you fall.</p>
+        <div class="garage-list" id="garage-list"></div>
+        <div class="garage-foot">
+          <div class="bank">
+            <div><span class="label">CASH</span><strong id="garage-cash">$0</strong></div>
+          </div>
+          <div class="row">
+            <button class="btn btn--ghost" id="btn-garage-back">BACK</button>
+            <button class="btn btn--primary" id="btn-garage-race">NEXT RACE</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ------------------------------------------------------- result -->
+    <section class="screen" id="screen-result">
+      <div class="card card--wide result">
+        <span class="result-kicker" id="result-kicker">RACE COMPLETE</span>
+        <h2 class="result-place" id="result-place">4th</h2>
+        <div class="result-stats">
+          <div><span class="label">TIME</span><strong id="result-time">0:00.00</strong></div>
+          <div><span class="label">PRIZE</span><strong id="result-prize">$0</strong></div>
+          <div><span class="label">SPILLS</span><strong id="result-falls">0</strong></div>
+        </div>
+        <p class="result-note" id="result-note"></p>
+        <div class="row">
+          <button class="btn btn--ghost" id="btn-result-menu">MENU</button>
+          <button class="btn btn--primary" id="btn-result-next">CONTINUE</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- -------------------------------------------------------- pause -->
+    <section class="screen" id="screen-pause">
+      <div class="card">
+        <h2 class="card-title">PAUSED</h2>
+        <div class="col">
+          <button class="btn btn--primary" id="btn-resume">RESUME</button>
+          <button class="btn btn--ghost" id="btn-restart">RESTART RACE</button>
+          <button class="btn btn--ghost" id="btn-quit">QUIT TO MENU</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- in-race chrome -->
+    <div class="race-ui" id="race-ui">
+      <button class="icon-btn" id="btn-pause" aria-label="Pause">❚❚</button>
+      <button class="icon-btn" id="btn-mute" aria-label="Toggle sound">♪</button>
+    </div>
+
+    <div class="touch" id="touch-controls" aria-hidden="true">
+      <div class="touch-left">
+        <button class="touch-btn" data-key="left" aria-label="Steer left">◀</button>
+        <button class="touch-btn" data-key="right" aria-label="Steer right">▶</button>
+      </div>
+      <div class="touch-right">
+        <button class="touch-btn touch-btn--sm" data-key="brake" aria-label="Brake">BRAKE</button>
+        <button class="touch-btn touch-btn--go" data-key="gas" aria-label="Throttle">GAS</button>
+        <button class="touch-btn touch-btn--sm" data-key="kick" aria-label="Kick">KICK</button>
+        <button class="touch-btn touch-btn--hit" data-key="punch" aria-label="Punch">PUNCH</button>
+      </div>
+    </div>
+
+    <script type="module" src="/roadrash/js/main.js"></script>
+  </body>
+</html>

@@ -10,6 +10,7 @@ import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
 const NAV_LINKS = [
   { label: "Templates", href: "#templates" },
   { label: "Workflow", href: "#workflow" },
+  { label: "Road Rash", href: "/roadrash" },
 ];
 
 export function Header() {
