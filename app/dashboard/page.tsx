@@ -29,8 +29,12 @@ const Page = async () => {
       </header>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        <AddNewButton />
-        <AddRepoButton />
+        <div className="animate-fade-up">
+          <AddNewButton />
+        </div>
+        <div className="animate-fade-up stagger-1">
+          <AddRepoButton />
+        </div>
       </div>
 
       <div className="mt-12">

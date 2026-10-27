@@ -256,7 +256,7 @@ const PlaygroundWorkspace = ({
         <ResizablePanel
           defaultSize="20"
           minSize={isMobile ? "14" : "15"}
-          className="overflow-hidden rounded-2xl"
+          className="animate-fade-in overflow-hidden rounded-2xl"
         >
           <FileExplorer
             files={files}
@@ -278,7 +278,7 @@ const PlaygroundWorkspace = ({
         <ResizablePanel
           defaultSize="50"
           minSize="28"
-          className="overflow-hidden rounded-2xl"
+          className="animate-fade-in stagger-1 overflow-hidden rounded-2xl"
         >
           <div className="flex h-full flex-col gap-2">
             <div className="min-h-0 flex-1">
@@ -307,7 +307,7 @@ const PlaygroundWorkspace = ({
         <ResizablePanel
           defaultSize="30"
           minSize={isMobile ? "18" : "20"}
-          className="overflow-hidden rounded-2xl"
+          className="animate-fade-in stagger-2 overflow-hidden rounded-2xl"
         >
           <InspectorPanel
             files={files}
