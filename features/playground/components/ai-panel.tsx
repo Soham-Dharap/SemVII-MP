@@ -1,6 +1,6 @@
 "use client";
 
-import { Bot, MessageSquareCode, Sparkles, WandSparkles } from "lucide-react";
+import { ArrowUp, Sparkles } from "lucide-react";
 
 const PLANNED_FEATURES = [
   "Explain and refactor any open file",
@@ -11,43 +11,59 @@ const PLANNED_FEATURES = [
 
 const AiPanel = () => {
   return (
-    <div className="editor-scroll flex min-h-0 flex-1 flex-col items-center justify-center gap-5 overflow-y-auto p-6 text-center">
-      <div className="relative">
-        <div className="flex size-14 items-center justify-center rounded-2xl bg-gradient-to-br from-iris to-iris-deep shadow-lg shadow-iris/30">
-          <Bot className="size-7 text-white" />
+    <div className="editor-scroll flex min-h-0 flex-1 flex-col overflow-y-auto p-5">
+      <div className="flex h-full flex-col">
+        <div className="flex items-center justify-between">
+          <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-muted-foreground">
+            Assistant
+          </span>
+          <span className="rounded-full border border-dashed border-border px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+            v2 · soon
+          </span>
         </div>
-        <span className="absolute -right-1.5 -top-1.5 flex size-6 items-center justify-center rounded-full bg-card shadow-sm ring-1 ring-border">
-          <Sparkles className="size-3.5 text-iris" />
-        </span>
-      </div>
 
-      <div className="space-y-1.5">
-        <span className="inline-block rounded-full bg-iris-soft px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-iris">
-          Arriving in Version 2
-        </span>
-        <h3 className="text-lg font-semibold tracking-tight">AI Assistant</h3>
-        <p className="mx-auto max-w-xs text-sm leading-6 text-muted-foreground">
-          Your in-editor pair programmer is being fine-tuned and will arrive in
-          the next major release.
-        </p>
-      </div>
+        <div className="mt-6 flex flex-col gap-4">
+          <div className="flex size-10 items-center justify-center rounded-xl border border-border bg-muted">
+            <Sparkles className="size-4.5 text-iris" />
+          </div>
+          <div>
+            <h3 className="text-base font-semibold tracking-tight">
+              In-editor pair programming
+            </h3>
+            <p className="mt-1.5 text-sm leading-6 text-muted-foreground">
+              The assistant is being built against this exact workspace. It
+              will read your open files and act inside the editor instead of a
+              generic chat window.
+            </p>
+          </div>
+        </div>
 
-      <ul className="w-full max-w-xs space-y-2.5 text-left">
-        {PLANNED_FEATURES.map((feature) => (
-          <li
-            key={feature}
-            className="flex items-start gap-2.5 text-sm text-foreground/75"
-          >
-            <WandSparkles className="mt-0.5 size-4 shrink-0 text-iris" />
-            {feature}
-          </li>
-        ))}
-      </ul>
+        <div className="my-6 h-px bg-border" />
 
-      <div className="w-full max-w-xs">
-        <div className="flex items-center gap-2 rounded-xl border border-dashed border-border bg-muted/50 px-3.5 py-3 text-sm text-muted-foreground">
-          <MessageSquareCode className="size-4" />
-          <span>Ask Codepilot AI…</span>
+        <ul className="space-y-0.5">
+          {PLANNED_FEATURES.map((feature, index) => (
+            <li
+              key={feature}
+              className="flex items-baseline gap-3 rounded-lg px-2 py-2.5 text-sm text-foreground/80"
+            >
+              <span className="font-mono text-[11px] text-muted-foreground/60">
+                0{index + 1}
+              </span>
+              {feature}
+            </li>
+          ))}
+        </ul>
+
+        <div className="mt-auto pt-6">
+          <div className="flex items-center gap-2 rounded-xl border border-border bg-muted/50 px-3.5 py-3 text-sm text-muted-foreground">
+            <span className="flex-1 truncate">Ask Codepilot AI…</span>
+            <span className="flex size-6 shrink-0 items-center justify-center rounded-md border border-border bg-card">
+              <ArrowUp className="size-3.5" />
+            </span>
+          </div>
+          <p className="mt-2.5 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground/60">
+            Arriving in Version 2
+          </p>
         </div>
       </div>
     </div>

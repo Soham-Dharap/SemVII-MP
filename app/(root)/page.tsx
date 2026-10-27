@@ -4,12 +4,12 @@ import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const TEMPLATES = [
-  { name: "React", icon: "/react.svg", note: "JSX live preview" },
-  { name: "Next.js", icon: "/nextjs-icon.svg", note: "App Router layout" },
-  { name: "Express", icon: "/expressjs-icon.svg", note: "API + static" },
-  { name: "Vue", icon: "/vuejs-icon.svg", note: "Composition API" },
-  { name: "Hono", icon: "/hono.svg", note: "Edge-ready API" },
-  { name: "Angular", icon: "/angular-2.svg", note: "Standalone components" },
+  { name: "React", icon: "/react.svg", note: "JSX live preview", mono: false },
+  { name: "Next.js", icon: "/nextjs-icon.svg", note: "App Router layout", mono: true },
+  { name: "Express", icon: "/expressjs-icon.svg", note: "API + static", mono: true },
+  { name: "Vue", icon: "/vuejs-icon.svg", note: "Composition API", mono: false },
+  { name: "Hono", icon: "/hono.svg", note: "Edge-ready API", mono: false },
+  { name: "Angular", icon: "/angular-2.svg", note: "Standalone components", mono: false },
 ];
 
 const STEPS = [
@@ -121,7 +121,9 @@ export default function Home() {
                   width={40}
                   height={40}
                   unoptimized
-                  className="size-10 object-contain transition-transform duration-300 group-hover:scale-110"
+                  className={`size-10 object-contain transition-transform duration-300 group-hover:scale-110 ${
+                    template.mono ? "dark:invert dark:opacity-90" : ""
+                  }`}
                 />
                 <div>
                   <p className="text-sm font-semibold tracking-tight">

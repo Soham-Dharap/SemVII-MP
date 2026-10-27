@@ -47,6 +47,7 @@ interface TemplateOption {
   tags: string[];
   features: string[];
   category: "frontend" | "backend" | "fullstack";
+  mono?: boolean;
 }
 
 const templates: TemplateOption[] = [
@@ -68,6 +69,7 @@ const templates: TemplateOption[] = [
     description:
       "The React framework with App Router layouts, server components and API routes.",
     icon: "/nextjs-icon.svg",
+    mono: true,
     tags: ["React", "SSR", "Fullstack"],
     features: ["App Router", "API routes", "File-based routing"],
     category: "fullstack",
@@ -79,6 +81,7 @@ const templates: TemplateOption[] = [
     description:
       "Minimalist Node.js framework for APIs and server-rendered web apps.",
     icon: "/expressjs-icon.svg",
+    mono: true,
     tags: ["Node.js", "API", "Backend"],
     features: ["Middleware", "Routing", "HTTP utilities"],
     category: "backend",
@@ -266,7 +269,10 @@ const TemplateSelectionModal = ({
                                 width={28}
                                 height={28}
                                 unoptimized
-                                className="object-contain"
+                                className={cn(
+                                  "object-contain",
+                                  template.mono && "dark:invert dark:opacity-90",
+                                )}
                               />
                             </div>
                             <div className="min-w-0">

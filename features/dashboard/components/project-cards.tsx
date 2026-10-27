@@ -46,13 +46,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toggleProjectStar } from "../actions";
 import type { Project, TemplateName } from "../type";
 
-const TEMPLATE_STYLE: Record<TemplateName, { bg: string; label: string }> = {
-  REACT: { bg: "bg-sky-500", label: "React" },
-  NEXTJS: { bg: "bg-zinc-900", label: "Next.js" },
-  EXPRESS: { bg: "bg-emerald-500", label: "Express" },
-  VUE: { bg: "bg-green-500", label: "Vue" },
-  HONO: { bg: "bg-orange-500", label: "Hono" },
-  ANGULAR: { bg: "bg-red-500", label: "Angular" },
+const TEMPLATE_STYLE: Record<TemplateName, { label: string }> = {
+  REACT: { label: "React" },
+  NEXTJS: { label: "Next.js" },
+  EXPRESS: { label: "Express" },
+  VUE: { label: "Vue" },
+  HONO: { label: "Hono" },
+  ANGULAR: { label: "Angular" },
 };
 
 interface ProjectCardsProps {
@@ -145,7 +145,7 @@ export default function ProjectCards({
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="animate-fade-up overflow-hidden rounded-2xl border border-border bg-card shadow-sm">
         {projects.map((project, index) => {
           const style =
             TEMPLATE_STYLE[project.template as TemplateName] ??
@@ -155,105 +155,96 @@ export default function ProjectCards({
           return (
             <div
               key={project.id}
-              style={{ animationDelay: `${Math.min(index, 8) * 60}ms` }}
-              className="group animate-fade-up flex flex-col rounded-2xl border border-border bg-card p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-iris/30 hover:shadow-lg"
+              style={{ animationDelay: `${Math.min(index, 10) * 40}ms` }}
+              className="group flex animate-fade-up items-center gap-4 px-5 py-4 transition-colors hover:bg-muted/40 odd:border-0 [&:not(:last-child)]:border-b [&:not(:last-child)]:border-border/70"
             >
-              <div className="mb-4 flex items-start justify-between">
-                <div className="flex size-11 items-center justify-center rounded-xl bg-iris-soft">
-                  <span
-                    className={`size-5 rounded-md ${style.bg} opacity-90`}
-                  />
-                </div>
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    aria-label={isStarred ? "Unstar" : "Star"}
-                    onClick={() => toggleStar(project)}
-                    className="rounded-lg p-2 transition-colors hover:bg-muted"
-                  >
-                    <Star
-                      className={`size-4 transition-colors ${
-                        isStarred
-                          ? "fill-amber-400 text-amber-400"
-                          : "text-muted-foreground/30 group-hover:text-muted-foreground/60"
-                      }`}
-                    />
-                  </button>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger
-                      className="rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-                      aria-label="Project actions"
-                    >
-                      <MoreHorizontal className="size-4" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-52">
-                      <DropdownMenuItem
-                        onClick={() =>
-                          router.push(`/playground/${project.id}`)
-                        }
-                      >
-                        <ExternalLink className="mr-2 size-4" />
-                        Open in editor
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => openEdit(project)}>
-                        <Edit3 className="mr-2 size-4" />
-                        Edit details
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => duplicate(project)}>
-                        <Copy className="mr-2 size-4" />
-                        Duplicate
-                      </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => copyLink(project.id)}>
-                        <Link2 className="mr-2 size-4" />
-                        Copy link
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem
-                        onClick={() => setDeleteTarget(project)}
-                        className="text-destructive focus:text-destructive"
-                      >
-                        <Trash2 className="mr-2 size-4" />
-                        Delete
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
-              </div>
+              <button
+                type="button"
+                aria-label={isStarred ? "Unstar" : "Star"}
+                onClick={() => toggleStar(project)}
+                className="shrink-0 rounded-lg p-1.5 transition-colors hover:bg-muted"
+              >
+                <Star
+                  className={`size-4 transition-colors ${
+                    isStarred
+                      ? "fill-amber-400 text-amber-400"
+                      : "text-muted-foreground/30 group-hover:text-muted-foreground/60"
+                  }`}
+                />
+              </button>
 
               <button
                 type="button"
                 onClick={() => router.push(`/playground/${project.id}`)}
-                className="text-left"
+                className="flex min-w-0 flex-1 items-center gap-4 text-left"
               >
-                <h3 className="text-base font-semibold tracking-tight transition-colors group-hover:text-iris">
-                  {project.title}
-                </h3>
-                <p className="mt-1 line-clamp-2 min-h-10 text-sm leading-5 text-muted-foreground">
-                  {project.description ?? "No description yet."}
-                </p>
-              </button>
-
-              <div className="mt-5 flex items-center justify-between border-t border-border/70 pt-4">
-                <span className="rounded-full bg-muted px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                <span className="hidden w-20 shrink-0 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground sm:block">
                   {style.label}
                 </span>
-                <div className="flex items-center gap-2">
-                  <Avatar className="size-6">
-                    <AvatarImage
-                      src={project.user.image ?? undefined}
-                      alt={project.user.name ?? "User"}
-                    />
-                    <AvatarFallback className="bg-foreground text-[10px] text-background">
-                      {(project.user.name ?? project.user.email)
-                        .slice(0, 1)
-                        .toUpperCase()}
-                    </AvatarFallback>
-                  </Avatar>
-                  <span className="text-xs text-muted-foreground">
-                    {format(new Date(project.createdAt), "MMM d, yyyy")}
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-sm font-semibold tracking-tight transition-colors group-hover:text-iris">
+                    {project.title}
                   </span>
-                </div>
-              </div>
+                  <span className="mt-0.5 block truncate text-xs text-muted-foreground">
+                    {project.description ?? "No description yet."}
+                  </span>
+                </span>
+              </button>
+
+              <span className="hidden shrink-0 text-xs text-muted-foreground md:block">
+                {format(new Date(project.createdAt), "MMM d, yyyy")}
+              </span>
+
+              <Avatar className="size-7 shrink-0">
+                <AvatarImage
+                  src={project.user.image ?? undefined}
+                  alt={project.user.name ?? "User"}
+                />
+                <AvatarFallback className="bg-foreground text-[10px] text-background">
+                  {(project.user.name ?? project.user.email)
+                    .slice(0, 1)
+                    .toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger
+                  className="shrink-0 rounded-lg p-2 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+                  aria-label="Project actions"
+                >
+                  <MoreHorizontal className="size-4" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-52">
+                  <DropdownMenuItem
+                    onClick={() =>
+                      router.push(`/playground/${project.id}`)
+                    }
+                  >
+                    <ExternalLink className="mr-2 size-4" />
+                    Open in editor
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => openEdit(project)}>
+                    <Edit3 className="mr-2 size-4" />
+                    Edit details
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => duplicate(project)}>
+                    <Copy className="mr-2 size-4" />
+                    Duplicate
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => copyLink(project.id)}>
+                    <Link2 className="mr-2 size-4" />
+                    Copy link
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => setDeleteTarget(project)}
+                    className="text-destructive focus:text-destructive"
+                  >
+                    <Trash2 className="mr-2 size-4" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
           );
         })}

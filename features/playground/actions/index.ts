@@ -114,14 +114,17 @@ export const createProjectFile = async (
       isDirectory: input.isDirectory,
     });
 
-    await db.projectFile.createMany({
-      data: data.map((entry) => ({ ...entry, playgroundId })),
-    });
+    // Prisma's MongoDB connector does not support createMany — insert each
+    // record sequentially (batches are small: one file plus implicit parents).
+    let created = null;
+    for (const entry of data) {
+      const record = await db.projectFile.create({
+        data: { ...entry, playgroundId },
+      });
+      if (record.path === path) created = record;
+    }
 
     revalidatePath(`/playground/${playgroundId}`);
-    const created = await db.projectFile.findFirst({
-      where: { playgroundId, path },
-    });
     return { ok: true as const, file: created };
   } catch (error) {
     console.error(error);

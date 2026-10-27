@@ -13,6 +13,11 @@ function resolvePath(baseDir: string, reference: string): string {
   if (/^https?:\/\//.test(cleanReference) || cleanReference.startsWith("//")) {
     return cleanReference;
   }
+  // A leading slash means project-root-relative, regardless of where the
+  // entry HTML lives (e.g. public/index.html referencing /src/app.js).
+  if (cleanReference.startsWith("/")) {
+    return normalizePath(cleanReference);
+  }
   const normalizedReference = normalizePath(cleanReference);
   if (!cleanReference.startsWith(".") && !baseDir) {
     return normalizedReference;
