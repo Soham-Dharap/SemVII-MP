@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { signOut } from "next-auth/react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,13 +12,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Home, LayoutDashboard, LogOut, User, UserRound } from "lucide-react";
-import LogoutButton from "./logout-button";
+import {
+  Home,
+  LayoutDashboard,
+  LogOut,
+  User,
+  UserRound,
+} from "lucide-react";
 import { useCurrentUser } from "../hooks/use-current-user";
 
 const UserButton = () => {
   const user = useCurrentUser();
-  const router = useRouter();
   const initials =
     user?.name
       ?.split(" ")
@@ -25,11 +30,6 @@ const UserButton = () => {
       .slice(0, 2)
       .join("")
       .toUpperCase() ?? "U";
-
-  // Navigate from the item's onClick rather than nesting <Link> inside a menu
-  // item — base-ui tears the menu down on selection, which can throw when a
-  // child anchor starts a navigation mid-unmount.
-  const go = (path: string) => () => router.push(path);
 
   return (
     <DropdownMenu>
@@ -58,25 +58,29 @@ const UserButton = () => {
           </span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={go("/dashboard/profile")}>
+        {/* Base UI's `render` turns the item into a real anchor: navigation is
+            native browser behavior, so it survives hydration hiccups and
+            supports middle-click / open-in-new-tab. */}
+        <DropdownMenuItem render={<Link href="/dashboard/profile" />}>
           <UserRound className="mr-2 size-4" />
           Your profile
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={go("/dashboard")}>
+        <DropdownMenuItem render={<Link href="/dashboard" />}>
           <LayoutDashboard className="mr-2 size-4" />
           Dashboard
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={go("/")}>
+        <DropdownMenuItem render={<Link href="/" />}>
           <Home className="mr-2 size-4" />
           Home page
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <LogoutButton>
-          <DropdownMenuItem variant="destructive">
-            <LogOut className="mr-2 size-4" />
-            Sign out
-          </DropdownMenuItem>
-        </LogoutButton>
+        <DropdownMenuItem
+          variant="destructive"
+          onClick={() => signOut({ redirectTo: "/" })}
+        >
+          <LogOut className="mr-2 size-4" />
+          Sign out
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

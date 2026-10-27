@@ -31,6 +31,9 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { BrandMark } from "@/components/brand";
+import UserButton from "@/features/auth/components/user-button";
+import { useCurrentUser } from "@/features/auth/hooks/use-current-user";
+import { ChevronsUpDown } from "lucide-react";
 
 interface PlaygroundDataProps {
   id: string;
@@ -56,6 +59,7 @@ export const DashboardSidebar = ({
 }) => {
   const pathname = usePathname();
   const router = useRouter();
+  const user = useCurrentUser();
   const [starredPlaygrounds] = useState(
     initialPlaygroundData.filter((p) => p.starred),
   );
@@ -186,6 +190,20 @@ export const DashboardSidebar = ({
               <LayoutDashboard className="size-4" />
               <span>All projects</span>
             </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <div className="flex items-center gap-2 rounded-lg px-2 py-1.5">
+              <UserButton />
+              <div className="min-w-0 flex-1 group-data-[collapsible=icon]:hidden">
+                <p className="truncate text-sm font-medium">
+                  {user?.name ?? "Account"}
+                </p>
+                <p className="truncate text-xs text-muted-foreground">
+                  {user?.email ?? "Manage profile"}
+                </p>
+              </div>
+              <ChevronsUpDown className="size-3.5 shrink-0 text-muted-foreground group-data-[collapsible=icon]:hidden" />
+            </div>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

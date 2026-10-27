@@ -16,23 +16,22 @@ const Page = async () => {
 
   return (
     <div className="mx-auto w-full max-w-5xl animate-fade-up px-4 py-10 sm:px-8">
-      <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-iris">
-            Workspace
-          </p>
-          <h1 className="text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">
-            Your projects
-          </h1>
-          <p className="mt-2 text-[15px] text-muted-foreground">
-            Spin up a new stack or jump back into a recent workspace.
-          </p>
-        </div>
-        <div className="flex items-center gap-2.5">
-          <AddRepoButton />
-          <AddNewButton />
-        </div>
+      <header className="mb-8">
+        <p className="mb-2 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-iris">
+          Workspace
+        </p>
+        <h1 className="text-3xl font-semibold tracking-[-0.03em] sm:text-4xl">
+          Your projects
+        </h1>
+        <p className="mt-2 text-[15px] text-muted-foreground">
+          Spin up a new stack or jump back into a recent workspace.
+        </p>
       </header>
+
+      <section className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <AddNewButton />
+        <AddRepoButton />
+      </section>
 
       {projects.length === 0 ? (
         <EmptyState

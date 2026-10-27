@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { useState } from "react";
 import { format } from "date-fns";
 import { toast } from "sonner";
@@ -173,9 +174,8 @@ export default function ProjectCards({
                 />
               </button>
 
-              <button
-                type="button"
-                onClick={() => router.push(`/playground/${project.id}`)}
+              <Link
+                href={`/playground/${project.id}`}
                 className="flex min-w-0 flex-1 items-center gap-4 text-left"
               >
                 <span className="hidden w-20 shrink-0 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-muted-foreground sm:block">
@@ -189,7 +189,7 @@ export default function ProjectCards({
                     {project.description ?? "No description yet."}
                   </span>
                 </span>
-              </button>
+              </Link>
 
               <span className="hidden shrink-0 text-xs text-muted-foreground md:block">
                 {format(new Date(project.createdAt), "MMM d, yyyy")}
@@ -216,9 +216,7 @@ export default function ProjectCards({
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-52">
                   <DropdownMenuItem
-                    onClick={() =>
-                      router.push(`/playground/${project.id}`)
-                    }
+                    render={<Link href={`/playground/${project.id}`} />}
                   >
                     <ExternalLink className="mr-2 size-4" />
                     Open in editor
