@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   Check,
   ChevronDown,
@@ -77,8 +76,6 @@ const EditorTopbar = ({
   saveStatus: "idle" | "saving" | "saved" | "error";
   isDirty: boolean;
 }) => {
-  const router = useRouter();
-
   return (
     <header className="flex h-13 shrink-0 items-center justify-between gap-3 rounded-2xl border border-border bg-card px-3 py-2 shadow-sm">
       <div className="flex min-w-0 items-center gap-1.5">
@@ -118,7 +115,7 @@ const EditorTopbar = ({
               {projects.map((project) => (
                 <DropdownMenuItem
                   key={project.id}
-                  onClick={() => router.push(`/playground/${project.id}`)}
+                  render={<Link href={`/playground/${project.id}`} />}
                   className={
                     project.id === playground.id ? "bg-muted font-medium" : ""
                   }
@@ -131,7 +128,7 @@ const EditorTopbar = ({
               ))}
             </div>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => router.push("/dashboard")}>
+            <DropdownMenuItem render={<Link href="/dashboard" />}>
               <Plus className="size-4" />
               New project
             </DropdownMenuItem>

@@ -1,12 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Plus } from "lucide-react";
+import { ArrowRight, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import TemplateSelectionModal from "./template-selection-modal";
 import { createPlayground } from "../actions";
-import { Button } from "@/components/ui/button";
 import type { TemplateName } from "../type";
 
 const AddNewButton = () => {
@@ -30,15 +29,27 @@ const AddNewButton = () => {
 
   return (
     <>
-      <Button
+      <button
         type="button"
-        variant="brand"
-        className="h-10 rounded-full px-5"
         onClick={() => setIsModalOpen(true)}
+        className="group flex h-full w-full flex-col justify-between gap-8 rounded-2xl border border-iris/25 bg-iris-soft/40 p-6 text-left shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-iris/50 hover:shadow-lg hover:shadow-iris/10"
       >
-        <Plus className="size-4" />
-        New project
-      </Button>
+        <div className="flex size-11 items-center justify-center rounded-xl bg-iris text-white shadow-sm shadow-iris/30 transition-transform duration-300 group-hover:scale-105">
+          <Plus className="size-5" />
+        </div>
+        <div>
+          <h2 className="text-lg font-semibold tracking-tight">
+            New project
+          </h2>
+          <p className="mt-1 text-sm leading-6 text-muted-foreground">
+            Pick a starter stack and open the editor in seconds.
+          </p>
+          <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-iris">
+            Start building
+            <ArrowRight className="size-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+          </span>
+        </div>
+      </button>
 
       <TemplateSelectionModal
         isOpen={isModalOpen}

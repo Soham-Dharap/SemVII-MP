@@ -2,6 +2,10 @@
 
 import React from "react";
 import { signIn } from "next-auth/react";
+import { toast } from "sonner";
+
+const comingSoon = () =>
+  toast.info("Legal pages arrive with Version 2 — check back soon.");
 
 const GoogleIcon = () => (
   <svg className="size-4" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -68,13 +72,21 @@ const SignInFormClient = () => {
 
       <p className="text-center text-sm leading-6 text-muted-foreground">
         By continuing you agree to our{" "}
-        <a href="#" className="underline underline-offset-2 hover:text-foreground">
+        <button
+          type="button"
+          onClick={comingSoon}
+          className="underline underline-offset-2 hover:text-foreground"
+        >
           Terms
-        </a>{" "}
+        </button>{" "}
         and{" "}
-        <a href="#" className="underline underline-offset-2 hover:text-foreground">
+        <button
+          type="button"
+          onClick={comingSoon}
+          className="underline underline-offset-2 hover:text-foreground"
+        >
           Privacy Policy
-        </a>
+        </button>
         .
       </p>
     </div>

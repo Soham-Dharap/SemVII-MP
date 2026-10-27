@@ -3,17 +3,21 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function DashboardLoading() {
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-10 sm:px-8">
-      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-        <div className="space-y-3">
-          <Skeleton className="h-3.5 w-24 rounded-full" />
-          <Skeleton className="h-10 w-64 rounded-xl" />
-          <Skeleton className="h-4 w-80 rounded-full" />
-        </div>
-        <div className="flex gap-2.5">
-          <Skeleton className="h-10 w-40 rounded-full" />
-          <Skeleton className="h-10 w-36 rounded-full" />
-        </div>
+      <div className="mb-8 space-y-3">
+        <Skeleton className="h-3.5 w-24 rounded-full" />
+        <Skeleton className="h-10 w-64 rounded-xl" />
+        <Skeleton className="h-4 w-80 max-w-full rounded-full" />
       </div>
+
+      {/* Big action cards */}
+      <div className="mb-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
+        {Array.from({ length: 2 }).map((_, i) => (
+          <Skeleton key={i} className="h-48 rounded-2xl" />
+        ))}
+      </div>
+
+      {/* Project list */}
+      <Skeleton className="mb-3 ml-1 h-3 w-32 rounded-full" />
       <div className="overflow-hidden rounded-2xl border border-border">
         {Array.from({ length: 5 }).map((_, index) => (
           <div
