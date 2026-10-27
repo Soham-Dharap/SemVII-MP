@@ -6,6 +6,8 @@
 
 export const publicRoutes: string[] = [
   "/",
+  // The Road Rash tribute is a self-contained, no-login arcade page.
+  "/roadrash",
 ]
 
 /**

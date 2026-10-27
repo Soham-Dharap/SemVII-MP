@@ -48,11 +48,22 @@ Required environment variables (see `.env.example`):
 | `AUTH_GOOGLE_ID` / `AUTH_GOOGLE_SECRET` | Google OAuth client |
 | `AUTH_TRUST_HOST` | `true` behind a hosting proxy |
 
+
+## Road Rash tribute (side quest)
+
+`/roadrash` hosts a from-scratch, non-commercial tribute to *Road Rash* (1991):
+pseudo-3D motorcycle racing with punches, kicks, traffic and roadside chaos.
+It is plain HTML/CSS/JavaScript in `public/roadrash` — no framework, no build
+step, no database — served as a static page and embedded by `app/roadrash/page.tsx`.
+See [public/roadrash/README.md](./public/roadrash/README.md) for the mechanics
+and the pseudo-3D renderer write-up.
+
 ## Project structure
 
 ```
 app/
   (root)/            Landing page (public)
+  roadrash/          Full-bleed host for the Road Rash tribute
   (auth)/            Sign-in
   dashboard/         Project list + sidebar shell
   playground/[id]/   Full-screen editor workspace
